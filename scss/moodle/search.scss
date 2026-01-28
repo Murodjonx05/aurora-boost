@@ -12,13 +12,19 @@
 }
 
 .simplesearchform {
+    width: 100%;
     @if $enable-rounded {
         .input-group input.form-control {
-            border-top-left-radius: $border-radius;
-            border-bottom-left-radius: $border-radius;
+            border-radius: 32px;
         }
     }
+    .input-group input.form-control {
+        width: 100%;
+        border-radius: 32px!important;
+    }
     .btn {
+        // i want button always hidden in frontpage for better look.
+        display:none;
         padding-left: 0.5rem;
         padding-right: 0.5rem;
     }
@@ -58,6 +64,18 @@
         transition: none;
         width: inherit;
     }
+}
+
+// Ensure search forms have 100% width to match browser preview changes
+.simplesearchform,
+.simplesearchform form,
+.simplesearchform .input-group {
+    width: 100%;
+}
+
+// Hide any labels inside the search input group to match browser preview changes
+.simplesearchform .input-group label {
+    display: none;
 }
 
 .simplesearchform .collapse.show,

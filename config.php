@@ -28,7 +28,7 @@ require_once(__DIR__ . '/lib.php');
 
 $THEME->name = 'aurora';
 $THEME->parents = ['boost'];
-$THEME->sheets = [];
+$THEME->sheets = ['main','frontpage','dev'];
 $THEME->editor_sheets = [];
 $THEME->editor_scss = ['editor'];
 $THEME->usefallback = true;
