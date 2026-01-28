@@ -1,0 +1,22 @@
+{
+  "name": "theme_aurora",
+  "version": "1.0.0",
+  "description": "Aurora New theme for Moodle based on Boost",
+  "main": "Gruntfile.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "moodle",
+    "theme",
+    "boost"
+  ],
+  "author": "Moodle",
+  "license": "GPL-3.0",
+  "devDependencies": {
+    "grunt": "^1.5.3",
+    "grunt-contrib-watch": "^1.1.0",
+    "grunt-sass": "^3.2.0",
+    "sass": "^1.32.13"
+  }
+}
