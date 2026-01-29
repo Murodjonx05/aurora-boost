@@ -23,25 +23,25 @@
 defined('MOODLE_INTERNAL') || die();
 
 if ($ADMIN->fulltree) {
-    $settings = new theme_boost_admin_settingspage_tabs('themesettingauroranew', get_string('configtitle', 'theme_aurora'));
-    $page = new admin_settingpage('theme_auroranew_general', get_string('generalsettings', 'theme_aurora'));
+    $settings = new theme_boost_admin_settingspage_tabs('themesettingaurora', get_string('configtitle', 'theme_aurora'));
+    $page = new admin_settingpage('theme_aurora_general', get_string('generalsettings', 'theme_aurora'));
 
     // Unaddable blocks.
     // Blocks to be excluded when this theme is enabled in the "Add a block" list: Administration, Navigation and Courses.
     $default = 'navigation,settings,course_list';
-    $setting = new admin_setting_configtext('theme_auroranew/unaddableblocks',
+    $setting = new admin_setting_configtext('theme_aurora/unaddableblocks',
         get_string('unaddableblocks', 'theme_aurora'), get_string('unaddableblocks_desc', 'theme_aurora'), $default, PARAM_TEXT);
     $page->add($setting);
 
     // Preset.
-    $name = 'theme_auroranew/preset';
+    $name = 'theme_aurora/preset';
     $title = get_string('preset', 'theme_aurora');
     $description = get_string('preset_desc', 'theme_aurora');
     $default = 'default.scss';
 
     $context = context_system::instance();
     $fs = get_file_storage();
-    $files = $fs->get_area_files($context->id, 'theme_auroranew', 'preset', 0, 'itemid, filepath, filename', false);
+    $files = $fs->get_area_files($context->id, 'theme_aurora', 'preset', 0, 'itemid, filepath, filename', false);
 
     $choices = [];
     foreach ($files as $file) {
@@ -51,12 +51,12 @@ if ($ADMIN->fulltree) {
     $choices['default.scss'] = 'default.scss';
     $choices['plain.scss'] = 'plain.scss';
 
-    $setting = new admin_setting_configthemepreset($name, $title, $description, $default, $choices, 'auroranew');
+    $setting = new admin_setting_configthemepreset($name, $title, $description, $default, $choices, 'aurora');
     $setting->set_updatedcallback('theme_reset_all_caches');
     $page->add($setting);
 
     // Preset files setting.
-    $name = 'theme_auroranew/presetfiles';
+    $name = 'theme_aurora/presetfiles';
     $title = get_string('presetfiles','theme_aurora');
     $description = get_string('presetfiles_desc', 'theme_aurora');
 
@@ -65,7 +65,7 @@ if ($ADMIN->fulltree) {
     $page->add($setting);
 
     // Background image setting.
-    $name = 'theme_auroranew/backgroundimage';
+    $name = 'theme_aurora/backgroundimage';
     $title = get_string('backgroundimage', 'theme_aurora');
     $description = get_string('backgroundimage_desc', 'theme_aurora');
     $setting = new admin_setting_configstoredfile($name, $title, $description, 'backgroundimage');
@@ -73,7 +73,7 @@ if ($ADMIN->fulltree) {
     $page->add($setting);
 
     // Login Background image setting.
-    $name = 'theme_auroranew/loginbackgroundimage';
+    $name = 'theme_aurora/loginbackgroundimage';
     $title = get_string('loginbackgroundimage', 'theme_aurora');
     $description = get_string('loginbackgroundimage_desc', 'theme_aurora');
     $setting = new admin_setting_configstoredfile($name, $title, $description, 'loginbackgroundimage');
@@ -81,7 +81,7 @@ if ($ADMIN->fulltree) {
     $page->add($setting);
 
     // We use an empty default value because the default colour should come from the preset.
-    $name = 'theme_auroranew/brandcolor';
+    $name = 'theme_aurora/brandcolor';
     $title = get_string('brandcolor', 'theme_aurora');
     $description = get_string('brandcolor_desc', 'theme_aurora');
     $setting = new admin_setting_configcolourpicker($name, $title, $description, '');
@@ -92,16 +92,16 @@ if ($ADMIN->fulltree) {
     $settings->add($page);
 
     // Advanced settings.
-    $page = new admin_settingpage('theme_auroranew_advanced', get_string('advancedsettings', 'theme_aurora'));
+    $page = new admin_settingpage('theme_aurora_advanced', get_string('advancedsettings', 'theme_aurora'));
 
     // Raw SCSS to include before the content.
-    $setting = new admin_setting_scsscode('theme_auroranew/scsspre',
+    $setting = new admin_setting_scsscode('theme_aurora/scsspre',
         get_string('rawscsspre', 'theme_aurora'), get_string('rawscsspre_desc', 'theme_aurora'), '', PARAM_RAW);
     $setting->set_updatedcallback('theme_reset_all_caches');
     $page->add($setting);
 
     // Raw SCSS to include after the content.
-    $setting = new admin_setting_scsscode('theme_auroranew/scss', get_string('rawscss', 'theme_aurora'),
+    $setting = new admin_setting_scsscode('theme_aurora/scss', get_string('rawscss', 'theme_aurora'),
         get_string('rawscss_desc', 'theme_aurora'), '', PARAM_RAW);
     $setting->set_updatedcallback('theme_reset_all_caches');
     $page->add($setting);
