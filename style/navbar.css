@@ -1,0 +1,36 @@
+.bg-body {
+    background: var(--aurora_nav_primary, white) !important;
+    /* Optimized UI font stack for best readability in Russian and English */
+    font-family:
+        "Noto Sans",                 /* Excellent for Latin and Cyrillic */
+        "PT Sans",                   /* High quality Cyrillic/Latin */
+        "Segoe UI",                  /* Great modern UI font, Latin+minor Cyrillic */
+        "Roboto",                    /* Good fallback, well-known */
+        "Tahoma",                    /* Well-hinted fallback */
+        "Arial",                     /* Generic UI fallback */
+        "Liberation Sans",           /* Linux Arial-compatible */
+        "Arial Unicode MS",          /* Wide Unicode support */
+        sans-serif;
+    font-size: 1.1rem;
+    font-weight: 600;
+    line-height: 1.5;
+}
+
+#page-wrapper nav.navbar.fixed-top .primary-navigation .nav-item a.nav-link {
+    color: var(--aurora_nav_text, #111) !important;
+    background-color: transparent !important;
+    font-family: inherit;
+}
+
+#page-wrapper nav.navbar.fixed-top .primary-navigation .nav-item a.nav-link:hover,
+#page-wrapper nav.navbar.fixed-top .primary-navigation .nav-item a.nav-link.active {
+    background-color: var(--aurora_nav_secondary) !important;
+    color: var(--aurora_nav_text_hover, #111) !important;
+    font-family: inherit;
+}
+
+#page-wrapper nav.navbar.fixed-top .primary-navigation .nav-item a.nav-link:active {
+    color: var(--aurora_nav_text_hover, #111) !important;
+    background-color: inherit !important;
+    font-family: inherit;
+}
