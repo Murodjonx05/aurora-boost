@@ -91,6 +91,61 @@ if ($ADMIN->fulltree) {
     // Must add the page after definiting all the settings!
     $settings->add($page);
 
+    // Navbar settings.
+    $page = new admin_settingpage('theme_aurora_navbar', get_string('navbarsettings', 'theme_aurora'));
+
+    // Navbar primary color.
+    $name = 'theme_aurora/aurora_nav_primary';
+    $title = get_string('auroranavprimary', 'theme_aurora');
+    $description = get_string('auroranavprimarydesc', 'theme_aurora');
+    $setting = new admin_setting_configcolourpicker($name, $title, $description, '#007bff');
+    $setting->set_updatedcallback('theme_reset_all_caches');
+    $page->add($setting);
+
+    // Navbar secondary color.
+    $name = 'theme_aurora/aurora_nav_secondary';
+    $title = get_string('auroranavsecondary', 'theme_aurora');
+    $description = get_string('auroranavsecondarydesc', 'theme_aurora');
+    $setting = new admin_setting_configcolourpicker($name, $title, $description, '#6c757d');
+    $setting->set_updatedcallback('theme_reset_all_caches');
+    $page->add($setting);
+
+    // Navbar text color.
+    $name = 'theme_aurora/aurora_nav_text';
+    $title = get_string('auroranavtext', 'theme_aurora');
+    $description = get_string('auroranavtextdesc', 'theme_aurora');
+    $setting = new admin_setting_configcolourpicker($name, $title, $description, '#ffffff');
+    $setting->set_updatedcallback('theme_reset_all_caches');
+    $page->add($setting);
+
+    // Navbar text hover color.
+    $name = 'theme_aurora/aurora_nav_text_hover';
+    $title = get_string('auroranavtexthover', 'theme_aurora');
+    $description = get_string('auroranavtexthoverdesc', 'theme_aurora');
+    $setting = new admin_setting_configcolourpicker($name, $title, $description, '#e9ecef');
+    $setting->set_updatedcallback('theme_reset_all_caches');
+    $page->add($setting);
+
+    // Navbar border radius.
+    $name = 'theme_aurora/aurora_nav_border_radius';
+    $title = get_string('auroranavborderradius', 'theme_aurora');
+    $description = get_string('auroranavborderradiusdesc', 'theme_aurora');
+    $default = '4px';
+    $choices = [
+        '0px' => '0px',
+        '4px' => '4px',
+        '8px' => '8px',
+        '12px' => '12px',
+        '16px' => '16px',
+        '24px' => '24px',
+        '32px' => '32px',
+    ];
+    $setting = new admin_setting_configselect($name, $title, $description, $default, $choices);
+    $setting->set_updatedcallback('theme_reset_all_caches');
+    $page->add($setting);
+
+    $settings->add($page);
+
     // Advanced settings.
     $page = new admin_settingpage('theme_aurora_advanced', get_string('advancedsettings', 'theme_aurora'));
 

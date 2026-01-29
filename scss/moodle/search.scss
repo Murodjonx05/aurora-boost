@@ -15,12 +15,12 @@
     width: 100%;
     @if $enable-rounded {
         .input-group input.form-control {
-            border-radius: 32px;
+            border-radius: var(--aurora_nav_border_radius,32px);
         }
     }
     .input-group input.form-control {
         width: 100%;
-        border-radius: 32px!important;
+        border-radius: var(--aurora_nav_border_radius,32px)!important;
     }
     .btn {
         // i want button always hidden in frontpage for better look.

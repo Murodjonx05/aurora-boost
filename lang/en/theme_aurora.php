@@ -58,3 +58,16 @@ $string['privacy:drawerindexclosed'] = 'The current preference for the index dra
 $string['privacy:drawerindexopen'] = 'The current preference for the index drawer is open.';
 $string['privacy:drawerblockclosed'] = 'The current preference for the block drawer is closed.';
 $string['privacy:drawerblockopen'] = 'The current preference for the block drawer is open.';
+
+// Navbar settings.
+$string['navbarsettings'] = 'Navbar settings';
+$string['auroranavprimary'] = 'Navbar primary color';
+$string['auroranavprimarydesc'] = 'Set the primary color for the navigation bar.';
+$string['auroranavsecondary'] = 'Navbar secondary color';
+$string['auroranavsecondarydesc'] = 'Set the secondary color for the navigation bar.';
+$string['auroranavtext'] = 'Navbar text color';
+$string['auroranavtextdesc'] = 'Set the text color for the navigation bar.';
+$string['auroranavtexthover'] = 'Navbar text hover color';
+$string['auroranavtexthoverdesc'] = 'Set the text hover color for the navigation bar.';
+$string['auroranavborderradius'] = 'Navbar border radius';
+$string['auroranavborderradiusdesc'] = 'Set the border radius for the navigation bar elements.';

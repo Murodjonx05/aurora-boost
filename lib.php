@@ -108,6 +108,22 @@ function theme_aurora_get_pre_scss($theme) {
         }, (array) $targets);
     }
 
+    // Add navbar variables.
+    $navprimary = !empty($theme->settings->aurora_nav_primary) ? $theme->settings->aurora_nav_primary : '#007bff';
+    $navsecondary = !empty($theme->settings->aurora_nav_secondary) ? $theme->settings->aurora_nav_secondary : '#6c757d';
+    $navtext = !empty($theme->settings->aurora_nav_text) ? $theme->settings->aurora_nav_text : '#ffffff';
+    $navtexthover = !empty($theme->settings->aurora_nav_text_hover) ? $theme->settings->aurora_nav_text_hover : '#e9ecef';
+    $navborderradius = !empty($theme->settings->aurora_nav_border_radius) ? $theme->settings->aurora_nav_border_radius : '4px';
+
+    $scss .= "/* Navbar variables */\n";
+    $scss .= ":root {\n";
+    $scss .= "  --aurora_nav_primary: " . $navprimary . ";\n";
+    $scss .= "  --aurora_nav_secondary: " . $navsecondary . ";\n";
+    $scss .= "  --aurora_nav_text: " . $navtext . ";\n";
+    $scss .= "  --aurora_nav_text_hover: " . $navtexthover . ";\n";
+    $scss .= "  --aurora_nav_border_radius: " . $navborderradius . ";\n";
+    $scss .= "}\n";
+
     // Add a new variable to indicate that we are running behat.
     if (defined('BEHAT_SITE_RUNNING')) {
         $scss .= "\$behatsite: true;\n";
