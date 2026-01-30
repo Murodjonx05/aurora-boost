@@ -70,3 +70,6 @@ $string['auroranavtexthover'] = 'Navigatsiya paneli matn hover rangi';
 $string['auroranavtexthoverdesc'] = 'Navigatsiya paneli uchun matnga sichqoncha kursorini olib borilganda rangini o\'rnating.';
 $string['auroranavborderradius'] = 'Navigatsiya paneli chegarasi radiusi';
 $string['auroranavborderradiusdesc'] = 'Navigatsiya paneli elementlari uchun chegarasi radiusini o\'rnating.';
+
+$string['auroranavbortextweight'] = 'Navigatsiya paneli matnining shrift qalinligi';
+$string['auroranavbortextweightdesc'] = 'Navigatsiya paneli matni uchun shrift qalinligini belgilang.';

@@ -71,3 +71,6 @@ $string['auroranavtexthover'] = 'Navbar text hover color';
 $string['auroranavtexthoverdesc'] = 'Set the text hover color for the navigation bar.';
 $string['auroranavborderradius'] = 'Navbar border radius';
 $string['auroranavborderradiusdesc'] = 'Set the border radius for the navigation bar elements.';
+
+$string['auroranavbortextweight'] = 'Navbar text weight';
+$string['auroranavbortextweightdesc'] = 'Set the font weight for the navigation bar text.';

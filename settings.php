@@ -127,6 +127,25 @@ if ($ADMIN->fulltree) {
     $page->add($setting);
 
     // Navbar border radius.
+    $name = 'theme_aurora/aurora_nav_text_weight';
+    $title = get_string('auroranavbortextweight', 'theme_aurora');
+    $description = get_string('auroranavbortextweightdesc', 'theme_aurora');
+    $default = '400';
+    $choices = [
+        '100' => '100',
+        '200' => '200',
+        '300' => '300',
+        '400' => '400',
+        '500' => '500',
+        '600' => '600',
+        '700' => '700',
+        '800' => '800',
+        '900' => '900',
+    ];
+    $setting = new admin_setting_configselect($name, $title, $description, $default, $choices);
+    $setting->set_updatedcallback('theme_reset_all_caches');
+    $page->add($setting);
+    // Navbar border radius.
     $name = 'theme_aurora/aurora_nav_border_radius';
     $title = get_string('auroranavborderradius', 'theme_aurora');
     $description = get_string('auroranavborderradiusdesc', 'theme_aurora');

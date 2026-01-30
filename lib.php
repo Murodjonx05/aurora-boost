@@ -114,6 +114,7 @@ function theme_aurora_get_pre_scss($theme) {
     $navtext = !empty($theme->settings->aurora_nav_text) ? $theme->settings->aurora_nav_text : '#ffffff';
     $navtexthover = !empty($theme->settings->aurora_nav_text_hover) ? $theme->settings->aurora_nav_text_hover : '#e9ecef';
     $navborderradius = !empty($theme->settings->aurora_nav_border_radius) ? $theme->settings->aurora_nav_border_radius : '4px';
+    $navtextweight = !empty($theme->settings->aurora_nav_text_weight) ? $theme->settings->aurora_nav_text_weight : 'normal';
 
     $scss .= "/* Navbar variables */\n";
     $scss .= ":root {\n";
@@ -122,6 +123,7 @@ function theme_aurora_get_pre_scss($theme) {
     $scss .= "  --aurora_nav_text: " . $navtext . ";\n";
     $scss .= "  --aurora_nav_text_hover: " . $navtexthover . ";\n";
     $scss .= "  --aurora_nav_border_radius: " . $navborderradius . ";\n";
+    $scss .= "  --aurora_nav_text_weight: " . $navtextweight . ";\n";
     $scss .= "}\n";
 
     // Add a new variable to indicate that we are running behat.
@@ -159,6 +161,22 @@ function theme_aurora_get_precompiled_css() {
  * @param array $options
  * @return bool
  */
+/**
+ * Override or extend methods of the core renderer and other core renderers.
+ *
+ * @param string $classname Name of the renderer to be adapted
+ * @return string Name of the rendering class to be used
+ */
+function theme_aurora_get_renderer($classname) {
+    // Override the myoverview block renderer
+    if ($classname === 'block_myoverview\output\renderer') {
+        return 'theme_aurora\output\block_myoverview_renderer';
+    }
+
+    // For all other renderers, use the parent theme's renderer
+    return null;
+}
+
 function theme_aurora_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, array $options = array()) {
     if ($context->contextlevel == CONTEXT_SYSTEM && ($filearea === 'logo' || $filearea === 'backgroundimage' ||
         $filearea === 'loginbackgroundimage')) {

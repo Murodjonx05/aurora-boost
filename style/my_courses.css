@@ -1,0 +1,9 @@
+#page-my-index{
+    div[role="search"][data-region="filter"]{
+        padding-top:20px;
+        padding-bottom:50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+}

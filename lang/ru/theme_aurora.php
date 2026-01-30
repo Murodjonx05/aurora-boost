@@ -70,3 +70,6 @@ $string['auroranavtexthover'] = 'Цвет текста при наведении
 $string['auroranavtexthoverdesc'] = 'Установить цвет текста при наведении для панели навигации.';
 $string['auroranavborderradius'] = 'Радиус границы панели навигации';
 $string['auroranavborderradiusdesc'] = 'Установить радиус границы для элементов панели навигации.';
+
+$string['auroranavbortextweight'] = 'Толщина шрифта текста панели навигации';
+$string['auroranavbortextweightdesc'] = 'Установить толщину шрифта для текста панели навигации.';
