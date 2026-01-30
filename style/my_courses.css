@@ -5,5 +5,42 @@
         display: flex;
         align-items: center;
         justify-content: center;
+        gap:20px;
+        
+    }
+
+    div[role="search"][data-region="filter"] input,
+    div[role="search"][data-region="filter"] button {
+        padding: 10px 15px;
+        border-radius:var(--aurora_nav_border_radius);
+        border:1px solid rgba(59, 59, 59, 0.25);
+    }
+    .page-header-headings{
+        display:none;
+    }
+    /* Style for the header action buttons inside #page-header */
+    #page-header .my-action-buttons .btn {
+        /* Example customization: adjust to fit your theme */
+        background-color: var(--bs-primary);
+        color: #fff;
+        border-radius: var(--aurora_nav_border_radius);
+        border: 1px solid var(--bs-primary);
+        padding: 10px 16px;
+        font-weight: 500;
+        margin: 4px 0;
+    }
+    #page-header .my-action-buttons .btn.btn-outline-primary {
+        background-color: #fff;
+        color: var(--bs-primary);
+        border: 1px solid var(--bs-primary);
+    }
+    #page-header .my-action-buttons .btn.btn-primary {
+        background-color: var(--bs-primary);
+        color: #fff;
+        border: 1px solid var(--bs-primary);
+    }
+    /* Add hover effect */
+    #page-header .my-action-buttons .btn:hover {
+        filter: brightness(0.96);
     }
 }

@@ -695,7 +695,7 @@ $divider-hover-color: $primary !default;
 .sitetopic {
     .section-item {
         margin-bottom: map-get($spacers, 4);
-        @include border-radius();
+        border:none;
     }
 }
 

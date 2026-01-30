@@ -74,3 +74,4 @@ $string['auroranavborderradiusdesc'] = 'Set the border radius for the navigation
 
 $string['auroranavbortextweight'] = 'Navbar text weight';
 $string['auroranavbortextweightdesc'] = 'Set the font weight for the navigation bar text.';
+$string['nocourses'] = 'No courses';

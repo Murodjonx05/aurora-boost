@@ -18,10 +18,10 @@ namespace theme_aurora\output;
 
 defined('MOODLE_INTERNAL') || die;
 
-// Простой рендерер для проверки переопределения шаблона
+// Custom renderer for the My Overview block.
 class block_myoverview_renderer extends \plugin_renderer_base {
-
-    // Этот класс будет использоваться для переопределения рендерера
-    // но мы не будем переопределять конкретные методы до тех пор, 
-    // пока не убедимся, что шаблон работает
+    // We rely on the parent (core) renderer to handle the main logic.
+    // This ensures that the JavaScript required to fetch courses is correctly initialized.
+    // Our custom 'templates/block_myoverview/view-cards.mustache' will automatically
+    // be used by the core logic when rendering the cards.
 }

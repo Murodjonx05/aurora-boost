@@ -73,3 +73,4 @@ $string['auroranavborderradiusdesc'] = 'Установить радиус гра
 
 $string['auroranavbortextweight'] = 'Толщина шрифта текста панели навигации';
 $string['auroranavbortextweightdesc'] = 'Установить толщину шрифта для текста панели навигации.';
+$string['nocourses'] = 'Курсов нет';

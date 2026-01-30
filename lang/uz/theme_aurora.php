@@ -73,3 +73,4 @@ $string['auroranavborderradiusdesc'] = 'Navigatsiya paneli elementlari uchun che
 
 $string['auroranavbortextweight'] = 'Navigatsiya paneli matnining shrift qalinligi';
 $string['auroranavbortextweightdesc'] = 'Navigatsiya paneli matni uchun shrift qalinligini belgilang.';
+$string['nocourses'] = 'Kurslar mavjud emas';
