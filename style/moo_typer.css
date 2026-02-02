@@ -1,0 +1,18 @@
+#page-mod-mootyper-view{
+    #texttoenter{
+        padding:20px!important;
+        background:rgb(238, 238, 238);
+        filter: blur(30px),brightness(0.95);
+        border:none;
+        box-shadow:none;
+        height: 100%;
+    }
+    #wrapStats{
+        padding:20px;
+        margin-bottom:30px;
+        height: 100%;
+    }
+    #keyboard h5 {
+        margin-bottom: 40px;
+    }
+}
