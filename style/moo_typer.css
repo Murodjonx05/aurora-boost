@@ -1,18 +1,248 @@
-#page-mod-mootyper-view{
-    #texttoenter{
-        padding:20px!important;
-        background:rgb(238, 238, 238);
-        filter: blur(30px),brightness(0.95);
-        border:none;
-        box-shadow:none;
-        height: 100%;
+#page-mod-mootyper-view #page-content {
+
+    h5 {
+        font-weight: 500;
+        color: #232323;
+        margin-bottom: 1rem;
     }
-    #wrapStats{
-        padding:20px;
-        margin-bottom:30px;
-        height: 100%;
+
+    #infoDiv {
+        background: #fff;
+        padding: 8px 12px;
+        border-radius: 4px;
+        margin-bottom: 8px;
+        font-size: 0.93rem;
+        color: #444;
+        border-left: 2px solid #d0d0d0;
     }
+    #infoDiv .reportlink {
+        margin-left: 6px;
+    }
+
+    #reportDiv {
+        margin-bottom: 12px;
+    }
+    #reportDiv .btn {
+        margin-right: 4px;
+        margin-bottom: 4px;
+        padding: 4px 8px;
+        font-weight: 500;
+        border: none;
+        background: #f4f4f4;
+    }
+    #reportDiv .btn:hover {
+        background: #eee;
+    }
+
+    #wrapStats {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        padding: 8px;
+        background: #fcfcfc;
+        border-radius: 4px;
+        box-shadow: none;
+        margin-bottom: 10px;
+    }
+
+    #statsLDiv,
+    #statsMDiv,
+    #statsRDiv {
+        flex: 1;
+        min-width: 70px;
+        padding: 7px 4px;
+        background: #f7f7f7;
+        border-radius: 3px;
+        text-align: center;
+    }
+
+    .statsText {
+        font-size: 0.74rem;
+        font-weight: 500;
+        color: #555;
+        text-transform: uppercase;
+        margin-bottom: 2px;
+    }
+
+    #timer,
+    #progressValue,
+    #mistakesValue,
+    #precisionValue,
+    #speedValue,
+    #wpmValue {
+        font-size: 1rem;
+        font-weight: 600;
+        color: #232323;
+    }
+
+    #jsDetailMistake {
+        display: inline-block;
+        padding: 2px 7px;
+        background: #faf8f3;
+        border-radius: 2px;
+        color: #a6812c;
+        font-size: 0.79rem;
+        margin-bottom: 7px;
+    }
+
+    #texttoenter {
+        position: relative;
+        padding: 18px 16px !important;
+        background: linear-gradient(135deg, #fcfcfd 78%, #f2f0f8 100%) !important;
+        border: 1.7px solid #dad7f6 !important;
+        border-radius: 8px !important;
+        box-shadow: 0 2px 8px rgba(67,56,202,.07), 0 1.5px 5px rgba(92,80,214,0.045) !important;
+        font-size: 1.14rem !important;
+        line-height: 2;
+        margin-bottom: 18px;
+        color: #232323;
+        transition: border 0.18s ease, box-shadow 0.22s cubic-bezier(0.4,0,0.2,1);
+        min-height: 3.2em;
+        white-space: pre-wrap;
+    }
+    /* #texttoenter:focus-within,
+    #texttoenter:hover {
+        border: 2px solid #43b369 !important;
+        box-shadow: 0 3px 12px 0 rgba(67,179,105,0.16) !important;
+    } */
+    #texttoenter .current-letter {
+        animation: blink-cursor 0.93s steps(1) infinite;
+        font-weight: 700;
+        font-size: 1.18em;
+        outline-offset: 0px;
+        z-index: 2;
+        position: relative;
+    }
+    @keyframes blink-cursor {
+        0%,100% { opacity: 1; }
+        50% { opacity: 0.3; }
+    }
+    #texttoenter .correct-letter {
+        font-weight: 600;
+        border-radius: 3px;
+        animation: pop-correct 190ms cubic-bezier(0.42,0,0.38,1.24);
+        font-size: 1.13em;
+        z-index: 1;
+        position: relative;
+    }
+    @keyframes pop-correct {
+        0% { transform: scale(0.89); }
+        70% { transform: scale(1.09); }
+        100% { transform: scale(1); }
+    }
+    #texttoenter .incorrect-letter {
+        font-weight: 700;
+        border-radius: 4px;
+        text-decoration: line-through;
+        animation: shake-wrong 222ms cubic-bezier(0.16,1,0.3,1);
+        font-size: 1.15em;
+        z-index: 1;
+        position: relative;
+    }
+    @keyframes shake-wrong {
+        0%{ transform: translateX(0);}
+        25%{ transform: translateX(-2px);}
+        50%{ transform: translateX(3px);}
+        75%{ transform: translateX(-1.5px);}
+        100%{ transform: translateX(0);}
+    }
+    #texttoenter .neutral-letter {
+        font-weight: 400;
+        font-size: 1.09em;
+        z-index: 0;
+        position: relative;
+    }
+    #texttoenter span {
+        margin: 0 0.6px;
+        padding: 0 1.7px;
+        font-family: 'JetBrains Mono', 'Fira Mono', 'Menlo', 'Consolas', monospace;
+        font-size: 1.13em;
+        display: inline-block;
+        vertical-align: bottom;
+        letter-spacing: -0.2em !important;
+        line-height: 1.55;
+        min-width: 1ch;
+        border-radius: 2.5px;
+        transition: 
+            background 170ms, 
+            color 170ms, 
+            box-shadow 170ms, 
+            outline 120ms, 
+            transform 170ms;
+        box-sizing: border-box;
+        text-align: center;
+        user-select: none;
+    }
+
+    .txtGreen {
+        color: #219150;
+        font-weight: 500;
+    }
+    .txtBlue {
+        color: #3576bd;
+        font-weight: 500;
+        background: #e1ecf7;
+        padding: 0 2px;
+        border-radius: 1px;
+    }
+    .txtBlack {
+        color: #222;
+        font-weight: 400;
+    }
+
+    #tb1 {
+        position: absolute;
+        left: -9999px;
+    }
+
     #keyboard h5 {
-        margin-bottom: 40px;
+        margin-top: 0;
+    }
+
+    #innerKeyboard {
+        display: none !important;
+    }
+
+    #form1 {
+        display: block;
+    }
+
+    a {
+        color: #2ba06b;
+        text-decoration: none;
+        font-weight: 500;
+    }
+    a:hover {
+        color: #157347;
+        text-decoration: underline;
+    }
+
+    @media (max-width: 768px) {
+        #wrapStats {
+            flex-direction: column;
+            padding: 5px;
+        }
+
+        #statsLDiv,
+        #statsMDiv,
+        #statsRDiv {
+            min-width: 100%;
+        }
+
+        #texttoenter {
+            padding: 10px 3.5px !important;
+            font-size: 1.02rem !important;
+            min-height: 2.2em;
+        }
+
+        #texttoenter span {
+            font-size: 1.04em;
+            padding: 0 1.1px;
+        }
+
+        #infoDiv {
+            font-size: 0.8rem;
+            padding: 6px 6px;
+        }
     }
 }

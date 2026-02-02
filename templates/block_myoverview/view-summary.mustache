@@ -1,0 +1,254 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template block_myoverview/view-summary
+
+    This template renders the list view for the myoverview block.
+
+    Example context (json):
+    {
+        "courses": [
+            {
+                "name": "Assignment due 1",
+                "viewurl": "https://moodlesite/course/view.php?id=2",
+                "courseimage": "https://moodlesite/pluginfile/123/course/overviewfiles/123.jpg",
+                "fullname": "course 3",
+                "summary": "This course is about assignments",
+                "hasprogress": true,
+                "progress": 10,
+                "coursecategory": "Category 1",
+                "visible": true
+            }
+        ]
+    }
+}}
+<div class="course-overview-grid" role="list">
+{{#courses}}
+    <article class="course-card list-group-item border-0 shadow-sm rounded-3 p-3 mb-3" 
+             role="listitem"
+             data-region="course-content"
+             data-course-id="{{{id}}}"
+             itemscope itemtype="http://schema.org/Course">
+        
+        <div class="course-header d-flex align-items-start gap-3">
+            <!-- Course Image with fixed aspect ratio -->
+            <div class="course-image-container flex-shrink-0">
+                <a href="{{viewurl}}" class="course-image-link d-block" tabindex="-1">
+                    <div class="course-thumbnail rounded-2" 
+                         style='background-image: url("{{{courseimage}}}");'
+                         itemprop="image">
+                        <span class="visually-hidden">{{fullname}}</span>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Course Content -->
+            <div class="course-content flex-grow-1">
+                <!-- Course Title and Actions -->
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                    <div class="flex-grow-1">
+                        <h3 class="course-title h5 mb-1">
+                            <a href="{{viewurl}}" class="course-link text-decoration-none fw-semibold" 
+                               itemprop="name">
+                                {{> core_course/favouriteicon }}
+                                {{{fullname}}}
+                            </a>
+                        </h3>
+                        
+                        {{#showshortname}}
+                        <div class="course-code text-muted small mb-1" 
+                             aria-label="{{#str}}aria:courseshortname, core_course{{/str}}">
+                            <code class="text-secondary">{{{shortname}}}</code>
+                        </div>
+                        {{/showshortname}}
+                    </div>
+                    
+                    <!-- Action Menu -->
+                    <div class="course-actions flex-shrink-0 ms-2">
+                        {{> block_myoverview/course-action-menu }}
+                    </div>
+                </div>
+
+                <!-- Category and Status -->
+                <div class="course-meta d-flex flex-wrap gap-2 mb-2">
+                    {{#showcoursecategory}}
+                    {{#coursecategory}}
+                    <span class="category-badge badge bg-light text-dark small py-1 px-2" 
+                          aria-label="{{#str}}aria:coursecategory, core_course{{/str}}"
+                          itemprop="provider">
+                        {{{coursecategory}}}
+                    </span>
+                    {{/coursecategory}}
+                    {{/showcoursecategory}}
+                    
+                    {{^visible}}
+                    <span class="status-badge badge bg-warning text-dark small py-1 px-2" 
+                          title="{{#str}} hiddenfromstudents {{/str}}">
+                        <i class="fa fa-eye-slash me-1" aria-hidden="true"></i>
+                        {{#str}} hiddenfromstudents {{/str}}
+                    </span>
+                    {{/visible}}
+                </div>
+
+                <!-- Course Summary -->
+                <div class="course-summary mb-3" 
+                     aria-label="{{#str}}aria:coursesummary, block_myoverview{{/str}}"
+                     itemprop="description">
+                    <p class="summary-text text-muted small mb-0 line-clamp-2">
+                        {{{summary}}}
+                    </p>
+                </div>
+
+                <!-- Progress Bar -->
+                {{#hasprogress}}
+                <div class="course-progress mt-2 pt-2 border-top">
+                    <div class="d-flex justify-content-between align-items-center mb-1">
+                        <span class="progress-label text-muted small">
+                            {{#str}} progress {{/str}}
+                        </span>
+                        <span class="progress-percentage text-muted small fw-medium">
+                            {{progress}}%
+                        </span>
+                    </div>
+                    <div class="progress" style="height: 6px;">
+                        <div class="progress-bar bg-primary" 
+                             role="progressbar" 
+                             style="width: {{progress}}%" 
+                             aria-valuenow="{{progress}}" 
+                             aria-valuemin="0" 
+                             aria-valuemax="100">
+                        </div>
+                    </div>
+                </div>
+                {{/hasprogress}}
+            </div>
+        </div>
+    </article>
+{{/courses}}
+</div>
+
+<style>
+.course-overview-grid {
+    margin: 0;
+}
+
+.course-card {
+    transition: all 0.2s ease-in-out;
+    background: white;
+    border: 1px solid rgba(0,0,0,0.1);
+}
+
+.course-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important;
+    border-color: rgba(0,0,0,0.15);
+}
+
+/* Course thumbnail with fixed aspect ratio and max height */
+.course-thumbnail {
+    /* Fixed aspect ratio - you can change these values as needed */
+    aspect-ratio: 4 / 3; /* Width to height ratio */
+    
+    /* Maximum height constraint */
+    max-height: 120px; /* Adjust this value as needed */
+    
+    /* Minimum dimensions to maintain consistency */
+    min-height: 80px;
+    min-width: 106.66px; /* Maintains 4:3 ratio when height is 80px */
+    
+    /* Background properties */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    object-fit: cover;
+    border: 1px solid #e9ecef;
+    
+    /* Ensure proper sizing */
+    width: auto; /* Width will adjust based on aspect ratio */
+    height: auto; /* Height will adjust based on aspect ratio */
+}
+
+.course-link {
+    color: #2c3e50;
+}
+
+.course-link:hover {
+    color: #3498db;
+}
+
+.course-title {
+    line-height: 1.4;
+}
+
+.summary-text {
+    line-height: 1.5;
+    max-height: 3em;
+    overflow: hidden;
+    position: relative;
+}
+
+.line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.category-badge {
+    font-weight: 500;
+}
+
+.status-badge {
+    font-weight: 500;
+}
+
+.progress-label {
+    font-weight: 500;
+}
+
+.course-actions {
+    opacity: 0.7;
+    transition: opacity 0.2s ease;
+}
+
+.course-card:hover .course-actions {
+    opacity: 1;
+}
+
+@media (max-width: 768px) {
+    .course-header {
+        flex-direction: column;
+    }
+    
+    .course-thumbnail {
+        width: 100% !important;
+        max-width: 300px; /* Limit width on mobile */
+        max-height: 225px; /* Maintain 4:3 ratio */
+    }
+    
+    .course-actions {
+        opacity: 1;
+        margin-top: 0.5rem;
+    }
+}
+
+/* Glassmorphism effect for premium look */
+.course-card {
+    backdrop-filter: blur(10px);
+    background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.7) 100%);
+}
+</style>
