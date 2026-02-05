@@ -22,6 +22,12 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+if ($hassiteconfig) {
+    $title = get_string('frontpageslidermanage', 'theme_aurora');
+    $url = new moodle_url('/theme/aurora/slider.php');
+    $ADMIN->add('themes', new admin_externalpage('theme_aurora_slider', $title, $url));
+}
+
 if ($ADMIN->fulltree) {
     $settings = new theme_boost_admin_settingspage_tabs('themesettingaurora', get_string('configtitle', 'theme_aurora'));
     $page = new admin_settingpage('theme_aurora_general', get_string('generalsettings', 'theme_aurora'));
@@ -145,6 +151,20 @@ if ($ADMIN->fulltree) {
     $setting = new admin_setting_configselect($name, $title, $description, $default, $choices);
     $setting->set_updatedcallback('theme_reset_all_caches');
     $page->add($setting);
+
+    // Navbar links position.
+    $name = 'theme_aurora/aurora_nav_links_position';
+    $title = get_string('auroranavlinksposition', 'theme_aurora');
+    $description = get_string('auroranavlinkspositiondesc', 'theme_aurora');
+    $default = 'left';
+    $choices = [
+        'left' => get_string('auroranavlinkspositionleft', 'theme_aurora'),
+        'center' => get_string('auroranavlinkspositioncenter', 'theme_aurora'),
+        'right' => get_string('auroranavlinkspositionright', 'theme_aurora'),
+    ];
+    $setting = new admin_setting_configselect($name, $title, $description, $default, $choices);
+    $setting->set_updatedcallback('theme_reset_all_caches');
+    $page->add($setting);
     // Navbar border radius.
     $name = 'theme_aurora/aurora_nav_border_radius';
     $title = get_string('auroranavborderradius', 'theme_aurora');
@@ -161,6 +181,24 @@ if ($ADMIN->fulltree) {
     ];
     $setting = new admin_setting_configselect($name, $title, $description, $default, $choices);
     $setting->set_updatedcallback('theme_reset_all_caches');
+    $page->add($setting);
+
+    $settings->add($page);
+
+    // Front page slider settings.
+    $page = new admin_settingpage('theme_aurora_frontpage', get_string('frontpagesettings', 'theme_aurora'));
+
+    $name = 'theme_aurora/frontpage_slider_enabled';
+    $title = get_string('frontpagesliderenabled', 'theme_aurora');
+    $description = get_string('frontpagesliderenabled_desc', 'theme_aurora');
+    $setting = new admin_setting_configcheckbox($name, $title, $description, 0);
+    $setting->set_updatedcallback('theme_reset_all_caches');
+    $page->add($setting);
+
+    $managelink = html_writer::link(new moodle_url('/theme/aurora/slider.php'),
+        get_string('frontpageslidermanagelink', 'theme_aurora'));
+    $setting = new admin_setting_heading('theme_aurora/frontpage_slider_manage', '',
+        get_string('frontpageslidermanagedesc', 'theme_aurora', $managelink));
     $page->add($setting);
 
     $settings->add($page);

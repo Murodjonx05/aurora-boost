@@ -7,68 +7,53 @@
     - Optimized for responsive layouts
 }}
 
-<!-- Тестовый элемент для проверки использования шаблона -->
-<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-xl-4 g-4" data-region="card-deck" role="list">
+<div class="aurora-myoverview-grid" data-region="card-deck" role="list">
     {{#courses}}
-    <div class="col" role="listitem" data-region="course-content" data-course-id="{{id}}">
-        <article class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden position-relative custom-course-card" tabindex="0" 
+    <div class="aurora-myoverview-item" role="listitem" data-region="course-content" data-course-id="{{id}}">
+        <article class="aurora-myoverview-card" tabindex="0"
                  aria-labelledby="course-title-{{id}}" aria-describedby="course-info-{{id}}">
-            <!-- Background Image with Overlay -->
-            <div class="position-absolute top-0 start-0 w-100 h-100">
-                <img src="{{courseimage}}" 
-                     alt="{{#str}}courseimage, core{{/str}}" 
-                     class="w-100 h-100 object-fit-cover" 
+            <div class="aurora-myoverview-media">
+                {{#courseimage}}
+                <img src="{{courseimage}}"
+                     alt="{{#str}}courseimage, core{{/str}}"
                      loading="lazy"
                      decoding="async">
-                <div class="card-mask"></div>
+                {{/courseimage}}
             </div>
-            
-            <!-- Card Content -->
-            <div class="card-body d-flex flex-column justify-content-end p-3 position-relative" style="z-index: 2; height: 100%;">
-                
-                <!-- Course Title -->
-                <a href="{{viewurl}}" 
-                   class="stretched-link text-white text-decoration-none fw-bold fs-6 lh-base"
-                   style="position: absolute; text-align: center; width: 90%; z-index: 3;">
-                    {{{fullname}}}
-                </a>
-                
-                <!-- Progress/Info Section -->
-                <div class="mt-auto w-100" id="course-info-{{id}}">
-                    {{#hasprogress}}
-                    <div class="progress progress-sm bg-white/20 rounded-pill mb-2" style="height: 6px;">
-                        <div class="progress-bar bg-white rounded-pill" 
-                             role="progressbar" 
-                             style="width: {{progress}}%;"
-                             aria-valuenow="{{progress}}" 
-                             aria-valuemin="0" 
-                             aria-valuemax="100"
-                             aria-label="{{progress}}% complete">
-                        </div>
-                    </div>
-                    <small class="text-white-50 fw-medium">{{progress}}%</small>
-                    {{/hasprogress}}
-                    
-                    {{^hasprogress}}
-                    {{#showshortname}}
-                    <small class="text-white-50">{{shortname}}</small>
-                    {{/showshortname}}
-                    {{/hasprogress}}
+            <div class="aurora-myoverview-overlay"></div>
+
+            <div class="aurora-myoverview-info" id="course-info-{{id}}">
+                <h3 class="aurora-myoverview-title" id="course-title-{{id}}">
+                    <a href="{{viewurl}}" class="stretched-link aurora-myoverview-link">
+                        {{{fullname}}}
+                    </a>
+                </h3>
+
+                {{#hasprogress}}
+                <div class="aurora-myoverview-progress" role="progressbar"
+                     aria-valuenow="{{progress}}" aria-valuemin="0" aria-valuemax="100"
+                     aria-label="{{progress}}% complete">
+                    <div class="aurora-myoverview-progress-bar" style="width: {{progress}}%;"></div>
                 </div>
-                
-                <!-- Favorite Indicator -->
-                {{#isfavourite}}
-                <div class="position-absolute top-0 end-0 m-2">
-                    <div class="bg-warning bg-opacity-25 rounded-circle p-2" 
-                         aria-label="{{#str}}markedasfavorite, core{{/str}}" 
-                         role="status">
-                        <svg class="bi text-warning" width="16" height="16" fill="currentColor">
-                            <use xlink:href="#star-fill"/>
-                        </svg>
-                    </div>
-                </div>
-                {{/isfavourite}}
+                <small class="aurora-myoverview-meta">{{progress}}%</small>
+                {{/hasprogress}}
+
+                {{^hasprogress}}
+                {{#showshortname}}
+                <small class="aurora-myoverview-meta">{{shortname}}</small>
+                {{/showshortname}}
+                {{/hasprogress}}
             </div>
+
+            {{#isfavourite}}
+            <div class="aurora-myoverview-fav"
+                 aria-label="{{#str}}markedasfavorite, core{{/str}}"
+                 role="status">
+                <svg class="bi" width="16" height="16" fill="currentColor">
+                    <use xlink:href="#star-fill"/>
+                </svg>
+            </div>
+            {{/isfavourite}}
         </article>
     </div>
     {{/courses}}
@@ -98,126 +83,3 @@
         <path d="M8.5 2.687c.654-.689 1.782-.886 3.112-.752 1.234.124 2.503.523 3.388.893v9.923c-.918-.35-2.107-.692-3.287-.81-1.094-.111-2.278-.039-3.213.492V2.687zM8 1.783C7.015.936 5.587.81 4.287.94c-1.514.153-3.042.672-3.994 1.105A.5.5 0 0 0 0 2.5v11a.5.5 0 0 0 .707.455c.882-.4 2.303-.881 3.68-1.02 1.409-.142 2.59.087 3.223.877a.5.5 0 0 0 .78 0c.633-.79 1.814-1.019 3.222-.877 1.378.139 2.8.62 3.681 1.02A.5.5 0 0 0 16 13.5v-11a.5.5 0 0 0-.293-.455c-.952-.433-2.48-.952-3.994-1.105C10.413.809 8.985.936 8 1.783z"/>
     </symbol>
 </svg>
-
-<style>
-/* Modern Card Styling */
-.custom-course-card {
-    aspect-ratio: 16/10;
-    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
-                box-shadow 0.3s ease,
-                border-color 0.3s ease;
-    will-change: transform;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-}
-
-/* Interactive States */
-.custom-course-card:hover,
-.custom-course-card:focus-within {
-    transform: translateY(-4px) scale(1.02);
-
-    border-color: rgba(var(--bs-primary-rgb), 0.1) !important;
-}
-
-.custom-course-card:focus-within {
-    outline: 2px solid rgba(var(--bs-primary-rgb), 0.5);
-    outline-offset: 2px;
-}
-
-/* Image Transitions */
-.custom-course-card .object-fit-cover {
-    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-    transform-origin: center center;
-}
-
-.custom-course-card:hover .object-fit-cover {
-    transform: scale(1.05);
-}
-
-/* Progress Bar Enhancements */
-.progress-sm {
-    height: 6px;
-}
-
-.progress-bar {
-    transition: width 0.3s ease;
-    box-shadow: 0 2px 4px rgba(255, 255, 255, 0.2);
-}
-
-/* Text Styling */
-.card-mask {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(to top, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.25) 35%, transparent 100%);
-    pointer-events: none;
-    z-index: 1;
-}
-
-.card-title a {
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    hyphens: auto;
-}
-
-/* Accessibility Focus Management */
-.custom-course-card:not(:focus-within):hover a {
-    text-decoration: underline;
-}
-
-/* Responsive Adjustments */
-@media (max-width: 576px) {
-    .custom-course-card {
-        aspect-ratio: 16/12;
-    }
-    
-    .card-title a {
-        -webkit-line-clamp: 1;
-        font-size: 0.9rem;
-    }
-}
-
-@media (min-width: 1200px) {
-    .custom-course-card {
-        aspect-ratio: 16/10;
-    }
-}
-
-/* Reduced Motion Support */
-@media (prefers-reduced-motion: reduce) {
-    .custom-course-card,
-    .custom-course-card .object-fit-cover,
-    .progress-bar {
-        transition: none;
-    }
-    
-    .custom-course-card:hover,
-    .custom-course-card:focus-within {
-        transform: none;
-    }
-}
-
-/* High Contrast Mode Support */
-@media (prefers-contrast: high) {
-    .custom-course-card {
-        border: 2px solid CanvasText;
-    }
-    
-    .card-title a {
-        color: CanvasText !important;
-        text-shadow: 1px 1px 2px Canvas;
-    }
-}
-
-/* Custom Properties for Theming */
-:root {
-    --course-card-bg-start: #667eea;
-    --course-card-bg-end: #764ba2;
-    --course-card-hover-scale: 1.02;
-    --course-card-transition-duration: 0.3s;
-}
-</style>

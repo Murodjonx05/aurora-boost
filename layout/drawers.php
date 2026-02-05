@@ -27,6 +27,8 @@ defined('MOODLE_INTERNAL') || die();
 require_once($CFG->libdir . '/behat/lib.php');
 require_once($CFG->dirroot . '/course/lib.php');
 
+global $DB;
+
 // Add block button in editing mode.
 $addblockbutton = $OUTPUT->addblockbutton();
 
@@ -82,6 +84,97 @@ $regionmainsettingsmenu = $buildregionmainsettings ? $OUTPUT->region_main_settin
 $header = $PAGE->activityheader;
 $headercontent = $header->export_for_template($renderer);
 
+$frontpageslider = null;
+$isfrontpage = ($PAGE->pagelayout === 'frontpage' || $PAGE->pagetype === 'site-index' || $PAGE->pagetype === 'course-search');
+if ($isfrontpage) {
+    $theme = theme_config::load('aurora');
+    $enabled = !empty($theme->settings->frontpage_slider_enabled);
+    if ($enabled) {
+        $records = $DB->get_records('theme_aurora_slider', ['enabled' => 1], 'sortorder ASC, id ASC');
+        if (!empty($records)) {
+            $context = context_system::instance();
+            $fs = get_file_storage();
+            $items = [];
+
+            foreach ($records as $record) {
+                $imageurl = null;
+                $files = $fs->get_area_files(
+                    $context->id,
+                    'theme_aurora',
+                    'frontpage_slider',
+                    $record->id,
+                    'itemid, filepath, filename',
+                    false
+                );
+                if (!empty($files)) {
+                    $file = reset($files);
+                    $imageurl = moodle_url::make_pluginfile_url(
+                        $context->id,
+                        'theme_aurora',
+                        'frontpage_slider',
+                        $record->id,
+                        '/',
+                        $file->get_filename()
+                    )->out(false);
+                }
+
+                $title = clean_param((string)($record->title ?? ''), PARAM_TEXT);
+                $description = clean_param((string)($record->description ?? ''), PARAM_TEXT);
+                $imagealt = clean_param((string)($record->imagealt ?? ''), PARAM_TEXT);
+                $buttontext = clean_param((string)($record->buttontext ?? ''), PARAM_TEXT);
+                $buttonurl = clean_param((string)($record->buttonurl ?? ''), PARAM_URL);
+                if ($buttonurl === '') {
+                    $buttonurl = clean_param((string)($record->buttonurl ?? ''), PARAM_LOCALURL);
+                }
+
+                if (empty($title) && empty($description) && empty($imageurl) && empty($buttonurl)) {
+                    continue;
+                }
+
+                if (empty($imagealt)) {
+                    $imagealt = $title ?: get_string('frontpagesliderimage', 'theme_aurora');
+                }
+
+                if (!empty($buttonurl) && empty($buttontext)) {
+                    $buttontext = get_string('frontpagesliderbuttondefault', 'theme_aurora');
+                }
+
+                $items[] = [
+                    'image' => $imageurl ?: null,
+                    'imagealt' => $imagealt,
+                    'title' => $title,
+                    'description' => $description,
+                    'buttontext' => $buttontext,
+                    'buttonurl' => $buttonurl,
+                ];
+            }
+
+            if (!empty($items)) {
+                $indicators = [];
+                foreach ($items as $index => &$item) {
+                    $item['active'] = ($index === 0);
+                    $indicators[] = [
+                        'index' => $index,
+                        'active' => ($index === 0),
+                        'label' => $item['title'] ?: get_string('frontpagesliderindicator', 'theme_aurora', $index + 1),
+                    ];
+                }
+                unset($item);
+
+                $frontpageslider = [
+                    'id' => 'aurora-front-slider',
+                    'label' => get_string('frontpagesliderregion', 'theme_aurora'),
+                    'items' => $items,
+                    'indicators' => $indicators,
+                    'showcontrols' => count($items) > 1,
+                    'showindicators' => count($items) > 1,
+                    'interval' => 8000,
+                ];
+            }
+        }
+    }
+}
+
 $templatecontext = [
     'sitename' => format_string($SITE->shortname, true, ['context' => context_course::instance(SITEID), "escape" => false]),
     'output' => $OUTPUT,
@@ -101,7 +194,8 @@ $templatecontext = [
     'hasregionmainsettingsmenu' => !empty($regionmainsettingsmenu),
     'overflow' => $overflow,
     'headercontent' => $headercontent,
-    'addblockbutton' => $addblockbutton
+    'addblockbutton' => $addblockbutton,
+    'frontpageslider' => $frontpageslider
 ];
 
-echo $OUTPUT->render_from_template('theme_boost/drawers', $templatecontext);
+echo $OUTPUT->render_from_template('theme_aurora/drawers', $templatecontext);

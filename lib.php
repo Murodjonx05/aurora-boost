@@ -115,6 +115,13 @@ function theme_aurora_get_pre_scss($theme) {
     $navtexthover = !empty($theme->settings->aurora_nav_text_hover) ? $theme->settings->aurora_nav_text_hover : '#e9ecef';
     $navborderradius = !empty($theme->settings->aurora_nav_border_radius) ? $theme->settings->aurora_nav_border_radius : '4px';
     $navtextweight = !empty($theme->settings->aurora_nav_text_weight) ? $theme->settings->aurora_nav_text_weight : 'normal';
+    $navlinksposition = !empty($theme->settings->aurora_nav_links_position) ? $theme->settings->aurora_nav_links_position : 'left';
+    $navlinksalign = 'flex-start';
+    if ($navlinksposition === 'center') {
+        $navlinksalign = 'center';
+    } else if ($navlinksposition === 'right') {
+        $navlinksalign = 'flex-end';
+    }
 
     $scss .= "/* Navbar variables */\n";
     $scss .= ":root {\n";
@@ -124,6 +131,7 @@ function theme_aurora_get_pre_scss($theme) {
     $scss .= "  --aurora_nav_text_hover: " . $navtexthover . ";\n";
     $scss .= "  --aurora_nav_border_radius: " . $navborderradius . ";\n";
     $scss .= "  --aurora_nav_text_weight: " . $navtextweight . ";\n";
+    $scss .= "  --aurora_nav_links_align: " . $navlinksalign . ";\n";
     $scss .= "}\n";
 
     // Add a new variable to indicate that we are running behat.
@@ -178,15 +186,38 @@ function theme_aurora_get_renderer($classname) {
 }
 
 function theme_aurora_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, array $options = array()) {
-    if ($context->contextlevel == CONTEXT_SYSTEM && ($filearea === 'logo' || $filearea === 'backgroundimage' ||
-        $filearea === 'loginbackgroundimage')) {
+    if ($context->contextlevel != CONTEXT_SYSTEM) {
+        send_file_not_found();
+    }
+
+    if ($filearea === 'frontpage_slider') {
+        $itemid = (int)array_shift($args);
+        $filename = array_pop($args);
+        $filepath = $args ? '/' . implode('/', $args) . '/' : '/';
+
+        $fs = get_file_storage();
+        $file = $fs->get_file($context->id, 'theme_aurora', 'frontpage_slider', $itemid, $filepath, $filename);
+        if (!$file) {
+            send_file_not_found();
+        }
+
+        if (!array_key_exists('cacheability', $options)) {
+            $options['cacheability'] = 'public';
+        }
+
+        send_stored_file($file, 60 * 60 * 24 * 60, 0, $forcedownload, $options);
+        return true;
+    }
+
+    if ($filearea === 'logo' || $filearea === 'backgroundimage' || $filearea === 'loginbackgroundimage' ||
+        $filearea === 'frontpage_slider_image') {
         $theme = theme_config::load('aurora');
         // By default, theme files must be cache-able by both browsers and proxies.
         if (!array_key_exists('cacheability', $options)) {
             $options['cacheability'] = 'public';
         }
         return $theme->setting_file_serve($filearea, $args, $forcedownload, $options);
-    } else {
-        send_file_not_found();
     }
+
+    send_file_not_found();
 }

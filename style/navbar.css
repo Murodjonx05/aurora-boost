@@ -1,36 +1,121 @@
-.bg-body {
-    background: var(--aurora_nav_primary, white) !important;
-    /* Optimized UI font stack for best readability in Russian and English */
+#page-wrapper nav.navbar.fixed-top.bg-body,
+#PRIMARY-NAVBAR.bg-body {
+    background-color: var(--aurora_nav_primary, #007bff) !important;
+    border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+    backdrop-filter: blur(10px);
     font-family:
-        "Noto Sans",                 /* Excellent for Latin and Cyrillic */
-        "PT Sans",                   /* High quality Cyrillic/Latin */
-        "Segoe UI",                  /* Great modern UI font, Latin+minor Cyrillic */
-        "Roboto",                    /* Good fallback, well-known */
-        "Tahoma",                    /* Well-hinted fallback */
-        "Arial",                     /* Generic UI fallback */
-        "Liberation Sans",           /* Linux Arial-compatible */
-        "Arial Unicode MS",          /* Wide Unicode support */
+        "Noto Sans",
+        "PT Sans",
+        "Segoe UI",
+        "Roboto",
+        "Tahoma",
+        "Arial",
+        "Liberation Sans",
+        "Arial Unicode MS",
         sans-serif;
-    font-size: 1.1rem;
-    font-weight:var(--aurora_nav_text_weight,normal);
-    line-height: 1.5;
+    font-size: 1.02rem;
+    font-weight: var(--aurora_nav_text_weight, 500);
+    line-height: 1.4;
 }
 
-#page-wrapper nav.navbar.fixed-top .primary-navigation .nav-item a.nav-link {
-    color: var(--aurora_nav_text, #111) !important;
+#page-wrapper nav.navbar.fixed-top .navbar-brand,
+#PRIMARY-NAVBAR .navbar-brand {
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    color: var(--aurora_nav_text, #fff) !important;
+}
+
+#page-wrapper nav.navbar.fixed-top .primary-navigation .nav-item a.nav-link,
+#PRIMARY-NAVBAR .primary-navigation .nav-item a.nav-link {
+    color: var(--aurora_nav_text, #fff) !important;
     background-color: transparent !important;
+    border-radius: var(--aurora_nav_border_radius, 10px);
+    padding: 0.4rem 0.9rem;
+    margin: 0 0.15rem;
     font-family: inherit;
+    transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+}
+
+#page-wrapper nav.navbar.fixed-top .primary-navigation,
+#page-wrapper nav.navbar.fixed-top .primary-navigation .moremenu,
+#page-wrapper nav.navbar.fixed-top .primary-navigation .moremenu .navbar-nav,
+#PRIMARY-NAVBAR .primary-navigation,
+#PRIMARY-NAVBAR .primary-navigation .moremenu,
+#PRIMARY-NAVBAR .primary-navigation .moremenu .navbar-nav {
+    height: 100%;
+}
+
+#page-wrapper nav.navbar.fixed-top .aurora-nav-links,
+#PRIMARY-NAVBAR .aurora-nav-links {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex: 1 1 auto;
+    justify-content: var(--aurora_nav_links_align, flex-start);
+    min-width: 0;
+}
+
+#page-wrapper nav.navbar.fixed-top .aurora-nav-links .primary-navigation,
+#PRIMARY-NAVBAR .aurora-nav-links .primary-navigation {
+    min-width: 0;
+}
+
+#page-wrapper nav.navbar.fixed-top .primary-navigation .nav-item,
+#PRIMARY-NAVBAR .primary-navigation .nav-item {
+    height: 60px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#page-wrapper nav.navbar.fixed-top .primary-navigation .nav-item a.nav-link.active,
+#page-wrapper nav.navbar.fixed-top .primary-navigation .nav-item a.nav-link:hover,
+#PRIMARY-NAVBAR .primary-navigation .nav-item a.nav-link.active,
+#PRIMARY-NAVBAR .primary-navigation .nav-item a.nav-link:hover {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    height: fit-content;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 #page-wrapper nav.navbar.fixed-top .primary-navigation .nav-item a.nav-link:hover,
-#page-wrapper nav.navbar.fixed-top .primary-navigation .nav-item a.nav-link.active {
-    background-color: var(--aurora_nav_secondary) !important;
-    color: var(--aurora_nav_text_hover, #111) !important;
-    font-family: inherit;
+#page-wrapper nav.navbar.fixed-top .primary-navigation .nav-item a.nav-link.active,
+#PRIMARY-NAVBAR .primary-navigation .nav-item a.nav-link:hover,
+#PRIMARY-NAVBAR .primary-navigation .nav-item a.nav-link.active {
+    background-color: var(--aurora_nav_secondary, rgba(255, 255, 255, 0.2)) !important;
+    color: var(--aurora_nav_text_hover, #fff) !important;
 }
 
-#page-wrapper nav.navbar.fixed-top .primary-navigation .nav-item a.nav-link:active {
-    color: var(--aurora_nav_text_hover, #111) !important;
-    background-color: inherit !important;
-    font-family: inherit;
+#page-wrapper nav.navbar.fixed-top .primary-navigation .nav-item a.nav-link:focus-visible,
+#PRIMARY-NAVBAR .primary-navigation .nav-item a.nav-link:focus-visible {
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.35);
+}
+
+#page-wrapper nav.navbar.fixed-top .navbar-nav .dropdown-toggle,
+#page-wrapper nav.navbar.fixed-top .usermenu-container .dropdown-toggle,
+#PRIMARY-NAVBAR .navbar-nav .dropdown-toggle,
+#PRIMARY-NAVBAR .usermenu-container .dropdown-toggle {
+    border-radius: 999px;
+    padding: 0.35rem 0.75rem;
+}
+
+#page-wrapper nav.navbar.fixed-top .navbar-toggler,
+#PRIMARY-NAVBAR .navbar-toggler {
+    border-radius: 10px;
+}
+
+#page-wrapper nav.navbar.fixed-top #usernavigation .divider,
+#PRIMARY-NAVBAR #usernavigation .divider {
+    opacity: 0.4;
+}
+
+#page-wrapper nav.navbar.fixed-top .navbar-nav .btn,
+#page-wrapper nav.navbar.fixed-top .navbar-nav .btn-outline-secondary,
+#PRIMARY-NAVBAR .navbar-nav .btn,
+#PRIMARY-NAVBAR .navbar-nav .btn-outline-secondary {
+    border-radius: 999px;
 }

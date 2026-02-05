@@ -1,0 +1,70 @@
+{{!
+    @template theme_aurora/front-page-slider
+
+    Front page slider block for Aurora.
+    This block is inserted directly under the navbar.
+}}
+
+{{#frontpageslider}}
+<div class="aurora-front-slider" role="region" aria-label="{{label}}">
+    <div id="{{id}}" class="carousel slide" data-bs-ride="carousel" data-bs-interval="{{interval}}">
+        {{#showindicators}}
+        <div class="carousel-indicators">
+            {{#indicators}}
+            <button type="button" data-bs-target="#{{id}}" data-bs-slide-to="{{index}}" class="{{#active}}active{{/active}}"
+                {{#active}}aria-current="true"{{/active}} aria-label="{{label}}"></button>
+            {{/indicators}}
+        </div>
+        {{/showindicators}}
+
+        <div class="carousel-inner">
+            {{#items}}
+            <div class="carousel-item{{#active}} active{{/active}}">
+                <div class="aurora-front-slider__slide">
+                    <div class="aurora-front-slider__media-wrap{{^image}} is-no-media{{/image}}">
+                        {{#image}}
+                        <img class="aurora-front-slider__media" src="{{image}}" alt="{{imagealt}}" loading="lazy" decoding="async">
+                        {{/image}}
+                        <div class="aurora-front-slider__overlay"></div>
+                    </div>
+                    <div class="container-fluid">
+                        <div class="aurora-front-slider__content">
+                            <div class="aurora-front-slider__card">
+                                <div class="aurora-front-slider__text">
+                                    {{#title}}
+                                    <h3 class="aurora-front-slider__title">
+                                        {{#buttonurl}}
+                                        <a class="aurora-front-slider__title-link" href="{{buttonurl}}">{{title}}</a>
+                                        {{/buttonurl}}
+                                        {{^buttonurl}}
+                                        {{title}}
+                                        {{/buttonurl}}
+                                    </h3>
+                                    {{/title}}
+                                    {{#description}}
+                                    <p class="aurora-front-slider__subtitle">{{description}}</p>
+                                    {{/description}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {{/items}}
+        </div>
+
+        {{#showcontrols}}
+        <button class="carousel-control-prev" type="button" data-bs-target="#{{id}}" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">{{#str}}previous, core{{/str}}</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#{{id}}" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">{{#str}}next, core{{/str}}</span>
+        </button>
+        {{/showcontrols}}
+    </div>
+</div>
+
+{{/frontpageslider}}
+

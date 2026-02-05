@@ -36,166 +36,58 @@
     }
 }}
 
-<ul class="list-group list-group-flush course-list-container">
+<ul class="aurora-myoverview-list" data-region="card-deck" role="list">
     {{#courses}}
-        <li class="list-group-item course-listitem border-0 p-0 mt-3 mb-3 rounded-4 shadow-sm bg-white"
+        <li class="aurora-myoverview-listitem"
             data-region="course-content"
             data-course-id="{{{id}}}">
-            <div class="row g-0 align-items-stretch" style="min-height:180px;">
-                <div class="col-md-3 col-lg-2 h-100 d-flex align-items-stretch">
-                    <a href="{{viewurl}}" class="d-block position-relative overflow-hidden rounded-4 course-image-wrapper h-100 w-100">
-                        <div class="course-image-container h-100 w-100">
-                            <div class="course-image rounded-4 h-100 w-100" 
-                                 style='background-image: url("{{{courseimage}}}"); 
-                                        background-size: cover; 
-                                        background-position: center; 
-                                        aspect-ratio: 16/9;
-                                        min-height: 140px;
-                                        width: 100%;
-                                        height: 100%;'>
-                                <span class="visually-hidden">{{fullname}}</span>
-                            </div>
+            <div class="aurora-myoverview-listcard">
+                <a href="{{viewurl}}"
+                   class="aurora-myoverview-listmedia{{^courseimage}} is-no-media{{/courseimage}}">
+                    {{#courseimage}}
+                    <img src="{{courseimage}}"
+                         alt="{{#str}}courseimage, core{{/str}}"
+                         loading="lazy"
+                         decoding="async">
+                    {{/courseimage}}
+                    <span class="visually-hidden">{{fullname}}</span>
+                    {{^visible}}
+                        <span class="aurora-myoverview-hidden">
+                            <i class="bi bi-eye-slash me-1"></i>Hidden
+                        </span>
+                    {{/visible}}
+                </a>
+
+                <div class="aurora-myoverview-listbody">
+                    {{#showshortname}}
+                        <div class="aurora-myoverview-shortname">{{{shortname}}}</div>
+                    {{/showshortname}}
+
+                    <h3 class="aurora-myoverview-listtitle">
+                        <a href="{{viewurl}}" class="aurora-myoverview-listlink">
+                            {{> core_course/favouriteicon }}
+                            {{{fullname}}}
+                        </a>
+                    </h3>
+
+                    {{#showcoursecategory}}
+                        <div class="aurora-myoverview-listcategory">
+                            <i class="bi bi-folder me-1"></i>
+                            <span class="categoryname">{{{coursecategory}}}</span>
                         </div>
-                        {{^visible}}
-                            <div class="position-absolute top-0 start-0 bg-danger bg-opacity-75 text-white px-2 py-1 small">
-                                <i class="bi bi-eye-slash me-1"></i>Hidden
-                            </div>
-                        {{/visible}}
-                    </a>
+                    {{/showcoursecategory}}
+
+                    {{#hasprogress}}
+                        <div class="aurora-myoverview-listprogress">
+                            {{> block_myoverview/progress-bar}}
+                        </div>
+                    {{/hasprogress}}
                 </div>
-                
-                <div class="col-md-8 col-lg-9 ps-md-4 d-flex flex-column justify-content-between" style="min-height:140px;">
-                    <div class="course-info flex-grow-1 d-flex flex-column">
-                        {{#showshortname}}
-                            <div class="course-meta text-muted small mb-1">
-                                <span class="badge bg-light text-dark border">{{{shortname}}}</span>
-                            </div>
-                        {{/showshortname}}
-                        
-                        <h3 class="course-title mb-2 flex-shrink-0">
-                            <a href="{{viewurl}}" class="text-decoration-none text-dark fw-bold course-link">
-                                {{> core_course/favouriteicon }}
-                                {{{fullname}}}
-                            </a>
-                        </h3>
-                        
-                        {{#showcoursecategory}}
-                            <div class="course-category text-muted small mb-2 flex-shrink-0">
-                                <i class="bi bi-folder me-1"></i>
-                                <span class="categoryname">{{{coursecategory}}}</span>
-                            </div>
-                        {{/showcoursecategory}}
-                        
-                        {{#hasprogress}}
-                            <div class="course-progress mt-3 flex-shrink-0">
-                                {{> block_myoverview/progress-bar}}
-                            </div>
-                        {{/hasprogress}}
-                    </div>
-                </div>
-                
-                <div class="col-md-1 col-lg-1 text-end d-flex flex-column justify-content-between">
-                    <div class="course-actions mt-auto">
-                        {{> block_myoverview/course-action-menu }}
-                    </div>
+
+                <div class="aurora-myoverview-listactions">
+                    {{> block_myoverview/course-action-menu }}
                 </div>
             </div>
         </li>
     {{/courses}}
 </ul>
-
-<style>
-.course-list-container {
-    max-width: 100%;
-    margin: 0 auto;
-    min-height: 350px;
-}
-
-.course-listitem {
-    transition: all 0.3s ease;
-    border: 1px solid #e9ecef;
-    min-height: 160px;
-    display: flex;
-    flex-direction: column;
-    justify-content: stretch;
-}
-.course-listitem:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    border-color: #dee2e6;
-}
-
-.course-image-wrapper {
-    display: block;
-    transition: transform 0.3s ease;
-    height: 100%;
-    width: 100%;
-}
-.course-image-wrapper:hover {
-    transform: scale(1.02);
-}
-.course-image-container {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    min-height: 140px;
-}
-.course-image {
-    min-height: 140px;
-    width: 100%;
-    height: 100%;
-    aspect-ratio: 16/9;
-    object-fit: cover;
-}
-.course-title {
-    font-size: 1.1rem;
-    line-height: 1.4;
-    margin-bottom: 0.35rem;
-}
-.course-link:hover {
-    color: #0d6efd !important;
-}
-.course-meta {
-    font-size: 0.85rem;
-}
-.course-category {
-    font-size: 0.9rem;
-}
-.course-actions {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    height: 100%;
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-    .course-listitem {
-        padding: 1rem !important;
-        min-height: 160px;
-    }
-    .course-image-container,
-    .course-image {
-        min-height: 120px;
-        aspect-ratio: 16/9;
-    }
-    .course-title {
-        font-size: 1rem;
-    }
-}
-
-@media (min-width: 768px) {
-    .course-image-container,
-    .course-image {
-        min-height: 140px;
-        aspect-ratio: 16/9;
-    }
-}
-
-/* Optional glassmorphism effect */
-.course-listitem.glass {
-    background: rgba(255, 255, 255, 0.8);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-}
-</style>

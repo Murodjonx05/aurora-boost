@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<XMLDB PATH="theme/aurora/db" VERSION="2025100601" COMMENT="Aurora theme slider tables">
+  <TABLES>
+    <TABLE NAME="theme_aurora_slider" COMMENT="Aurora front page slider items">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="sortorder" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="enabled" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1"/>
+        <FIELD NAME="title" TYPE="text" NOTNULL="false"/>
+        <FIELD NAME="description" TYPE="text" NOTNULL="false"/>
+        <FIELD NAME="imagealt" TYPE="text" NOTNULL="false"/>
+        <FIELD NAME="buttontext" TYPE="text" NOTNULL="false"/>
+        <FIELD NAME="buttonurl" TYPE="text" NOTNULL="false"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="sortorder_idx" UNIQUE="false" FIELDS="sortorder"/>
+        <INDEX NAME="enabled_idx" UNIQUE="false" FIELDS="enabled"/>
+      </INDEXES>
+    </TABLE>
+  </TABLES>
+</XMLDB>
