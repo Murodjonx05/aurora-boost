@@ -15,3 +15,14 @@ a:focus {
     transition: none !important;
 
 }
+
+#page {
+    a:active,
+    a:focus,
+    a:focus-visible,
+    a:visited,
+    a:target {
+        background: none !important;
+        box-shadow: none !important;
+    }
+}

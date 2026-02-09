@@ -28,7 +28,8 @@ defined('MOODLE_INTERNAL') || die();
  * @param int $oldversion
  * @return bool
  */
-function xmldb_theme_aurora_upgrade($oldversion) {
+function xmldb_theme_aurora_upgrade($oldversion)
+{
     global $DB;
 
     $dbman = $DB->get_manager();

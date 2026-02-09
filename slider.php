@@ -40,7 +40,7 @@ $PAGE->requires->css('/theme/aurora/style/slider-admin.css');
 
 $fs = get_file_storage();
 
-$normalise_sortorder = function() use ($DB) {
+$normalise_sortorder = function () use ($DB) {
     $records = $DB->get_records('theme_aurora_slider', [], 'sortorder ASC, id ASC');
     $sortorder = 1;
     foreach ($records as $record) {
@@ -102,7 +102,8 @@ if ($action === 'edit' && $id) {
     file_prepare_draft_area($draftid, $context->id, 'theme_aurora', 'frontpage_slider', $id, $options);
     $record->imagefile = $draftid;
     $form->set_data($record);
-} else {
+}
+else {
     $draftid = file_get_submitted_draft_itemid('imagefile');
     file_prepare_draft_area($draftid, $context->id, 'theme_aurora', 'frontpage_slider', 0, $options);
     $form->set_data((object)[
@@ -131,7 +132,8 @@ if ($data = $form->get_data()) {
         $record->sortorder = (int)$DB->get_field_sql('SELECT COALESCE(MAX(sortorder), 0) FROM {theme_aurora_slider}') + 1;
         $record->timecreated = $now;
         $id = $DB->insert_record('theme_aurora_slider', $record, true);
-    } else {
+    }
+    else {
         $record->id = $data->id;
         $DB->update_record('theme_aurora_slider', $record);
         $id = $data->id;
@@ -155,8 +157,8 @@ echo $OUTPUT->heading($header);
 
 echo html_writer::tag('div',
     html_writer::tag('h3', $formtitle, ['class' => 'aurora-slider-form-title']) .
-    ($action === 'edit' ? html_writer::link($baseurl, get_string('frontpageslidercancel', 'theme_aurora'), ['class' => 'btn btn-secondary ms-2']) : ''),
-    ['class' => 'd-flex align-items-center mb-3']
+    ($action === 'edit' ?html_writer::link($baseurl, get_string('frontpageslidercancel', 'theme_aurora'), ['class' => 'btn btn-secondary ms-2']) : ''),
+['class' => 'd-flex align-items-center mb-3']
 );
 
 $form->display();
@@ -165,7 +167,8 @@ echo html_writer::tag('h3', get_string('frontpagesliderlist', 'theme_aurora'), [
 
 if (empty($records)) {
     echo html_writer::div(get_string('frontpagesliderempty', 'theme_aurora'), 'alert alert-info');
-} else {
+}
+else {
     $table = new html_table();
     $table->head = [
         get_string('frontpagesliderpreview', 'theme_aurora'),
@@ -199,12 +202,12 @@ if (empty($records)) {
             );
         }
 
-        $preview = $imageurl ?
+        $preview = $imageurl ? 
             html_writer::empty_tag('img', [
-                'src' => $imageurl->out(false),
-                'alt' => s($record->title),
-                'class' => 'aurora-slider-preview',
-            ]) :
+            'src' => $imageurl->out(false),
+            'alt' => s($record->title),
+            'class' => 'aurora-slider-preview',
+        ]) :
             html_writer::div(get_string('none'), 'text-muted');
 
         $enabled = $record->enabled ? get_string('yes') : get_string('no');

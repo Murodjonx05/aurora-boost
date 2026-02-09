@@ -63,7 +63,7 @@ if ($ADMIN->fulltree) {
 
     // Preset files setting.
     $name = 'theme_aurora/presetfiles';
-    $title = get_string('presetfiles','theme_aurora');
+    $title = get_string('presetfiles', 'theme_aurora');
     $description = get_string('presetfiles_desc', 'theme_aurora');
 
     $setting = new admin_setting_configstoredfile($name, $title, $description, 'preset', 0,

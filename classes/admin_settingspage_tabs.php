@@ -27,7 +27,8 @@ defined('MOODLE_INTERNAL') || die();
  * @copyright 2016 Ryan Wyllie
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class theme_boost_admin_settingspage_tabs extends admin_settingpage {
+class theme_boost_admin_settingspage_tabs extends admin_settingpage
+{
 
     /** @var The tabs */
     protected $tabs = array();
@@ -37,15 +38,17 @@ class theme_boost_admin_settingspage_tabs extends admin_settingpage {
      *
      * @param admin_settingpage $tab A tab.
      */
-    public function add_tab(admin_settingpage $tab) {
+    public function add_tab(admin_settingpage $tab)
+    {
         foreach ($tab->settings as $setting) {
-            $this->settings->{$setting->name} = $setting;
+            $this->settings->{ $setting->name} = $setting;
         }
         $this->tabs[] = $tab;
         return true;
     }
 
-    public function add($tab) {
+    public function add($tab)
+    {
         return $this->add_tab($tab);
     }
 
@@ -54,7 +57,8 @@ class theme_boost_admin_settingspage_tabs extends admin_settingpage {
      *
      * @return array
      */
-    public function get_tabs() {
+    public function get_tabs()
+    {
         return $this->tabs;
     }
 
@@ -63,7 +67,8 @@ class theme_boost_admin_settingspage_tabs extends admin_settingpage {
      *
      * @return string
      */
-    public function output_html() {
+    public function output_html()
+    {
         global $OUTPUT;
 
         $activetab = optional_param('activetab', '', PARAM_TEXT);
@@ -77,7 +82,8 @@ class theme_boost_admin_settingspage_tabs extends admin_settingpage {
             if (empty($activetab) && !$havesetactive) {
                 $active = true;
                 $havesetactive = true;
-            } else if ($activetab === $tab->name) {
+            }
+            else if ($activetab === $tab->name) {
                 $active = true;
             }
 
@@ -97,4 +103,3 @@ class theme_boost_admin_settingspage_tabs extends admin_settingpage {
     }
 
 }
-

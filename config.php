@@ -28,12 +28,12 @@ require_once(__DIR__ . '/lib.php');
 
 $THEME->name = 'aurora';
 $THEME->parents = ['boost'];
-$THEME->sheets = ['main','navbar','frontpage','my_courses','moo_typer','dev'];
+$THEME->sheets = ['main', 'navbar', 'frontpage', 'my_courses', 'moo_typer', 'dev'];
 $THEME->editor_sheets = [];
 $THEME->editor_scss = ['editor'];
 $THEME->usefallback = true;
 $THEME->enable_dock = false;
-$THEME->scss = function($theme) {
+$THEME->scss = function ($theme) {
     return theme_aurora_get_main_scss_content($theme);
 };
 $THEME->dock = false;

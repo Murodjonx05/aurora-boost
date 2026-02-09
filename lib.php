@@ -30,7 +30,8 @@ defined('MOODLE_INTERNAL') || die();
  * @param theme_config $theme The theme config object.
  * @return string
  */
-function theme_aurora_get_main_scss_content($theme) {
+function theme_aurora_get_main_scss_content($theme)
+{
     global $CFG;
 
     $scss = '';
@@ -40,11 +41,14 @@ function theme_aurora_get_main_scss_content($theme) {
     $context = context_system::instance();
     if ($filename == 'default.scss') {
         $scss .= file_get_contents($CFG->dirroot . '/theme/boost/scss/preset/default.scss');
-    } else if ($filename == 'plain.scss') {
+    }
+    else if ($filename == 'plain.scss') {
         $scss .= file_get_contents($CFG->dirroot . '/theme/boost/scss/preset/plain.scss');
-    } else if ($filename && ($presetfile = $fs->get_file($context->id, 'theme_aurora', 'preset', 0, '/', $filename))) {
+    }
+    else if ($filename && ($presetfile = $fs->get_file($context->id, 'theme_aurora', 'preset', 0, '/', $filename))) {
         $scss .= $presetfile->get_content();
-    } else {
+    }
+    else {
         // Safety fallback - maybe new installs etc.
         $scss .= file_get_contents($CFG->dirroot . '/theme/boost/scss/preset/default.scss');
     }
@@ -58,7 +62,8 @@ function theme_aurora_get_main_scss_content($theme) {
  * @param theme_config $theme The theme config object.
  * @return string
  */
-function theme_aurora_get_extra_scss($theme) {
+function theme_aurora_get_extra_scss($theme)
+{
     $content = '';
     $imageurl = $theme->setting_file_url('backgroundimage', 'backgroundimage');
 
@@ -88,7 +93,8 @@ function theme_aurora_get_extra_scss($theme) {
  * @param theme_config $theme The theme config object.
  * @return string
  */
-function theme_aurora_get_pre_scss($theme) {
+function theme_aurora_get_pre_scss($theme)
+{
     global $CFG;
 
     $scss = '';
@@ -99,13 +105,13 @@ function theme_aurora_get_pre_scss($theme) {
 
     // Prepend variables first.
     foreach ($configurable as $configkey => $targets) {
-        $value = isset($theme->settings->{$configkey}) ? $theme->settings->{$configkey} : null;
+        $value = isset($theme->settings->{ $configkey}) ? $theme->settings->{ $configkey} : null;
         if (empty($value)) {
             continue;
         }
-        array_map(function($target) use (&$scss, $value) {
+        array_map(function ($target) use (&$scss, $value) {
             $scss .= '$' . $target . ': ' . $value . ";\n";
-        }, (array) $targets);
+        }, (array)$targets);
     }
 
     // Add navbar variables.
@@ -119,7 +125,8 @@ function theme_aurora_get_pre_scss($theme) {
     $navlinksalign = 'flex-start';
     if ($navlinksposition === 'center') {
         $navlinksalign = 'center';
-    } else if ($navlinksposition === 'right') {
+    }
+    else if ($navlinksposition === 'right') {
         $navlinksalign = 'flex-end';
     }
 
@@ -152,7 +159,8 @@ function theme_aurora_get_pre_scss($theme) {
  *
  * @return string compiled css
  */
-function theme_aurora_get_precompiled_css() {
+function theme_aurora_get_precompiled_css()
+{
     global $CFG;
     return file_get_contents($CFG->dirroot . '/theme/boost/style/moodle.css');
 }
@@ -175,7 +183,8 @@ function theme_aurora_get_precompiled_css() {
  * @param string $classname Name of the renderer to be adapted
  * @return string Name of the rendering class to be used
  */
-function theme_aurora_get_renderer($classname) {
+function theme_aurora_get_renderer($classname)
+{
     // Override the myoverview block renderer
     if ($classname === 'block_myoverview\output\renderer') {
         return 'theme_aurora\output\block_myoverview_renderer';
@@ -185,7 +194,8 @@ function theme_aurora_get_renderer($classname) {
     return null;
 }
 
-function theme_aurora_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, array $options = array()) {
+function theme_aurora_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, array $options = array())
+{
     if ($context->contextlevel != CONTEXT_SYSTEM) {
         send_file_not_found();
     }
@@ -210,7 +220,7 @@ function theme_aurora_pluginfile($course, $cm, $context, $filearea, $args, $forc
     }
 
     if ($filearea === 'logo' || $filearea === 'backgroundimage' || $filearea === 'loginbackgroundimage' ||
-        $filearea === 'frontpage_slider_image') {
+    $filearea === 'frontpage_slider_image') {
         $theme = theme_config::load('aurora');
         // By default, theme files must be cache-able by both browsers and proxies.
         if (!array_key_exists('cacheability', $options)) {
