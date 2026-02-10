@@ -257,3 +257,18 @@ table:not(.table):not(.ygtvtable):not(.table-reboot):not(.yui3-datatable-table) 
         border-width: $table-border-width;
     }
 }
+
+// Reorder enrolment icons to appear before the course name.
+.coursebox .info {
+    display: flex;
+    flex-direction: column;
+
+    .enrolmenticons {
+        order: -5;
+        position: absolute;
+        top:0px;
+        right:min(10%,20px);
+        
+        color:white;
+    }
+}

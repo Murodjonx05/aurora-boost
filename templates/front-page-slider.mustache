@@ -1,70 +1,73 @@
 {{!
-    @template theme_aurora/front-page-slider
+  @template theme_aurora/front-page-slider-custom
 
-    Front page slider block for Aurora.
-    This block is inserted directly under the navbar.
+  Custom slider: NOT based on the old Aurora markup.
+  Uses the same variables:
+  id, label, interval, showindicators, indicators, showcontrols, items,
+  title, description, buttonurl, buttontext, image, imagealt, active.
 }}
 
 {{#frontpageslider}}
-<div class="aurora-front-slider" role="region" aria-label="{{label}}">
-    <div id="{{id}}" class="carousel slide" data-bs-ride="carousel" data-bs-interval="{{interval}}">
-        {{#showindicators}}
-        <div class="carousel-indicators">
-            {{#indicators}}
-            <button type="button" data-bs-target="#{{id}}" data-bs-slide-to="{{index}}" class="{{#active}}active{{/active}}"
-                {{#active}}aria-current="true"{{/active}} aria-label="{{label}}"></button>
-            {{/indicators}}
-        </div>
-        {{/showindicators}}
+<section class="aurora-hero-slider" role="region" aria-label="{{label}}">
+  <div id="{{id}}" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="{{interval}}">
 
-        <div class="carousel-inner">
-            {{#items}}
-            <div class="carousel-item{{#active}} active{{/active}}">
-                <div class="aurora-front-slider__slide">
-                    <div class="aurora-front-slider__media-wrap{{^image}} is-no-media{{/image}}">
-                        {{#image}}
-                        <img class="aurora-front-slider__media" src="{{image}}" alt="{{imagealt}}" loading="lazy" decoding="async">
-                        {{/image}}
-                        <div class="aurora-front-slider__overlay"></div>
-                    </div>
-                    <div class="container-fluid">
-                        <div class="aurora-front-slider__content">
-                            <div class="aurora-front-slider__card">
-                                <div class="aurora-front-slider__text">
-                                    {{#title}}
-                                    <h3 class="aurora-front-slider__title">
-                                        {{#buttonurl}}
-                                        <a class="aurora-front-slider__title-link" href="{{buttonurl}}">{{title}}</a>
-                                        {{/buttonurl}}
-                                        {{^buttonurl}}
-                                        {{title}}
-                                        {{/buttonurl}}
-                                    </h3>
-                                    {{/title}}
-                                    {{#description}}
-                                    <p class="aurora-front-slider__subtitle">{{description}}</p>
-                                    {{/description}}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+    <div class="carousel-inner aurora-hero-slider__inner">
+      {{#items}}
+      <div class="carousel-item{{#active}} active{{/active}}">
+        <div class="aurora-hero-slider__frame">
+
+          <!-- Background -->
+          <div class="aurora-hero-slider__bg" aria-hidden="true">
+            {{#image}}
+              <img class="aurora-hero-slider__bg-img" src="{{image}}" alt="" loading="lazy" decoding="async">
+            {{/image}}
+            {{^image}}
+              <div class="aurora-hero-slider__bg-fallback"></div>
+            {{/image}}
+            <div class="aurora-hero-slider__shade"></div>
+          </div>
+
+          <!-- Card -->
+          <div class="aurora-hero-slider__container">
+            <div class="aurora-hero-slider__panel">
+
+              {{#title}}
+              <h2 class="aurora-hero-slider__title">
+                {{#buttonurl}}
+                  <a class="aurora-hero-slider__title-link" href="{{buttonurl}}">
+                    {{title}}
+                  </a>
+                {{/buttonurl}}
+                {{^buttonurl}}
+                  {{title}}
+                {{/buttonurl}}
+              </h2>
+              {{/title}}
+
+              {{#description}}
+              <p class="aurora-hero-slider__desc">{{description}}</p>
+              {{/description}}
+
             </div>
-            {{/items}}
+          </div>
+
         </div>
-
-        {{#showcontrols}}
-        <button class="carousel-control-prev" type="button" data-bs-target="#{{id}}" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">{{#str}}previous, core{{/str}}</span>
-        </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#{{id}}" data-bs-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">{{#str}}next, core{{/str}}</span>
-        </button>
-        {{/showcontrols}}
+      </div>
+      {{/items}}
     </div>
-</div>
 
+    {{#showcontrols}}
+      <button class="carousel-control-prev aurora-hero-slider__control" type="button" data-bs-target="#{{id}}" data-bs-slide="prev" aria-label="{{#str}}previous, core{{/str}}">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+        <span class="visually-hidden">{{#str}}previous, core{{/str}}</span>
+      </button>
+      <button class="carousel-control-next aurora-hero-slider__control" type="button" data-bs-target="#{{id}}" data-bs-slide="next" aria-label="{{#str}}next, core{{/str}}">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+        <span class="visually-hidden">{{#str}}next, core{{/str}}</span>
+      </button>
+    {{/showcontrols}}
+
+  </div>
+</section>
 {{/frontpageslider}}
 
