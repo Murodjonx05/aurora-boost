@@ -18,25 +18,34 @@
     #page-content .info { display: none !important; }
   
     /* ================== DESIGN TOKENS ================== */
+    color-scheme: light;
     --quiz-bg: #ffffff;
-    --quiz-border: rgba(15, 23, 42, 0.10);
-    --quiz-border-hover: rgba(59, 91, 253, 0.30);
+    --quiz-card-bg:
+      radial-gradient(900px 240px at 18% -30px, rgba(59, 91, 253, 0.09), transparent 60%),
+      radial-gradient(900px 240px at 85% 0px, rgba(56, 189, 248, 0.065), transparent 60%),
+      var(--quiz-bg);
+    --quiz-border: rgba(15, 23, 42, 0.11);
+    --quiz-border-hover: rgba(59, 91, 253, 0.34);
     --quiz-shadow: 0 10px 26px rgba(15, 23, 42, 0.08);
-    --quiz-shadow-hover: 0 16px 40px rgba(59, 91, 253, 0.14);
+    --quiz-shadow-hover: 0 18px 42px rgba(59, 91, 253, 0.14);
   
     --text-main: #0f172a;
-    --text-muted: #64748b;
-    --text-accent: #3b5bfd;
+    --text-muted: #5f6f85;
+    --text-accent: #3558f6;
   
     --option-bg: rgba(248, 250, 252, 0.95);
-    --option-border: rgba(15, 23, 42, 0.08);
+    --option-border: rgba(15, 23, 42, 0.09);
     --option-hover: rgba(238, 242, 255, 0.95);
-    --option-active: rgba(224, 231, 255, 0.95);
+    --option-active: rgba(226, 233, 255, 0.96);
   
-    --radius-lg: 18px;
-    --radius-md: 14px;
+    --radius-lg: 20px;
+    --radius-md: 15px;
   
     --ring: 0 0 0 4px rgba(147, 197, 253, 0.55);
+    --trans-fast: .16s ease;
+    --trans-main: .22s ease;
+    --card-pad-y: 2rem;
+    --card-pad-x: 2.2rem;
   
     /* Keep these in sync with option padding (used by fallback bleed) */
     --row-py: 0.95rem;
@@ -82,11 +91,13 @@
     .que.essay label {
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Arial, sans-serif;
       color: var(--text-main);
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
     }
 
     .que .formulation{
-      background:none!important;
-      border:none!important;
+      background: none !important;
+      border: none !important;
     }
   
     /* =========================================================
@@ -116,16 +127,26 @@
        2) QUESTION CARD — MULTICHOICE
        ========================================================= */
     .que.multichoice.deferredfeedback {
-      background:
-        radial-gradient(900px 240px at 18% -30px, rgba(59, 91, 253, 0.10), transparent 60%),
-        radial-gradient(900px 240px at 85% 0px, rgba(56, 189, 248, 0.07), transparent 60%),
-        var(--quiz-bg);
+      background: var(--quiz-card-bg);
       border: 1px solid var(--quiz-border);
       border-radius: var(--radius-lg);
       box-shadow: var(--quiz-shadow);
-      padding: 2.1rem 2.3rem 1.9rem;
+      padding: var(--card-pad-y) var(--card-pad-x) calc(var(--card-pad-y) - .2rem);
       margin: 0 0 2.2rem 0;
-      transition: border-color .2s ease, box-shadow .2s ease, transform .12s ease;
+      transition: border-color var(--trans-main), box-shadow var(--trans-main), transform .12s ease;
+      position: relative;
+      overflow: clip;
+    }
+
+    .que.multichoice.deferredfeedback::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 3px;
+      background: linear-gradient(90deg, rgba(59, 91, 253, .65), rgba(56, 189, 248, .45), transparent 92%);
+      pointer-events: none;
     }
   
     .que.multichoice.deferredfeedback:hover {
@@ -173,9 +194,9 @@
       padding: .24rem .75rem;
       font-size: .82rem;
       border-radius: 999px;
-      background: rgba(59, 91, 253, 0.10);
+      background: rgba(59, 91, 253, 0.11);
       color: var(--text-accent);
-      border: 1px solid rgba(59, 91, 253, 0.18);
+      border: 1px solid rgba(59, 91, 253, 0.22);
       font-weight: 600;
     }
   
@@ -242,7 +263,7 @@
       background: var(--option-bg);
       border: 1px solid var(--option-border);
       padding: var(--row-py) var(--row-px);
-      transition: background .15s ease, border .15s ease, box-shadow .15s ease, transform .08s ease;
+      transition: background var(--trans-fast), border var(--trans-fast), box-shadow var(--trans-fast), transform .08s ease;
     }
   
     .que.multichoice .answer > .r0:hover,
@@ -320,7 +341,7 @@
   
     .que.multichoice .answer p {
       margin: 0;
-      font-size: 1.05rem;
+      font-size: 1.04rem;
       color: var(--text-main);
       line-height: 1.55;
       font-weight: 520;
@@ -395,16 +416,26 @@
        4) QUESTION CARD — TRUE/FALSE (same premium as multichoice)
        ========================================================= */
     .que.truefalse.deferredfeedback {
-      background:
-        radial-gradient(900px 240px at 18% -30px, rgba(59, 91, 253, 0.10), transparent 60%),
-        radial-gradient(900px 240px at 85% 0px, rgba(56, 189, 248, 0.07), transparent 60%),
-        var(--quiz-bg) !important;
+      background: var(--quiz-card-bg) !important;
       border: 1px solid var(--quiz-border) !important;
       border-radius: var(--radius-lg) !important;
       box-shadow: var(--quiz-shadow) !important;
-      padding: 2.1rem 2.3rem 1.9rem !important;
+      padding: var(--card-pad-y) var(--card-pad-x) calc(var(--card-pad-y) - .2rem) !important;
       margin: 0 0 2.2rem 0 !important;
-      transition: border-color .2s ease, box-shadow .2s ease, transform .12s ease !important;
+      transition: border-color var(--trans-main), box-shadow var(--trans-main), transform .12s ease !important;
+      position: relative;
+      overflow: clip;
+    }
+
+    .que.truefalse.deferredfeedback::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 3px;
+      background: linear-gradient(90deg, rgba(59, 91, 253, .65), rgba(56, 189, 248, .45), transparent 92%);
+      pointer-events: none;
     }
   
     .que.truefalse.deferredfeedback:hover {
@@ -430,7 +461,7 @@
       background: var(--option-bg) !important;
       border: 1px solid var(--option-border) !important;
       padding: var(--row-py) var(--row-px) !important;
-      transition: background .15s ease, border-color .15s ease, box-shadow .15s ease, transform .08s ease !important;
+      transition: background var(--trans-fast), border-color var(--trans-fast), box-shadow var(--trans-fast), transform .08s ease !important;
     }
   
     .que.truefalse .answer > .r0:hover,
@@ -531,16 +562,29 @@
     .que.ddwtos,
     .que.essay {
       position: relative;
-      background:
-        radial-gradient(900px 240px at 18% -30px, rgba(59, 91, 253, 0.10), transparent 60%),
-        radial-gradient(900px 240px at 85% 0px, rgba(56, 189, 248, 0.07), transparent 60%),
-        var(--quiz-bg);
+      background: var(--quiz-card-bg);
       border: 1px solid var(--quiz-border);
       border-radius: var(--radius-lg);
       box-shadow: var(--quiz-shadow);
-      padding: 2.1rem 2.3rem 1.9rem;
+      padding: var(--card-pad-y) var(--card-pad-x) calc(var(--card-pad-y) - .2rem);
       margin: 0 0 2.2rem 0;
-      transition: border-color .2s ease, box-shadow .2s ease, transform .12s ease;
+      transition: border-color var(--trans-main), box-shadow var(--trans-main), transform .12s ease;
+      overflow: clip;
+    }
+
+    .que.match::before,
+    .que.shortanswer::before,
+    .que.numerical::before,
+    .que.ddwtos::before,
+    .que.essay::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 3px;
+      background: linear-gradient(90deg, rgba(59, 91, 253, .65), rgba(56, 189, 248, .45), transparent 92%);
+      pointer-events: none;
     }
 
     .que.match:hover,
@@ -610,7 +654,7 @@
       color: var(--text-main);
       box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9);
       padding: .58rem .85rem;
-      transition: border-color .15s ease, box-shadow .15s ease, background .15s ease;
+      transition: border-color var(--trans-fast), box-shadow var(--trans-fast), background var(--trans-fast);
     }
 
     .que.shortanswer input[type="text"]:hover,
@@ -652,7 +696,7 @@
       border-radius: var(--radius-md);
       box-shadow: 0 8px 20px rgba(15, 23, 42, 0.05);
       padding: .72rem .86rem;
-      transition: background .15s ease, border-color .15s ease, box-shadow .15s ease;
+      transition: background var(--trans-fast), border-color var(--trans-fast), box-shadow var(--trans-fast);
     }
 
     .que.match .answer.table-reboot tr:hover {
@@ -683,7 +727,7 @@
       background: #fff;
       color: var(--text-main);
       box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.95);
-      transition: border-color .15s ease, box-shadow .15s ease;
+      transition: border-color var(--trans-fast), box-shadow var(--trans-fast);
     }
 
     .que.match .answer.table-reboot select.form-select:hover {
@@ -791,7 +835,7 @@
       border-radius: var(--radius-md);
       background: rgba(255, 255, 255, 0.94);
       box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.95);
-      transition: border-color .15s ease, box-shadow .15s ease;
+      transition: border-color var(--trans-fast), box-shadow var(--trans-fast);
     }
 
     .que.essay .qtype_essay_response:focus-within {
@@ -805,6 +849,13 @@
       border-radius: 12px;
       background: #fff;
       color: var(--text-main);
+      transition: border-color var(--trans-fast), box-shadow var(--trans-fast);
+    }
+
+    .que.essay textarea.form-control:focus-visible {
+      outline: none;
+      border-color: rgba(59, 91, 253, 0.55);
+      box-shadow: var(--ring);
     }
 
     .que.essay .tox.tox-tinymce {
@@ -825,7 +876,9 @@
       .que.numerical,
       .que.ddwtos,
       .que.essay {
-        padding: 1.35rem 1.15rem 1.1rem;
+        --card-pad-y: 1.35rem;
+        --card-pad-x: 1.15rem;
+        padding: var(--card-pad-y) var(--card-pad-x) calc(var(--card-pad-y) - .25rem);
       }
       .que.multichoice .qtext,
       .que.truefalse .qtext,
@@ -859,7 +912,9 @@
       .que.numerical,
       .que.ddwtos,
       .que.essay {
-        padding: 1rem .9rem;
+        --card-pad-y: 1rem;
+        --card-pad-x: .9rem;
+        padding: var(--card-pad-y) var(--card-pad-x) calc(var(--card-pad-y) - .2rem);
         border-radius: 16px;
       }
   
@@ -898,6 +953,39 @@
       .que.ddwtos .qtext .drop {
         min-width: 1.9rem;
         min-height: 1.9rem;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .que.multichoice.deferredfeedback,
+      .que.truefalse.deferredfeedback,
+      .que.match,
+      .que.shortanswer,
+      .que.numerical,
+      .que.ddwtos,
+      .que.essay,
+      .que.multichoice .answer > .r0,
+      .que.multichoice .answer > .r1,
+      .que.truefalse .answer > .r0,
+      .que.truefalse .answer > .r1,
+      .que.match .answer.table-reboot tr {
+        transition: none !important;
+        animation: none !important;
+      }
+
+      .que.multichoice.deferredfeedback:hover,
+      .que.truefalse.deferredfeedback:hover,
+      .que.match:hover,
+      .que.shortanswer:hover,
+      .que.numerical:hover,
+      .que.ddwtos:hover,
+      .que.essay:hover,
+      .que.multichoice .answer > .r0:hover,
+      .que.multichoice .answer > .r1:hover,
+      .que.truefalse .answer > .r0:hover,
+      .que.truefalse .answer > .r1:hover,
+      .que.match .answer.table-reboot tr:hover {
+        transform: none !important;
       }
     }
   
