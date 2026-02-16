@@ -35,6 +35,7 @@ $templatecontext = [
     'sidepreblocks' => $blockshtml,
     'hasblocks' => $hasblocks
 ];
+$templatecontext = array_merge($templatecontext, theme_aurora_get_template_context());
 
 if (empty($PAGE->layout_options['noactivityheader'])) {
     $header = $PAGE->activityheader;

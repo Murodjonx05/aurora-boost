@@ -194,6 +194,162 @@ function theme_aurora_get_renderer($classname)
     return null;
 }
 
+/**
+ * Parse "Text|URL" lines into mustache-friendly links.
+ *
+ * @param string|null $raw
+ * @return array
+ */
+function theme_aurora_parse_link_lines(?string $raw): array
+{
+    $links = [];
+    if (empty($raw)) {
+        return $links;
+    }
+
+    $context = context_system::instance();
+    $lines = preg_split('/\r\n|\r|\n/', $raw);
+    foreach ($lines as $line) {
+        $line = trim((string)$line);
+        if ($line === '' || strpos($line, '|') === false) {
+            continue;
+        }
+
+        [$textraw, $urlraw] = array_map('trim', explode('|', $line, 2));
+        if ($textraw === '' || $urlraw === '') {
+            continue;
+        }
+
+        $url = clean_param($urlraw, PARAM_URL);
+        if ($url === '') {
+            $url = clean_param($urlraw, PARAM_LOCALURL);
+        }
+        if ($url === '') {
+            continue;
+        }
+
+        $text = format_text($textraw, FORMAT_HTML, ['context' => $context, 'filter' => true, 'para' => false]);
+        $links[] = [
+            'text' => $text,
+            'url' => $url,
+        ];
+    }
+
+    return $links;
+}
+
+/**
+ * Build custom template context from theme settings.
+ *
+ * @return array
+ */
+function theme_aurora_get_template_context(): array
+{
+    global $SITE;
+
+    $theme = theme_config::load('aurora');
+    $context = context_system::instance();
+    $footerlogo = $theme->setting_file_url('footerlogo', 'footerlogo');
+    $navbarlogo = $theme->setting_file_url('navbarlogo', 'navbarlogo');
+
+    $footerbrandtitle = !empty($theme->settings->footerbrandtitle)
+        ? format_text($theme->settings->footerbrandtitle, FORMAT_HTML, ['context' => $context, 'filter' => true, 'para' => false])
+        : format_string($SITE->shortname, true, ['context' => $context, 'escape' => false]);
+    $footerdescription = !empty($theme->settings->footerdescription)
+        ? format_text($theme->settings->footerdescription, FORMAT_HTML, ['context' => $context, 'filter' => true, 'para' => false])
+        : '';
+    $footercontacttitle = !empty($theme->settings->footercontacttitle)
+        ? format_text($theme->settings->footercontacttitle, FORMAT_HTML, ['context' => $context, 'filter' => true, 'para' => false])
+        : get_string('footercontacttitle_default', 'theme_aurora');
+    $footernavtitle = !empty($theme->settings->footernavtitle)
+        ? format_text($theme->settings->footernavtitle, FORMAT_HTML, ['context' => $context, 'filter' => true, 'para' => false])
+        : get_string('footernavtitle_default', 'theme_aurora');
+    $footercopyright = !empty($theme->settings->footercopyright)
+        ? format_text($theme->settings->footercopyright, FORMAT_HTML, ['context' => $context, 'filter' => true, 'para' => false])
+        : '&copy; ' . date('Y') . ' ' . format_string($SITE->shortname, true, ['context' => $context, 'escape' => false]);
+    $footerbottomright = !empty($theme->settings->footerbottomright)
+        ? format_text($theme->settings->footerbottomright, FORMAT_HTML, ['context' => $context, 'filter' => true, 'para' => false])
+        : '';
+
+    $contactitems = [];
+    $address = trim((string)($theme->settings->footercontactaddress ?? ''));
+    $phone = trim((string)($theme->settings->footercontactphone ?? ''));
+    $email = trim((string)($theme->settings->footercontactemail ?? ''));
+    $extra = trim((string)($theme->settings->footercontactextra ?? ''));
+
+    if ($address !== '') {
+        $contactitems[] = [
+            'label' => format_text($address, FORMAT_HTML, ['context' => $context, 'filter' => true, 'para' => false]),
+            'icon' => 'location',
+        ];
+    }
+    if ($phone !== '') {
+        $phonelink = preg_replace('/[^0-9+]/', '', $phone);
+        $contactitems[] = [
+            'label' => format_text($phone, FORMAT_HTML, ['context' => $context, 'filter' => true, 'para' => false]),
+            'icon' => 'phone',
+            'url' => $phonelink !== '' ? 'tel:' . $phonelink : null,
+            'hasurl' => $phonelink !== '',
+        ];
+    }
+    if ($email !== '') {
+        $emailclean = clean_param($email, PARAM_EMAIL);
+        $contactitems[] = [
+            'label' => format_text($email, FORMAT_HTML, ['context' => $context, 'filter' => true, 'para' => false]),
+            'icon' => 'email',
+            'url' => $emailclean !== '' ? 'mailto:' . $emailclean : null,
+            'hasurl' => $emailclean !== '',
+        ];
+    }
+    if ($extra !== '') {
+        $contactitems[] = [
+            'label' => format_text($extra, FORMAT_HTML, ['context' => $context, 'filter' => true, 'para' => false]),
+            'icon' => 'info',
+        ];
+    }
+
+    // Backward compatibility with the old textarea format.
+    if (empty($contactitems) && !empty($theme->settings->footercontacts)) {
+        foreach (preg_split('/\r\n|\r|\n/', (string)$theme->settings->footercontacts) as $line) {
+            $line = trim($line);
+            if ($line === '') {
+                continue;
+            }
+            $contactitems[] = [
+                'label' => format_text($line, FORMAT_HTML, ['context' => $context, 'filter' => true, 'para' => false]),
+                'icon' => 'info',
+            ];
+        }
+    }
+
+    $navbarlinks = theme_aurora_parse_link_lines($theme->settings->navbarcustomlinks ?? '');
+    $footernavlinks = theme_aurora_parse_link_lines($theme->settings->footernavlinks ?? '');
+
+    $footerenabled = !isset($theme->settings->footerenabled) || (int)$theme->settings->footerenabled === 1;
+
+    return [
+        'auroranavbar' => [
+            'customlogo' => !empty($navbarlogo) ? $navbarlogo : null,
+            'customlinks' => $navbarlinks,
+            'hascustomlinks' => !empty($navbarlinks),
+        ],
+        'aurorafooter' => [
+            'enabled' => $footerenabled,
+            'logo' => !empty($footerlogo) ? $footerlogo : null,
+            'brandtitle' => $footerbrandtitle,
+            'description' => $footerdescription,
+            'contacttitle' => $footercontacttitle,
+            'contactitems' => $contactitems,
+            'hascontactitems' => !empty($contactitems),
+            'navtitle' => $footernavtitle,
+            'navlinks' => $footernavlinks,
+            'hasnavlinks' => !empty($footernavlinks),
+            'copyright' => $footercopyright,
+            'bottomright' => $footerbottomright,
+        ],
+    ];
+}
+
 function theme_aurora_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, array $options = array())
 {
     if ($context->contextlevel != CONTEXT_SYSTEM) {
@@ -220,6 +376,7 @@ function theme_aurora_pluginfile($course, $cm, $context, $filearea, $args, $forc
     }
 
     if ($filearea === 'logo' || $filearea === 'backgroundimage' || $filearea === 'loginbackgroundimage' ||
+    $filearea === 'navbarlogo' || $filearea === 'footerlogo' ||
     $filearea === 'frontpage_slider_image') {
         $theme = theme_config::load('aurora');
         // By default, theme files must be cache-able by both browsers and proxies.

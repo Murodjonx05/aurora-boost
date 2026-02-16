@@ -31,5 +31,6 @@ $templatecontext = [
     'output' => $OUTPUT,
     'bodyattributes' => $bodyattributes
 ];
+$templatecontext = array_merge($templatecontext, theme_aurora_get_template_context());
 
 echo $OUTPUT->render_from_template('theme_aurora/login', $templatecontext);

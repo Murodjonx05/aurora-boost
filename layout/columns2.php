@@ -73,5 +73,6 @@ $templatecontext = [
     'overflow' => $overflow,
     'addblockbutton' => $addblockbutton,
 ];
+$templatecontext = array_merge($templatecontext, theme_aurora_get_template_context());
 
 echo $OUTPUT->render_from_template('theme_aurora/columns2', $templatecontext);

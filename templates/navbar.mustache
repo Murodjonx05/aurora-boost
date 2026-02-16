@@ -64,12 +64,17 @@
 
         <a href="{{{ config.homeurl }}}" class="navbar-brand d-none d-md-flex align-items-center m-0 me-4 p-0 aabtn">
 
+            {{#auroranavbar.customlogo}}
+                <img src="{{{ auroranavbar.customlogo }}}" class="logo me-1" alt="{{sitename}}">
+            {{/auroranavbar.customlogo}}
+            {{^auroranavbar.customlogo}}
             {{# output.should_display_navbar_logo }}
                 <img src="{{output.get_compact_logo_url}}" class="logo me-1" alt="{{sitename}}">
             {{/ output.should_display_navbar_logo }}
             {{^ output.should_display_navbar_logo }}
                 {{{ sitename }}}
             {{/ output.should_display_navbar_logo }}
+            {{/auroranavbar.customlogo}}
         </a>
         <div class="aurora-nav-links">
             {{#primarymoremenu}}
@@ -77,6 +82,16 @@
                     {{> core/moremenu}}
                 </div>
             {{/primarymoremenu}}
+
+            {{#auroranavbar.hascustomlinks}}
+            <ul class="navbar-nav d-none d-md-flex my-1 px-1">
+                {{#auroranavbar.customlinks}}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{{ url }}}">{{{ text }}}</a>
+                    </li>
+                {{/auroranavbar.customlinks}}
+            </ul>
+            {{/auroranavbar.hascustomlinks}}
 
             <ul class="navbar-nav d-none d-md-flex my-1 px-1">
                 <!-- page_heading_menu -->

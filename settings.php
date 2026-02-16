@@ -165,6 +165,23 @@ if ($ADMIN->fulltree) {
     $setting = new admin_setting_configselect($name, $title, $description, $default, $choices);
     $setting->set_updatedcallback('theme_reset_all_caches');
     $page->add($setting);
+
+    // Navbar custom logo.
+    $name = 'theme_aurora/navbarlogo';
+    $title = get_string('auroranavbarlogo', 'theme_aurora');
+    $description = get_string('auroranavbarlogo_desc', 'theme_aurora');
+    $setting = new admin_setting_configstoredfile($name, $title, $description, 'navbarlogo');
+    $setting->set_updatedcallback('theme_reset_all_caches');
+    $page->add($setting);
+
+    // Navbar custom links, one per line: Text|URL.
+    $name = 'theme_aurora/navbarcustomlinks';
+    $title = get_string('auroranavbarcustomlinks', 'theme_aurora');
+    $description = get_string('auroranavbarcustomlinks_desc', 'theme_aurora');
+    $setting = new admin_setting_configtextarea($name, $title, $description, '', PARAM_RAW, 6, 80);
+    $setting->set_updatedcallback('theme_reset_all_caches');
+    $page->add($setting);
+
     // Navbar border radius.
     $name = 'theme_aurora/aurora_nav_border_radius';
     $title = get_string('auroranavborderradius', 'theme_aurora');
@@ -180,6 +197,102 @@ if ($ADMIN->fulltree) {
         '32px' => '32px',
     ];
     $setting = new admin_setting_configselect($name, $title, $description, $default, $choices);
+    $setting->set_updatedcallback('theme_reset_all_caches');
+    $page->add($setting);
+
+    $settings->add($page);
+
+    // Footer settings.
+    $page = new admin_settingpage('theme_aurora_footer', get_string('footersettings', 'theme_aurora'));
+
+    $name = 'theme_aurora/footerenabled';
+    $title = get_string('footerenabled', 'theme_aurora');
+    $description = get_string('footerenabled_desc', 'theme_aurora');
+    $setting = new admin_setting_configcheckbox($name, $title, $description, 1);
+    $setting->set_updatedcallback('theme_reset_all_caches');
+    $page->add($setting);
+
+    $name = 'theme_aurora/footerlogo';
+    $title = get_string('footerlogo', 'theme_aurora');
+    $description = get_string('footerlogo_desc', 'theme_aurora');
+    $setting = new admin_setting_configstoredfile($name, $title, $description, 'footerlogo');
+    $setting->set_updatedcallback('theme_reset_all_caches');
+    $page->add($setting);
+
+    $name = 'theme_aurora/footerbrandtitle';
+    $title = get_string('footerbrandtitle', 'theme_aurora');
+    $description = get_string('footerbrandtitle_desc', 'theme_aurora');
+    $setting = new admin_setting_configtext($name, $title, $description, '', PARAM_RAW_TRIMMED);
+    $setting->set_updatedcallback('theme_reset_all_caches');
+    $page->add($setting);
+
+    $name = 'theme_aurora/footerdescription';
+    $title = get_string('footerdescription', 'theme_aurora');
+    $description = get_string('footerdescription_desc', 'theme_aurora');
+    $setting = new admin_setting_configtextarea($name, $title, $description, '', PARAM_RAW, 4, 80);
+    $setting->set_updatedcallback('theme_reset_all_caches');
+    $page->add($setting);
+
+    $name = 'theme_aurora/footercontacttitle';
+    $title = get_string('footercontacttitle', 'theme_aurora');
+    $description = get_string('footercontacttitle_desc', 'theme_aurora');
+    $setting = new admin_setting_configtext($name, $title, $description, '', PARAM_RAW_TRIMMED);
+    $setting->set_updatedcallback('theme_reset_all_caches');
+    $page->add($setting);
+
+    $name = 'theme_aurora/footercontactaddress';
+    $title = get_string('footercontactaddress', 'theme_aurora');
+    $description = get_string('footercontactaddress_desc', 'theme_aurora');
+    $setting = new admin_setting_configtext($name, $title, $description, '', PARAM_RAW_TRIMMED);
+    $setting->set_updatedcallback('theme_reset_all_caches');
+    $page->add($setting);
+
+    $name = 'theme_aurora/footercontactphone';
+    $title = get_string('footercontactphone', 'theme_aurora');
+    $description = get_string('footercontactphone_desc', 'theme_aurora');
+    $setting = new admin_setting_configtext($name, $title, $description, '', PARAM_RAW_TRIMMED);
+    $setting->set_updatedcallback('theme_reset_all_caches');
+    $page->add($setting);
+
+    $name = 'theme_aurora/footercontactemail';
+    $title = get_string('footercontactemail', 'theme_aurora');
+    $description = get_string('footercontactemail_desc', 'theme_aurora');
+    $setting = new admin_setting_configtext($name, $title, $description, '', PARAM_RAW_TRIMMED);
+    $setting->set_updatedcallback('theme_reset_all_caches');
+    $page->add($setting);
+
+    $name = 'theme_aurora/footercontactextra';
+    $title = get_string('footercontactextra', 'theme_aurora');
+    $description = get_string('footercontactextra_desc', 'theme_aurora');
+    $setting = new admin_setting_configtext($name, $title, $description, '', PARAM_RAW_TRIMMED);
+    $setting->set_updatedcallback('theme_reset_all_caches');
+    $page->add($setting);
+
+    $name = 'theme_aurora/footernavtitle';
+    $title = get_string('footernavtitle', 'theme_aurora');
+    $description = get_string('footernavtitle_desc', 'theme_aurora');
+    $setting = new admin_setting_configtext($name, $title, $description, '', PARAM_RAW_TRIMMED);
+    $setting->set_updatedcallback('theme_reset_all_caches');
+    $page->add($setting);
+
+    $name = 'theme_aurora/footernavlinks';
+    $title = get_string('footernavlinks', 'theme_aurora');
+    $description = get_string('footernavlinks_desc', 'theme_aurora');
+    $setting = new admin_setting_configtextarea($name, $title, $description, '', PARAM_RAW, 6, 80);
+    $setting->set_updatedcallback('theme_reset_all_caches');
+    $page->add($setting);
+
+    $name = 'theme_aurora/footercopyright';
+    $title = get_string('footercopyright', 'theme_aurora');
+    $description = get_string('footercopyright_desc', 'theme_aurora');
+    $setting = new admin_setting_configtext($name, $title, $description, '', PARAM_RAW_TRIMMED);
+    $setting->set_updatedcallback('theme_reset_all_caches');
+    $page->add($setting);
+
+    $name = 'theme_aurora/footerbottomright';
+    $title = get_string('footerbottomright', 'theme_aurora');
+    $description = get_string('footerbottomright_desc', 'theme_aurora');
+    $setting = new admin_setting_configtext($name, $title, $description, '', PARAM_RAW_TRIMMED);
     $setting->set_updatedcallback('theme_reset_all_caches');
     $page->add($setting);
 
