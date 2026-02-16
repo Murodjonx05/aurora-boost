@@ -14,17 +14,17 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace theme_boost\privacy;
+namespace theme_aurora\privacy;
 
 use context_user;
 use core_privacy\local\request\writer;
 
 /**
- * Privacy tests for theme_boost.
+ * Privacy tests for theme_aurora.
  *
- * @package    theme_boost
+ * @package    theme_aurora
  * @category   test
- * @covers     \theme_boost\privacy\provider
+ * @covers     \theme_aurora\privacy\provider
  * @copyright  2018 Adrian Greeve <adriangreeve.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -68,9 +68,9 @@ final class provider_test extends \core_privacy\tests\provider_testcase {
         $writer = writer::with_context(context_user::instance($user->id));
         $this->assertTrue($writer->has_any_data());
 
-        $exportedpreferences = $writer->get_user_preferences('theme_boost');
+        $exportedpreferences = $writer->get_user_preferences('theme_aurora');
         $this->assertCount(1, (array) $exportedpreferences);
         $this->assertEquals($value, (bool) $exportedpreferences->{$preference}->value);
-        $this->assertEquals(get_string($expectdescription, 'theme_boost'), $exportedpreferences->{$preference}->description);
+        $this->assertEquals(get_string($expectdescription, 'theme_aurora'), $exportedpreferences->{$preference}->description);
     }
 }

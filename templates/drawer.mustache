@@ -15,7 +15,7 @@
     along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 }}
 {{!
-    @template theme_boost/drawer
+    @template theme_aurora/drawer
 
     Example context (json):
     {
@@ -57,9 +57,4 @@
     </div>
 </div>
 
-{! {{#js}}
-{! M.util.js_pending('theme_boost/drawers:load');
-{! require(['theme_boost/drawers'], function() {
-{!     M.util.js_complete('theme_boost/drawers:load');
-{! });
-{! {{/js}}
+{{! Drawers JS is initialised in the parent layout templates. }}

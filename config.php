@@ -17,7 +17,7 @@
 /**
  * Boost config.
  *
- * @package   theme_boost
+ * @package   theme_aurora
  * @copyright 2016 Frédéric Massart
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -28,7 +28,7 @@ require_once(__DIR__ . '/lib.php');
 
 $THEME->name = 'aurora';
 $THEME->parents = ['boost'];
-$THEME->sheets = ['main', 'navbar', 'frontpage', 'my_courses', 'moo_typer', 'dev'];
+$THEME->sheets = ['main', 'navbar', 'frontpage', 'my_courses', 'moo_typer', 'dev','dev2'];
 $THEME->editor_sheets = [];
 $THEME->editor_scss = ['editor'];
 $THEME->usefallback = true;

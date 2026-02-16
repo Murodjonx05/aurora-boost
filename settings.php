@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * @package   theme_boost
+ * @package   theme_aurora
  * @copyright 2016 Ryan Wyllie
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -29,7 +29,7 @@ if ($hassiteconfig) {
 }
 
 if ($ADMIN->fulltree) {
-    $settings = new theme_boost_admin_settingspage_tabs('themesettingaurora', get_string('configtitle', 'theme_aurora'));
+    $settings = new theme_aurora_admin_settingspage_tabs('themesettingaurora', get_string('configtitle', 'theme_aurora'));
     $page = new admin_settingpage('theme_aurora_general', get_string('generalsettings', 'theme_aurora'));
 
     // Unaddable blocks.

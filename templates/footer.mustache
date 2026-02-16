@@ -15,7 +15,7 @@
     along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 }}
 {{!
-    @template theme_boost/footer
+    @template theme_aurora/footer
 
     Page footer.
 
@@ -42,7 +42,7 @@
                 {{#pix}}t/messages-o, core{{/pix}}
             </button>
         {{/output.has_communication_links}}
-        <button class="btn btn-icon rounded-circle bg-secondary btn-footer-popover" data-action="footer-popover" aria-label="{{#str}}showfooter, theme_boost{{/str}}">
+        <button class="btn btn-icon rounded-circle bg-secondary btn-footer-popover" data-action="footer-popover" aria-label="{{#str}}showfooter, theme_aurora{{/str}}">
             {{#pix}}e/question, core{{/pix}}
         </button>
     </div>
@@ -94,7 +94,7 @@
     </div>
 </footer>
 {{#js}}
-require(['theme_boost/footer-popover'], function(FooterPopover) {
+require(['theme_aurora/footer-popover'], function(FooterPopover) {
     FooterPopover.init();
 });
 {{/js}}

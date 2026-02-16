@@ -2,7 +2,6 @@ a,
 a:hover,
 a:link,
 a:visited,
-a:active,
 a:focus {
 
     text-decoration: none !important;
@@ -16,7 +15,24 @@ a:focus {
 
 }
 
-/* #page {
+#page-site-index{
+a,
+a:hover,
+a:link,
+a:visited,
+a:focus {
+
+    text-decoration: none !important;
+    /* background: none !important; */
+
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+    cursor: pointer !important;
+    transition: none !important;
+
+}
+
     a:active,
     a:focus,
     a:focus-visible,
@@ -25,4 +41,4 @@ a:focus {
         background: none !important;
         box-shadow: none !important;
     }
-} */
+}

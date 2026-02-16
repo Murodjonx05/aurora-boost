@@ -25,7 +25,7 @@ defined('MOODLE_INTERNAL') || die;
 /**
  * Renderers to align Moodle's HTML with that expected by Bootstrap
  *
- * @package    theme_boost
+ * @package    theme_aurora
  * @copyright  2012 Bas Brands, www.basbrands.nl
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -60,7 +60,7 @@ class core_renderer extends \core_renderer {
      * @return string the HTML for the navbar.
      */
     public function navbar(): string {
-        $newnav = new \theme_boost\boostnavbar($this->page);
+        $newnav = new \theme_aurora\boostnavbar($this->page);
         return $this->render_from_template('core/navbar', $newnav);
     }
 

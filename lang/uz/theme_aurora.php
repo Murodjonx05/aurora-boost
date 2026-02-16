@@ -123,3 +123,4 @@ $string['frontpagesliderbuttontext_desc'] = 'Slayder tugmasi uchun yozuv (masala
 $string['frontpagesliderbuttonurl'] = 'Tugma havolasi';
 $string['frontpagesliderbuttonurl_desc'] = 'Slayder tugmasi uchun URL.';
 $string['frontpagesliderbuttondefault'] = 'Bizni yollang';
+$string['showfooter'] = 'Footerni ko\'rsatish';

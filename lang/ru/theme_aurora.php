@@ -123,3 +123,4 @@ $string['frontpagesliderbuttontext_desc'] = 'Подпись кнопки (нап
 $string['frontpagesliderbuttonurl'] = 'Ссылка кнопки';
 $string['frontpagesliderbuttonurl_desc'] = 'URL для кнопки слайдера.';
 $string['frontpagesliderbuttondefault'] = 'Нанять нас';
+$string['showfooter'] = 'Показать футер';

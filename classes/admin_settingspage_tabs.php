@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * @package   theme_boost
+ * @package   theme_aurora
  * @copyright 2016 Ryan Wyllie
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -23,11 +23,11 @@
 defined('MOODLE_INTERNAL') || die();
 
 /**
- * @package   theme_boost
+ * @package   theme_aurora
  * @copyright 2016 Ryan Wyllie
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class theme_boost_admin_settingspage_tabs extends admin_settingpage
+class theme_aurora_admin_settingspage_tabs extends admin_settingpage
 {
 
     /** @var The tabs */
@@ -99,7 +99,7 @@ class theme_boost_admin_settingspage_tabs extends admin_settingpage
             return '';
         }
 
-        return $OUTPUT->render_from_template('theme_boost/admin_setting_tabs', $context);
+        return $OUTPUT->render_from_template('theme_aurora/admin_setting_tabs', $context);
     }
 
 }

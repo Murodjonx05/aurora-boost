@@ -1,0 +1,900 @@
+/* =========================================================
+   AURORA — MODERN QUIZ ATTEMPT UI (Moodle) — ONE CLEAN BLOCK
+   Scope: #page-mod-quiz-attempt
+   Covers:
+   - multichoice (que.multichoice.*)
+   - true/false (que.truefalse.*)
+   - match / shortanswer / numerical / ddwtos / essay
+   Features:
+   - controlled reset (kills Moodle/Bootstrap leftovers)
+   - premium card + premium option rows
+   - full-row clickable input overlay (both types)
+   - selected state: :has() + fallback
+   ========================================================= */
+
+   #page-mod-quiz-attempt {
+
+    /* Hide default info panel */
+    #page-content .info { display: none !important; }
+  
+    /* ================== DESIGN TOKENS ================== */
+    --quiz-bg: #ffffff;
+    --quiz-border: rgba(15, 23, 42, 0.10);
+    --quiz-border-hover: rgba(59, 91, 253, 0.30);
+    --quiz-shadow: 0 10px 26px rgba(15, 23, 42, 0.08);
+    --quiz-shadow-hover: 0 16px 40px rgba(59, 91, 253, 0.14);
+  
+    --text-main: #0f172a;
+    --text-muted: #64748b;
+    --text-accent: #3b5bfd;
+  
+    --option-bg: rgba(248, 250, 252, 0.95);
+    --option-border: rgba(15, 23, 42, 0.08);
+    --option-hover: rgba(238, 242, 255, 0.95);
+    --option-active: rgba(224, 231, 255, 0.95);
+  
+    --radius-lg: 18px;
+    --radius-md: 14px;
+  
+    --ring: 0 0 0 4px rgba(147, 197, 253, 0.55);
+  
+    /* Keep these in sync with option padding (used by fallback bleed) */
+    --row-py: 0.95rem;
+    --row-px: 1rem;
+  
+    /* =========================================================
+       0) BASE TYPOGRAPHY FOR QUIZ QUESTIONS
+       ========================================================= */
+    .que.multichoice,
+    .que.truefalse,
+    .que.match,
+    .que.shortanswer,
+    .que.numerical,
+    .que.ddwtos,
+    .que.essay,
+    .que.multichoice p,
+    .que.truefalse p,
+    .que.match p,
+    .que.shortanswer p,
+    .que.numerical p,
+    .que.ddwtos p,
+    .que.essay p,
+    .que.multichoice span,
+    .que.truefalse span,
+    .que.match span,
+    .que.shortanswer span,
+    .que.numerical span,
+    .que.ddwtos span,
+    .que.essay span,
+    .que.multichoice div,
+    .que.truefalse div,
+    .que.match div,
+    .que.shortanswer div,
+    .que.numerical div,
+    .que.ddwtos div,
+    .que.essay div,
+    .que.multichoice label,
+    .que.truefalse label,
+    .que.match label,
+    .que.shortanswer label,
+    .que.numerical label,
+    .que.ddwtos label,
+    .que.essay label {
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Arial, sans-serif;
+      color: var(--text-main);
+    }
+  
+    /* =========================================================
+       1) CONTROLLED RESET — MULTICHOICE
+       ========================================================= */
+    .que.multichoice *:not(input):not(label):not(svg):not(path) {
+      all: unset;
+      box-sizing: border-box;
+      display: revert;
+    }
+  
+    .que.multichoice,
+    .que.multichoice .content,
+    .que.multichoice .formulation {
+      display: block;
+      position: relative;
+    }
+  
+    .que.multichoice input[type="radio"] {
+      all: revert;
+      accent-color: var(--text-accent);
+    }
+  
+    .que.multichoice label { cursor: pointer; }
+  
+    /* =========================================================
+       2) QUESTION CARD — MULTICHOICE
+       ========================================================= */
+    .que.multichoice.deferredfeedback {
+      background:
+        radial-gradient(900px 240px at 18% -30px, rgba(59, 91, 253, 0.10), transparent 60%),
+        radial-gradient(900px 240px at 85% 0px, rgba(56, 189, 248, 0.07), transparent 60%),
+        var(--quiz-bg);
+      border: 1px solid var(--quiz-border);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--quiz-shadow);
+      padding: 2.1rem 2.3rem 1.9rem;
+      margin: 0 0 2.2rem 0;
+      transition: border-color .2s ease, box-shadow .2s ease, transform .12s ease;
+    }
+  
+    .que.multichoice.deferredfeedback:hover {
+      border-color: var(--quiz-border-hover);
+      box-shadow: var(--quiz-shadow-hover);
+      transform: translateY(-1px);
+    }
+  
+    /* Header bits */
+    .que.multichoice .no,
+    .que.multichoice .qno,
+    .que.truefalse .no,
+    .que.truefalse .qno,
+    .que.match .no,
+    .que.match .qno,
+    .que.shortanswer .no,
+    .que.shortanswer .qno,
+    .que.numerical .no,
+    .que.numerical .qno,
+    .que.ddwtos .no,
+    .que.ddwtos .qno,
+    .que.essay .no,
+    .que.essay .qno {
+      font-size: 1.02rem;
+      font-weight: 750;
+      color: var(--text-accent);
+      letter-spacing: .01em;
+    }
+  
+    .que.multichoice .state,
+    .que.multichoice .badge,
+    .que.truefalse .state,
+    .que.truefalse .badge,
+    .que.match .state,
+    .que.match .badge,
+    .que.shortanswer .state,
+    .que.shortanswer .badge,
+    .que.numerical .state,
+    .que.numerical .badge,
+    .que.ddwtos .state,
+    .que.ddwtos .badge,
+    .que.essay .state,
+    .que.essay .badge {
+      margin-left: .65rem;
+      padding: .24rem .75rem;
+      font-size: .82rem;
+      border-radius: 999px;
+      background: rgba(59, 91, 253, 0.10);
+      color: var(--text-accent);
+      border: 1px solid rgba(59, 91, 253, 0.18);
+      font-weight: 600;
+    }
+  
+    .que.multichoice .editquestion,
+    .que.truefalse .editquestion,
+    .que.match .editquestion,
+    .que.shortanswer .editquestion,
+    .que.numerical .editquestion,
+    .que.ddwtos .editquestion,
+    .que.essay .editquestion {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      font-size: .88rem;
+      opacity: .9;
+    }
+  
+    .que.multichoice .editquestion a,
+    .que.truefalse .editquestion a,
+    .que.match .editquestion a,
+    .que.shortanswer .editquestion a,
+    .que.numerical .editquestion a,
+    .que.ddwtos .editquestion a,
+    .que.essay .editquestion a {
+      color: var(--text-muted);
+      text-decoration: underline dotted;
+    }
+    .que.multichoice .editquestion a:hover,
+    .que.truefalse .editquestion a:hover,
+    .que.match .editquestion a:hover,
+    .que.shortanswer .editquestion a:hover,
+    .que.numerical .editquestion a:hover,
+    .que.ddwtos .editquestion a:hover,
+    .que.essay .editquestion a:hover {
+      color: var(--text-accent);
+      text-decoration: underline;
+    }
+  
+    .que.multichoice .qtext,
+    .que.truefalse .qtext,
+    .que.match .qtext,
+    .que.shortanswer .qtext,
+    .que.numerical .qtext,
+    .que.ddwtos .qtext,
+    .que.essay .qtext {
+      margin: 1.1rem 0 1.6rem;
+      font-size: 1.16rem;
+      line-height: 1.7;
+      font-weight: 600;
+      color: var(--text-main);
+    }
+  
+    /* Answers wrap */
+    .que.multichoice .answer {
+      display: flex;
+      flex-direction: column;
+      gap: .72rem;
+    }
+  
+    .que.multichoice .answer > .r0,
+    .que.multichoice .answer > .r1 {
+      position: relative;
+      border-radius: var(--radius-md);
+      background: var(--option-bg);
+      border: 1px solid var(--option-border);
+      padding: var(--row-py) var(--row-px);
+      transition: background .15s ease, border .15s ease, box-shadow .15s ease, transform .08s ease;
+    }
+  
+    .que.multichoice .answer > .r0:hover,
+    .que.multichoice .answer > .r1:hover {
+      background: var(--option-hover);
+      border-color: rgba(59, 91, 253, 0.22);
+      box-shadow: 0 10px 22px rgba(15, 23, 42, 0.06);
+      transform: translateY(-1px);
+    }
+  
+    /* Moodle label layouts */
+    .que.multichoice .answer > .r0 label,
+    .que.multichoice .answer > .r1 label {
+      display: flex;
+      align-items: flex-start;
+      gap: .9rem;
+      width: 100%;
+    }
+  
+    .que.multichoice .answer .d-flex {
+      display: flex;
+      align-items: flex-start;
+      gap: .9rem;
+      width: 100%;
+    }
+  
+    /* ================== FULL-ROW CLICK — MULTICHOICE ==================
+       We must NOT rely on "label wraps input" because Moodle often has siblings.
+       Solution: make the real input full overlay per row (click anywhere selects),
+       but keep visible content above it.
+    */
+    .que.multichoice .answer > .r0,
+    .que.multichoice .answer > .r1 { position: relative; }
+  
+    .que.multichoice .answer > .r0 label,
+    .que.multichoice .answer > .r1 label {
+      position: relative;
+      width: 100%;
+      display: block;
+    }
+  
+    .que.multichoice .answer > .r0 label > *,
+    .que.multichoice .answer > .r1 label > * {
+      position: relative;
+      z-index: 2;
+    }
+  
+    .que.multichoice .answer > .r0 input[type="radio"],
+    .que.multichoice .answer > .r1 input[type="radio"] {
+      position: absolute !important;
+      inset: 0 !important;
+      width: 100% !important;
+      height: 100% !important;
+      margin: 0 !important;
+  
+      opacity: 0 !important;
+      cursor: pointer !important;
+      z-index: 3 !important;
+  
+      appearance: none !important;
+      -webkit-appearance: none !important;
+      background: transparent !important;
+      border: 0 !important;
+      box-shadow: none !important;
+      outline: 0 !important;
+    }
+  
+    /* Keep the classic small radio visual (optional).
+       If you want ONLY fake bullet like truefalse, tell me and I’ll unify both. */
+    .que.multichoice .answer input[type="radio"] {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--text-accent);
+    }
+  
+    .que.multichoice .answer p {
+      margin: 0;
+      font-size: 1.05rem;
+      color: var(--text-main);
+      line-height: 1.55;
+      font-weight: 520;
+    }
+  
+    /* Selected state (no double box) */
+    @supports selector(:has(*)) {
+      .que.multichoice .answer > .r0:has(input[type="radio"]:checked),
+      .que.multichoice .answer > .r1:has(input[type="radio"]:checked) {
+        background: var(--option-active);
+        border-color: rgba(59, 91, 253, 0.55);
+        box-shadow: 0 14px 28px rgba(59, 91, 253, 0.12);
+      }
+  
+      /* neutralize inner highlight */
+      .que.multichoice .answer input[type="radio"]:checked + .d-flex {
+        background: transparent !important;
+        border: 0 !important;
+        box-shadow: none !important;
+        border-radius: 0 !important;
+        width: auto !important;
+        height: auto !important;
+        margin: 0 !important;
+        padding: 0 !important;
+      }
+  
+      .que.multichoice .answer > .r0:has(input[type="radio"]:focus-visible),
+      .que.multichoice .answer > .r1:has(input[type="radio"]:focus-visible) {
+        box-shadow: var(--ring), 0 14px 28px rgba(59, 91, 253, 0.12);
+        border-color: rgba(59, 91, 253, 0.55);
+      }
+    }
+  
+    @supports not selector(:has(*)) {
+      .que.multichoice .answer input[type="radio"]:checked + .d-flex {
+        background: var(--option-active) !important;
+        border: 1px solid rgba(59, 91, 253, 0.55) !important;
+        border-radius: var(--radius-md) !important;
+        box-shadow: 0 14px 28px rgba(59, 91, 253, 0.12) !important;
+  
+        margin: calc(var(--row-py) * -1) calc(var(--row-px) * -1) !important;
+        padding: var(--row-py) var(--row-px) !important;
+  
+        width: auto !important;
+        height: auto !important;
+      }
+    }
+  
+    .que.multichoice input[type="radio"]:focus-visible {
+      outline: none;
+      box-shadow: var(--ring);
+      border-radius: 50%;
+    }
+  
+    /* =========================================================
+       3) CONTROLLED RESET — TRUE/FALSE (hard)
+       ========================================================= */
+    .que.truefalse .ablock {
+      border: 0 !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      background: transparent !important;
+      box-shadow: none !important;
+    }
+  
+    .que.truefalse .answer,
+    .que.truefalse .answer * { box-sizing: border-box; }
+  
+    .que.truefalse .answer label.ms-1 { margin-left: 0 !important; }
+  
+    /* =========================================================
+       4) QUESTION CARD — TRUE/FALSE (same premium as multichoice)
+       ========================================================= */
+    .que.truefalse.deferredfeedback {
+      background:
+        radial-gradient(900px 240px at 18% -30px, rgba(59, 91, 253, 0.10), transparent 60%),
+        radial-gradient(900px 240px at 85% 0px, rgba(56, 189, 248, 0.07), transparent 60%),
+        var(--quiz-bg) !important;
+      border: 1px solid var(--quiz-border) !important;
+      border-radius: var(--radius-lg) !important;
+      box-shadow: var(--quiz-shadow) !important;
+      padding: 2.1rem 2.3rem 1.9rem !important;
+      margin: 0 0 2.2rem 0 !important;
+      transition: border-color .2s ease, box-shadow .2s ease, transform .12s ease !important;
+    }
+  
+    .que.truefalse.deferredfeedback:hover {
+      border-color: var(--quiz-border-hover) !important;
+      box-shadow: var(--quiz-shadow-hover) !important;
+      transform: translateY(-1px) !important;
+    }
+  
+    /* =========================================================
+       5) ANSWERS — TRUE/FALSE (premium rows + hidden native radio)
+       DOM: <div class="r0"><input ...><label for=...>Text</label></div>
+       ========================================================= */
+    .que.truefalse .answer {
+      display: flex !important;
+      flex-direction: column !important;
+      gap: .72rem !important;
+    }
+  
+    .que.truefalse .answer > .r0,
+    .que.truefalse .answer > .r1 {
+      position: relative !important;
+      border-radius: var(--radius-md) !important;
+      background: var(--option-bg) !important;
+      border: 1px solid var(--option-border) !important;
+      padding: var(--row-py) var(--row-px) !important;
+      transition: background .15s ease, border-color .15s ease, box-shadow .15s ease, transform .08s ease !important;
+    }
+  
+    .que.truefalse .answer > .r0:hover,
+    .que.truefalse .answer > .r1:hover {
+      background: var(--option-hover) !important;
+      border-color: rgba(59, 91, 253, 0.22) !important;
+      box-shadow: 0 10px 22px rgba(15, 23, 42, 0.06) !important;
+      transform: translateY(-1px) !important;
+    }
+  
+    /* FULL-CARD INPUT OVERLAY + HARD HIDE native radio */
+    .que.truefalse .answer > .r0 input[type="radio"],
+    .que.truefalse .answer > .r1 input[type="radio"] {
+      position: absolute !important;
+      inset: 0 !important;
+      width: 100% !important;
+      height: 100% !important;
+  
+      margin: 0 !important;
+  
+      opacity: 0 !important;
+      cursor: pointer !important;
+      z-index: 3 !important;
+  
+      appearance: none !important;
+      -webkit-appearance: none !important;
+      -moz-appearance: none !important;
+  
+      background: transparent !important;
+      border: 0 !important;
+      outline: 0 !important;
+      box-shadow: none !important;
+    }
+  
+    /* Visible label */
+    .que.truefalse .answer > .r0 label[for],
+    .que.truefalse .answer > .r1 label[for] {
+      position: relative !important;
+      z-index: 1 !important;
+      display: block !important;
+      width: 100% !important;
+      padding-left: 0 !important;
+      font-size: 1.05rem !important;
+      line-height: 1.55 !important;
+      font-weight: 520 !important;
+      color: var(--text-main) !important;
+      user-select: none !important;
+    }
+  
+    /* Keep only one control visual (no pseudo radio) */
+    .que.truefalse .answer > .r0 label[for]::before,
+    .que.truefalse .answer > .r1 label[for]::before,
+    .que.truefalse .answer > .r0 label[for]::after,
+    .que.truefalse .answer > .r1 label[for]::after {
+      content: none !important;
+      display: none !important;
+    }
+  
+    /* Selected state */
+    @supports selector(:has(*)) {
+      .que.truefalse .answer > .r0:has(input[type="radio"]:checked),
+      .que.truefalse .answer > .r1:has(input[type="radio"]:checked) {
+        background: var(--option-active) !important;
+        border-color: rgba(59, 91, 253, 0.55) !important;
+        box-shadow: 0 14px 28px rgba(59, 91, 253, 0.12) !important;
+      }
+  
+      .que.truefalse .answer > .r0:has(input[type="radio"]:focus-visible),
+      .que.truefalse .answer > .r1:has(input[type="radio"]:focus-visible) {
+        box-shadow: var(--ring), 0 14px 28px rgba(59, 91, 253, 0.12) !important;
+        border-color: rgba(59, 91, 253, 0.55) !important;
+      }
+    }
+  
+    @supports not selector(:has(*)) {
+      /* Fallback paint via label (cannot select parent in old CSS) */
+      .que.truefalse .answer > .r0 input[type="radio"]:checked + label[for],
+      .que.truefalse .answer > .r1 input[type="radio"]:checked + label[for] {
+        box-shadow: 0 0 0 9999px var(--option-active) inset !important;
+        border-radius: var(--radius-md) !important;
+      }
+  
+      .que.truefalse .answer > .r0 input[type="radio"]:focus-visible + label[for],
+      .que.truefalse .answer > .r1 input[type="radio"]:focus-visible + label[for] {
+        box-shadow: 0 0 0 4px rgba(147, 197, 253, 0.55),
+                    0 0 0 9999px var(--option-active) inset !important;
+        border-radius: var(--radius-md) !important;
+      }
+    }
+
+    /* =========================================================
+       6) QUESTION CARD + INPUTS — OTHER TYPES
+       match / shortanswer / numerical / ddwtos / essay
+       ========================================================= */
+    .que.match,
+    .que.shortanswer,
+    .que.numerical,
+    .que.ddwtos,
+    .que.essay {
+      position: relative;
+      background:
+        radial-gradient(900px 240px at 18% -30px, rgba(59, 91, 253, 0.10), transparent 60%),
+        radial-gradient(900px 240px at 85% 0px, rgba(56, 189, 248, 0.07), transparent 60%),
+        var(--quiz-bg);
+      border: 1px solid var(--quiz-border);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--quiz-shadow);
+      padding: 2.1rem 2.3rem 1.9rem;
+      margin: 0 0 2.2rem 0;
+      transition: border-color .2s ease, box-shadow .2s ease, transform .12s ease;
+    }
+
+    .que.match:hover,
+    .que.shortanswer:hover,
+    .que.numerical:hover,
+    .que.ddwtos:hover,
+    .que.essay:hover {
+      border-color: var(--quiz-border-hover);
+      box-shadow: var(--quiz-shadow-hover);
+      transform: translateY(-1px);
+    }
+
+    .que.match .content,
+    .que.shortanswer .content,
+    .que.numerical .content,
+    .que.ddwtos .content,
+    .que.essay .content,
+    .que.match .formulation,
+    .que.shortanswer .formulation,
+    .que.numerical .formulation,
+    .que.ddwtos .formulation,
+    .que.essay .formulation {
+      position: relative;
+      display: block;
+    }
+
+    .que.match .ablock,
+    .que.shortanswer .ablock,
+    .que.numerical .ablock,
+    .que.essay .ablock {
+      margin: 0;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      box-shadow: none;
+    }
+
+    .que.shortanswer .ablock,
+    .que.numerical .ablock {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: .7rem;
+    }
+
+    .que.shortanswer .ablock > label,
+    .que.numerical .ablock > label {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    .que.shortanswer .answer,
+    .que.numerical .answer {
+      display: inline-block;
+      min-width: min(100%, 320px);
+    }
+
+    .que.shortanswer input[type="text"],
+    .que.numerical input[type="text"] {
+      width: min(100%, 560px);
+      max-width: 100%;
+      min-height: 44px;
+      border: 1px solid var(--option-border);
+      border-radius: 12px;
+      background: rgba(248, 250, 252, 0.9);
+      color: var(--text-main);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9);
+      padding: .58rem .85rem;
+      transition: border-color .15s ease, box-shadow .15s ease, background .15s ease;
+    }
+
+    .que.shortanswer input[type="text"]:hover,
+    .que.numerical input[type="text"]:hover {
+      border-color: rgba(59, 91, 253, 0.32);
+      background: #fff;
+    }
+
+    .que.shortanswer input[type="text"]:focus-visible,
+    .que.numerical input[type="text"]:focus-visible {
+      outline: none;
+      border-color: rgba(59, 91, 253, 0.55);
+      box-shadow: var(--ring);
+      background: #fff;
+    }
+
+    /* match question */
+    .que.match .answer.table-reboot {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0 .72rem;
+      margin: 0;
+    }
+
+    .que.match .answer.table-reboot tbody,
+    .que.match .answer.table-reboot tr,
+    .que.match .answer.table-reboot td {
+      border: 0;
+      background: transparent;
+    }
+
+    .que.match .answer.table-reboot tr {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(220px, 340px);
+      gap: .8rem;
+      align-items: center;
+      background: var(--option-bg);
+      border: 1px solid var(--option-border);
+      border-radius: var(--radius-md);
+      box-shadow: 0 8px 20px rgba(15, 23, 42, 0.05);
+      padding: .72rem .86rem;
+      transition: background .15s ease, border-color .15s ease, box-shadow .15s ease;
+    }
+
+    .que.match .answer.table-reboot tr:hover {
+      background: var(--option-hover);
+      border-color: rgba(59, 91, 253, 0.26);
+      box-shadow: 0 12px 24px rgba(59, 91, 253, 0.10);
+    }
+
+    .que.match .answer.table-reboot td.text p {
+      margin: 0;
+      font-size: 1.01rem;
+      line-height: 1.45;
+      font-weight: 520;
+      word-break: break-word;
+    }
+
+    .que.match .answer.table-reboot td.control {
+      width: 100%;
+      text-align: right;
+    }
+
+    .que.match .answer.table-reboot select.form-select {
+      width: 100%;
+      max-width: 340px;
+      min-height: 42px;
+      border: 1px solid var(--option-border);
+      border-radius: 10px;
+      background: #fff;
+      color: var(--text-main);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.95);
+      transition: border-color .15s ease, box-shadow .15s ease;
+    }
+
+    .que.match .answer.table-reboot select.form-select:hover {
+      border-color: rgba(59, 91, 253, 0.32);
+    }
+
+    .que.match .answer.table-reboot select.form-select:focus-visible {
+      outline: none;
+      border-color: rgba(59, 91, 253, 0.55);
+      box-shadow: var(--ring);
+    }
+
+    /* ddwtos question */
+    .que.ddwtos .qtext p {
+      margin: 0 0 .72rem;
+      font-size: 1.03rem;
+      line-height: 1.55;
+      font-weight: 520;
+    }
+
+    .que.ddwtos .qtext .drop {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 0 .38rem;
+      border-radius: 10px;
+      border: 1px dashed rgba(59, 91, 253, 0.55);
+      background: rgba(238, 242, 255, 0.92);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9);
+      font-weight: 650;
+      color: var(--text-accent);
+      vertical-align: middle;
+    }
+
+    .que.ddwtos .qtext .drop.active {
+      display: inline-flex;
+      margin: 0 2px 2px 0;
+    }
+
+    .que.ddwtos .answercontainer {
+      margin-top: .8rem;
+      padding: .72rem;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--option-border);
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(248, 250, 252, 0.95));
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.95);
+    }
+
+    .que.ddwtos [class*="draggrouphomes"] {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .45rem;
+    }
+
+    .que.ddwtos .draghome {
+      display: inline-flex !important;
+      align-items: center;
+      justify-content: center;
+      padding: 0 .45rem;
+      border-radius: 10px;
+      border: 1px solid rgba(59, 91, 253, 0.28);
+      background: #fff;
+      color: var(--text-accent);
+      font-weight: 700;
+      box-shadow: 0 6px 14px rgba(15, 23, 42, 0.08);
+    }
+
+    .que.ddwtos .draghome.beingdragged {
+      box-shadow: 0 10px 26px rgba(15, 23, 42, 0.24);
+      cursor: grabbing;
+    }
+
+    .que.ddwtos .draghome.placed {
+      margin-bottom: 2px;
+      vertical-align: middle;
+    }
+
+    .que.ddwtos .qtext .draghome.placed {
+      display: inline-flex !important;
+      margin: 0 2px 2px 0;
+    }
+
+    .que.ddwtos .draghome.dragplaceholder {
+      display: none !important;
+    }
+
+    .que.ddwtos .draghome.dragplaceholder.active {
+      display: inline-flex !important;
+      visibility: hidden !important;
+      border-color: transparent !important;
+      background: transparent !important;
+      box-shadow: none;
+      pointer-events: none;
+    }
+
+    /* essay question */
+    .que.essay .answer,
+    .que.essay .qtype_essay_response {
+      width: 100%;
+    }
+
+    .que.essay .qtype_essay_response {
+      padding: .45rem;
+      border: 1px solid var(--option-border);
+      border-radius: var(--radius-md);
+      background: rgba(255, 255, 255, 0.94);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.95);
+      transition: border-color .15s ease, box-shadow .15s ease;
+    }
+
+    .que.essay .qtype_essay_response:focus-within {
+      border-color: rgba(59, 91, 253, 0.55);
+      box-shadow: var(--ring);
+    }
+
+    .que.essay textarea.form-control {
+      min-height: 220px;
+      border: 1px solid var(--option-border);
+      border-radius: 12px;
+      background: #fff;
+      color: var(--text-main);
+    }
+
+    .que.essay .tox.tox-tinymce {
+      border: 1px solid rgba(15, 23, 42, 0.10) !important;
+      border-radius: 12px !important;
+      box-shadow: none !important;
+      overflow: hidden;
+    }
+  
+    /* =========================================================
+       7) RESPONSIVE (all types keep same rhythm)
+       ========================================================= */
+    @media (max-width: 900px) {
+      .que.multichoice.deferredfeedback,
+      .que.truefalse.deferredfeedback,
+      .que.match,
+      .que.shortanswer,
+      .que.numerical,
+      .que.ddwtos,
+      .que.essay {
+        padding: 1.35rem 1.15rem 1.1rem;
+      }
+      .que.multichoice .qtext,
+      .que.truefalse .qtext,
+      .que.match .qtext,
+      .que.shortanswer .qtext,
+      .que.numerical .qtext,
+      .que.ddwtos .qtext,
+      .que.essay .qtext { font-size: 1.05rem; }
+
+      .que.match .answer.table-reboot tr {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .que.match .answer.table-reboot td.control {
+        text-align: left;
+      }
+
+      .que.match .answer.table-reboot select.form-select {
+        max-width: 100%;
+      }
+    }
+  
+    @media (max-width: 560px) {
+      --row-py: 0.85rem;
+      --row-px: 0.85rem;
+  
+      .que.multichoice.deferredfeedback,
+      .que.truefalse.deferredfeedback,
+      .que.match,
+      .que.shortanswer,
+      .que.numerical,
+      .que.ddwtos,
+      .que.essay {
+        padding: 1rem .9rem;
+        border-radius: 16px;
+      }
+  
+      .que.multichoice .answer > .r0,
+      .que.multichoice .answer > .r1,
+      .que.truefalse .answer > .r0,
+      .que.truefalse .answer > .r1 {
+        padding: var(--row-py) var(--row-px);
+        border-radius: 14px;
+      }
+  
+      .que.multichoice .answer p,
+      .que.truefalse .answer > .r0 label[for],
+      .que.truefalse .answer > .r1 label[for] {
+        font-size: 1rem;
+        font-weight: 500;
+      }
+
+      .que.shortanswer .ablock,
+      .que.numerical .ablock {
+        align-items: stretch;
+      }
+
+      .que.shortanswer .answer,
+      .que.numerical .answer {
+        width: 100%;
+        min-width: 0;
+      }
+
+      .que.shortanswer input[type="text"],
+      .que.numerical input[type="text"] {
+        width: 100%;
+      }
+
+      .que.ddwtos .draghome,
+      .que.ddwtos .qtext .drop {
+        min-width: 1.9rem;
+        min-height: 1.9rem;
+      }
+    }
+  
+  }
+  

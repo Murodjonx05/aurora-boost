@@ -15,7 +15,7 @@
     along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 }}
 {{!
-    @template theme_boost/columns2
+    @template theme_aurora/columns2
 
     Admin time setting template.
 
@@ -48,7 +48,7 @@
         "hasregionmainsettingsmenu": false
     }
 }}
-{{> theme_boost/head }}
+{{> theme_aurora/head }}
 
 <body {{{ bodyattributes }}}>
 {{> core/local/toast/wrapper}}
@@ -100,15 +100,14 @@
         </div>
     </div>
     {{{ output.standard_after_main_region_html }}}
-    {{> theme_boost/footer }}
+    {{> theme_aurora/footer }}
 </div>
 
 </body>
 </html>
 {{#js}}
-M.util.js_pending('theme_boost/loader');
-require(['theme_boost/loader', 'theme_boost/drawer'], function(Loader, Drawer) {
-    Drawer.init();
-    M.util.js_complete('theme_boost/loader');
+M.util.js_pending('theme_aurora/loader');
+require(['theme_aurora/loader', 'theme_aurora/drawers'], function() {
+    M.util.js_complete('theme_aurora/loader');
 });
 {{/js}}

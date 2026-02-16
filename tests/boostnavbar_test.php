@@ -14,13 +14,13 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace theme_boost;
+namespace theme_aurora;
 
 /**
  * Test the boostnavbar file
  *
- * @package    theme_boost
- * @covers     \theme_boost\boostnavbar
+ * @package    theme_aurora
+ * @covers     \theme_aurora\boostnavbar
  * @copyright  2021 Peter Dias
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */

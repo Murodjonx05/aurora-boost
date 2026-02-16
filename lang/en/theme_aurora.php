@@ -124,3 +124,4 @@ $string['frontpagesliderbuttontext_desc'] = 'Label for the slider button (e.g. H
 $string['frontpagesliderbuttonurl'] = 'Button link';
 $string['frontpagesliderbuttonurl_desc'] = 'URL for the slider button.';
 $string['frontpagesliderbuttondefault'] = 'Hire us';
+$string['showfooter'] = 'Show footer';

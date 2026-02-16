@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace theme_boost;
+namespace theme_aurora;
 
 use core\navigation\views\view;
 use navigation_node;
@@ -25,7 +25,7 @@ use lang_string;
 /**
  * Creates a navbar for boost that allows easy control of the navbar items.
  *
- * @package    theme_boost
+ * @package    theme_aurora
  * @copyright  2021 Adrian Greeve <adrian@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */

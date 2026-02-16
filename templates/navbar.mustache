@@ -16,7 +16,7 @@
 }}
 {{!
 
-    @template theme_boost/navbar
+    @template theme_aurora/navbar
 
     This template renders the top navbar.
 
@@ -57,7 +57,7 @@
 }}
 <nav id="PRIMARY-NAVBAR" class="navbar fixed-top bg-body navbar-expand" aria-label="{{#str}}sitemenubar, admin{{/str}}">
     <div class="container-fluid">
-        <button class="navbar-toggler aabtn d-block d-md-none px-1 my-1 border-0" data-toggler="drawers" data-action="toggle" data-target="theme_boost-drawers-primary">
+        <button class="navbar-toggler aabtn d-block d-md-none px-1 my-1 border-0" data-toggler="drawers" data-action="toggle" data-target="theme_aurora-drawers-primary">
             <span class="navbar-toggler-icon"></span>
             <span class="visually-hidden">{{#str}}sidepanel, core{{/str}}</span>
         </button>
@@ -90,7 +90,7 @@
                 <div class="divider border-start h-75 align-self-center mx-1"></div>
             {{/output.search_box}}
             {{#langmenu}}
-                {{> theme_boost/language_menu }}
+                {{> theme_aurora/language_menu }}
                 <div class="divider border-start h-75 align-self-center mx-1"></div>
             {{/langmenu}}
             {{{ output.navbar_plugin_output }}}
@@ -104,4 +104,4 @@
     </div>
 </nav>
 
-{{> theme_boost/primary-drawer-mobile }}
+{{> theme_aurora/primary-drawer-mobile }}

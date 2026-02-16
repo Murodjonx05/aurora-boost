@@ -15,7 +15,7 @@
     along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 }}
 {{!
-    @template theme_boost/drawers
+    @template theme_aurora/drawers
 
     Boost drawer template.
 
@@ -49,7 +49,7 @@
         "addblockbutton": ""
     }
 }}
-{{> theme_boost/head }}
+{{> theme_aurora/head }}
 
 <body {{{ bodyattributes }}}>
 {{> core/local/toast/wrapper}}
@@ -60,10 +60,10 @@
     {{> theme_aurora/navbar }}
     {{> theme_aurora/front-page-slider }}
     {{#courseindex}}
-        {{< theme_boost/drawer }}
-            {{$id}}theme_boost-drawers-courseindex{{/id}}
+        {{< theme_aurora/drawer }}
+            {{$id}}theme_aurora-drawers-courseindex{{/id}}
             {{$drawerheadercontent}}
-                {{> theme_boost/courseindexdrawercontrols}}
+                {{> theme_aurora/courseindexdrawercontrols}}
             {{/drawerheadercontent}}
             {{$drawerclasses}}drawer drawer-left {{#courseindexopen}}show{{/courseindexopen}}{{/drawerclasses}}
             {{$drawercontent}}
@@ -73,11 +73,11 @@
             {{$drawerstate}}show-drawer-left{{/drawerstate}}
             {{$tooltipplacement}}right{{/tooltipplacement}}
             {{$closebuttontext}}{{#str}}closecourseindex, core{{/str}}{{/closebuttontext}}
-        {{/ theme_boost/drawer}}
+        {{/ theme_aurora/drawer}}
     {{/courseindex}}
     {{#hasblocks}}
-        {{< theme_boost/drawer }}
-            {{$id}}theme_boost-drawers-blocks{{/id}}
+        {{< theme_aurora/drawer }}
+            {{$id}}theme_aurora-drawers-blocks{{/id}}
             {{$drawerclasses}}drawer drawer-right{{#blockdraweropen}} show{{/blockdraweropen}}{{/drawerclasses}}
             {{$drawercontent}}
                 <div class="d-print-none">
@@ -91,7 +91,7 @@
             {{$tooltipplacement}}left{{/tooltipplacement}}
             {{$drawercloseonresize}}1{{/drawercloseonresize}}
             {{$closebuttontext}}{{#str}}closeblockdrawer, core{{/str}}{{/closebuttontext}}
-        {{/ theme_boost/drawer}}
+        {{/ theme_aurora/drawer}}
     {{/hasblocks}}
     <div id="page" data-region="mainpage" data-usertour="scroller" class="drawers {{#courseindexopen}}show-drawer-left{{/courseindexopen}} {{#blockdraweropen}}show-drawer-right{{/blockdraweropen}} drag-container">
         <div id="topofscroll" class="main-inner">
@@ -102,7 +102,7 @@
                             class="btn icon-no-margin"
                             data-toggler="drawers"
                             data-action="toggle"
-                            data-target="theme_boost-drawers-courseindex"
+                            data-target="theme_aurora-drawers-courseindex"
                             data-bs-toggle="tooltip"
                             data-bs-placement="right"
                             title="{{#str}}opendrawerindex, core{{/str}}"
@@ -118,7 +118,7 @@
                             class="btn icon-no-margin"
                             data-toggler="drawers"
                             data-action="toggle"
-                            data-target="theme_boost-drawers-blocks"
+                            data-target="theme_aurora-drawers-blocks"
                             data-bs-toggle="tooltip"
                             data-bs-placement="right"
                             title="{{#str}}opendrawerblocks, core{{/str}}"
@@ -175,9 +175,8 @@
 </body>
 </html>
 {{#js}}
-M.util.js_pending('theme_boost/loader');
-require(['theme_boost/loader', 'theme_boost/drawer'], function(Loader, Drawer) {
-    Drawer.init();
-    M.util.js_complete('theme_boost/loader');
+M.util.js_pending('theme_aurora/loader');
+require(['theme_aurora/loader', 'theme_aurora/drawers'], function() {
+    M.util.js_complete('theme_aurora/loader');
 });
 {{/js}}
