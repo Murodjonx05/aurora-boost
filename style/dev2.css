@@ -4,7 +4,7 @@
    Covers:
    - multichoice (que.multichoice.*)
    - true/false (que.truefalse.*)
-   - match / shortanswer / numerical / ddwtos / essay
+   - match / shortanswer / numerical / ddwtos / ddmarker / essay
    Features:
    - controlled reset (kills Moodle/Bootstrap leftovers)
    - premium card + premium option rows
@@ -54,41 +54,11 @@
     /* =========================================================
        0) BASE TYPOGRAPHY FOR QUIZ QUESTIONS
        ========================================================= */
-    .que.multichoice,
-    .que.truefalse,
-    .que.match,
-    .que.shortanswer,
-    .que.numerical,
-    .que.ddwtos,
-    .que.essay,
-    .que.multichoice p,
-    .que.truefalse p,
-    .que.match p,
-    .que.shortanswer p,
-    .que.numerical p,
-    .que.ddwtos p,
-    .que.essay p,
-    .que.multichoice span,
-    .que.truefalse span,
-    .que.match span,
-    .que.shortanswer span,
-    .que.numerical span,
-    .que.ddwtos span,
-    .que.essay span,
-    .que.multichoice div,
-    .que.truefalse div,
-    .que.match div,
-    .que.shortanswer div,
-    .que.numerical div,
-    .que.ddwtos div,
-    .que.essay div,
-    .que.multichoice label,
-    .que.truefalse label,
-    .que.match label,
-    .que.shortanswer label,
-    .que.numerical label,
-    .que.ddwtos label,
-    .que.essay label {
+    :is(.que.multichoice, .que.truefalse, .que.match, .que.shortanswer, .que.numerical, .que.ddwtos, .que.ddmarker, .que.essay),
+    :is(.que.multichoice, .que.truefalse, .que.match, .que.shortanswer, .que.numerical, .que.ddwtos, .que.ddmarker, .que.essay) p,
+    :is(.que.multichoice, .que.truefalse, .que.match, .que.shortanswer, .que.numerical, .que.ddwtos, .que.ddmarker, .que.essay) span,
+    :is(.que.multichoice, .que.truefalse, .que.match, .que.shortanswer, .que.numerical, .que.ddwtos, .que.ddmarker, .que.essay) div,
+    :is(.que.multichoice, .que.truefalse, .que.match, .que.shortanswer, .que.numerical, .que.ddwtos, .que.ddmarker, .que.essay) label {
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Arial, sans-serif;
       color: var(--text-main);
       -webkit-font-smoothing: antialiased;
@@ -98,6 +68,93 @@
     .que .formulation{
       background: none !important;
       border: none !important;
+    }
+
+    /* =========================================================
+       0A) ATTEMPT SHELL — NAV / TIMER / SUBMIT / ALERTS
+       ========================================================= */
+    .tertiary-navigation {
+      margin: .2rem 0 1rem;
+    }
+
+    .tertiary-navigation .row {
+      margin: 0;
+    }
+
+    .tertiary-navigation .navitem {
+      display: flex;
+      align-items: center;
+      gap: .55rem;
+    }
+
+    .tertiary-navigation .btn {
+      min-height: 40px;
+      border-radius: 11px;
+      border: 1px solid var(--option-border);
+      background: #fff;
+      color: var(--text-main);
+      font-weight: 560;
+      transition: border-color var(--trans-fast), box-shadow var(--trans-fast), background var(--trans-fast);
+    }
+
+    .tertiary-navigation .btn:hover {
+      border-color: rgba(59, 91, 253, 0.32);
+      background: rgba(238, 242, 255, 0.65);
+    }
+
+    .tertiary-navigation .btn:focus-visible {
+      outline: none;
+      box-shadow: var(--ring);
+    }
+
+    .submitbtns {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 1rem;
+    }
+
+    #mod_quiz-next-nav {
+      min-height: 44px;
+      border-radius: 12px;
+      border: 1px solid rgba(59, 91, 253, 0.34);
+      background: linear-gradient(180deg, #4f72ff 0%, #3558f6 100%);
+      color: #fff;
+      font-weight: 650;
+      letter-spacing: .01em;
+      box-shadow: 0 10px 22px rgba(59, 91, 253, 0.26);
+      transition: transform .12s ease, box-shadow var(--trans-fast), filter var(--trans-fast);
+    }
+
+    #mod_quiz-next-nav:hover {
+      filter: brightness(1.02);
+      box-shadow: 0 14px 28px rgba(59, 91, 253, 0.30);
+      transform: translateY(-1px);
+    }
+
+    #mod_quiz-next-nav:focus-visible {
+      outline: none;
+      box-shadow: var(--ring), 0 14px 28px rgba(59, 91, 253, 0.30);
+    }
+
+    #connection-error,
+    #connection-ok {
+      border-radius: 12px;
+      padding: .9rem 1rem;
+      margin: 1rem 0;
+      border: 1px solid transparent;
+      box-shadow: 0 8px 20px rgba(15, 23, 42, 0.05);
+    }
+
+    #connection-error {
+      background: rgba(254, 242, 242, 0.9);
+      border-color: rgba(239, 68, 68, 0.32);
+      color: #991b1b;
+    }
+
+    #connection-ok {
+      background: rgba(236, 253, 245, 0.88);
+      border-color: rgba(16, 185, 129, 0.32);
+      color: #065f46;
     }
   
     /* =========================================================
@@ -156,40 +213,14 @@
     }
   
     /* Header bits */
-    .que.multichoice .no,
-    .que.multichoice .qno,
-    .que.truefalse .no,
-    .que.truefalse .qno,
-    .que.match .no,
-    .que.match .qno,
-    .que.shortanswer .no,
-    .que.shortanswer .qno,
-    .que.numerical .no,
-    .que.numerical .qno,
-    .que.ddwtos .no,
-    .que.ddwtos .qno,
-    .que.essay .no,
-    .que.essay .qno {
+    :is(.que.multichoice, .que.truefalse, .que.match, .que.shortanswer, .que.numerical, .que.ddwtos, .que.ddmarker, .que.essay) :is(.no, .qno) {
       font-size: 1.02rem;
       font-weight: 750;
       color: var(--text-accent);
       letter-spacing: .01em;
     }
   
-    .que.multichoice .state,
-    .que.multichoice .badge,
-    .que.truefalse .state,
-    .que.truefalse .badge,
-    .que.match .state,
-    .que.match .badge,
-    .que.shortanswer .state,
-    .que.shortanswer .badge,
-    .que.numerical .state,
-    .que.numerical .badge,
-    .que.ddwtos .state,
-    .que.ddwtos .badge,
-    .que.essay .state,
-    .que.essay .badge {
+    :is(.que.multichoice, .que.truefalse, .que.match, .que.shortanswer, .que.numerical, .que.ddwtos, .que.ddmarker, .que.essay) :is(.state, .badge) {
       margin-left: .65rem;
       padding: .24rem .75rem;
       font-size: .82rem;
@@ -200,13 +231,7 @@
       font-weight: 600;
     }
   
-    .que.multichoice .editquestion,
-    .que.truefalse .editquestion,
-    .que.match .editquestion,
-    .que.shortanswer .editquestion,
-    .que.numerical .editquestion,
-    .que.ddwtos .editquestion,
-    .que.essay .editquestion {
+    :is(.que.multichoice, .que.truefalse, .que.match, .que.shortanswer, .que.numerical, .que.ddwtos, .que.ddmarker, .que.essay) .editquestion {
       position: absolute;
       top: 14px;
       right: 14px;
@@ -214,34 +239,16 @@
       opacity: .9;
     }
   
-    .que.multichoice .editquestion a,
-    .que.truefalse .editquestion a,
-    .que.match .editquestion a,
-    .que.shortanswer .editquestion a,
-    .que.numerical .editquestion a,
-    .que.ddwtos .editquestion a,
-    .que.essay .editquestion a {
+    :is(.que.multichoice, .que.truefalse, .que.match, .que.shortanswer, .que.numerical, .que.ddwtos, .que.ddmarker, .que.essay) .editquestion a {
       color: var(--text-muted);
       text-decoration: underline dotted;
     }
-    .que.multichoice .editquestion a:hover,
-    .que.truefalse .editquestion a:hover,
-    .que.match .editquestion a:hover,
-    .que.shortanswer .editquestion a:hover,
-    .que.numerical .editquestion a:hover,
-    .que.ddwtos .editquestion a:hover,
-    .que.essay .editquestion a:hover {
+    :is(.que.multichoice, .que.truefalse, .que.match, .que.shortanswer, .que.numerical, .que.ddwtos, .que.ddmarker, .que.essay) .editquestion a:hover {
       color: var(--text-accent);
       text-decoration: underline;
     }
   
-    .que.multichoice .qtext,
-    .que.truefalse .qtext,
-    .que.match .qtext,
-    .que.shortanswer .qtext,
-    .que.numerical .qtext,
-    .que.ddwtos .qtext,
-    .que.essay .qtext {
+    :is(.que.multichoice, .que.truefalse, .que.match, .que.shortanswer, .que.numerical, .que.ddwtos, .que.ddmarker, .que.essay) .qtext {
       margin: 1.1rem 0 1.6rem;
       font-size: 1.16rem;
       line-height: 1.7;
@@ -275,14 +282,6 @@
     }
   
     /* Moodle label layouts */
-    .que.multichoice .answer > .r0 label,
-    .que.multichoice .answer > .r1 label {
-      display: flex;
-      align-items: flex-start;
-      gap: .9rem;
-      width: 100%;
-    }
-  
     .que.multichoice .answer .d-flex {
       display: flex;
       align-items: flex-start;
@@ -295,9 +294,6 @@
        Solution: make the real input full overlay per row (click anywhere selects),
        but keep visible content above it.
     */
-    .que.multichoice .answer > .r0,
-    .que.multichoice .answer > .r1 { position: relative; }
-  
     .que.multichoice .answer > .r0 label,
     .que.multichoice .answer > .r1 label {
       position: relative;
@@ -560,6 +556,7 @@
     .que.shortanswer,
     .que.numerical,
     .que.ddwtos,
+    .que.ddmarker,
     .que.essay {
       position: relative;
       background: var(--quiz-card-bg);
@@ -576,6 +573,7 @@
     .que.shortanswer::before,
     .que.numerical::before,
     .que.ddwtos::before,
+    .que.ddmarker::before,
     .que.essay::before {
       content: "";
       position: absolute;
@@ -591,6 +589,7 @@
     .que.shortanswer:hover,
     .que.numerical:hover,
     .que.ddwtos:hover,
+    .que.ddmarker:hover,
     .que.essay:hover {
       border-color: var(--quiz-border-hover);
       box-shadow: var(--quiz-shadow-hover);
@@ -601,11 +600,13 @@
     .que.shortanswer .content,
     .que.numerical .content,
     .que.ddwtos .content,
+    .que.ddmarker .content,
     .que.essay .content,
     .que.match .formulation,
     .que.shortanswer .formulation,
     .que.numerical .formulation,
     .que.ddwtos .formulation,
+    .que.ddmarker .formulation,
     .que.essay .formulation {
       position: relative;
       display: block;
@@ -682,6 +683,7 @@
     .que.match .answer.table-reboot tbody,
     .que.match .answer.table-reboot tr,
     .que.match .answer.table-reboot td {
+      padding:0;
       border: 0;
       background: transparent;
     }
@@ -823,6 +825,156 @@
       pointer-events: none;
     }
 
+    /* ddmarker question (image-based) */
+    .que.ddmarker .ddarea {
+      margin-top: .65rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: .85rem;
+    }
+
+    .que.ddmarker .droparea {
+      width: min(100%, 1140px);
+      margin-inline: auto;
+      border-radius: 14px;
+      border: 1px solid var(--option-border);
+      background: #fff;
+      box-shadow: 0 10px 22px rgba(15, 23, 42, 0.08);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .que.ddmarker .dropbackground {
+      display: block;
+      width: 100%;
+      height: auto;
+      margin: 0;
+    }
+
+    /* 
+      Improved: Make .markertext highlight work for all interaction modes.
+      - Uses button-like styling for markertext elements.
+      - Ensures interaction feedback works (highlight) for mouse hover, keyboard tab, and touch.
+      - Only changes opacity and no shadow for highlight; keeps rules simple and robust.
+    */
+    .que.ddmarker .droparea .marker .markertext,
+    .que.ddmarker .draghomes .marker .markertext,
+    .que.ddmarker div.markertexts .markertext,
+    form.mform fieldset#id_previewareaheader div.markertexts .markertext {
+        margin: 0 5px;
+        z-index: 3;
+        background: #fff;
+        border: none !important;
+        padding: 5px 10px;
+        display: inline-block;
+        border-radius: 10px;
+        color: #222;
+        opacity: 0.6;
+        font-weight: 500;
+        font-size: .95rem;
+        line-height: 1.35;
+        cursor: pointer;
+        transition: opacity 0.16s;
+        outline: none;
+        box-shadow: none !important;
+        text-shadow: none !important;
+        filter: none !important;
+    }
+
+    /* Highlight markertext when hovered, focused (keyboard), or active (pressed/tapped) */
+    .que.ddmarker .droparea .marker .markertext:hover,
+    .que.ddmarker .droparea .marker .markertext:focus-visible,
+    .que.ddmarker .droparea .marker .markertext:active,
+    .que.ddmarker .draghomes .marker .markertext:hover,
+    .que.ddmarker .draghomes .marker .markertext:focus-visible,
+    .que.ddmarker .draghomes .marker .markertext:active,
+    .que.ddmarker div.markertexts .markertext:hover,
+    .que.ddmarker div.markertexts .markertext:focus-visible,
+    .que.ddmarker div.markertexts .markertext:active,
+    form.mform fieldset#id_previewareaheader div.markertexts .markertext:hover,
+    form.mform fieldset#id_previewareaheader div.markertexts .markertext:focus-visible,
+    form.mform fieldset#id_previewareaheader div.markertexts .markertext:active {
+        opacity: 1;
+        outline: 2px solid #4477ee22;
+        outline-offset: 1px;
+        box-shadow: none !important;
+        text-shadow: none !important;
+        filter: none !important;
+        /* Optional: background: #f3f7fd; */
+    }
+
+    .que.ddmarker .dropzones [class*="drop"],
+    .que.ddmarker .dropzones .dropzone {
+      border: 2px dashed rgba(53, 88, 246, 0.35);
+      border-radius: 12px;
+      background: rgba(238, 242, 255, 0.32);
+      transition: border-color var(--trans-fast), background var(--trans-fast), box-shadow var(--trans-fast);
+    }
+
+    .que.ddmarker .dropzones [class*="drop"]:hover,
+    .que.ddmarker .dropzones .dropzone:hover {
+      border-color: rgba(53, 88, 246, 0.55);
+      background: rgba(224, 231, 255, 0.45);
+      box-shadow: inset 0 0 0 1px rgba(53, 88, 246, 0.15);
+    }
+
+    .que.ddmarker .draghomes {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: .55rem;
+      width: min(100%, 1140px);
+      margin-inline: auto;
+      padding: .15rem 0 .3rem;
+    }
+
+    .que.ddmarker .marker {
+      border-radius: 999px;
+      border: 1px solid rgba(53, 88, 246, 0.32);
+      background: #fff;
+      color: var(--text-main);
+      box-shadow: none !important;
+      padding: .32rem .62rem;
+      transition: border-color var(--trans-fast), background var(--trans-fast);
+    }
+
+    .que.ddmarker .marker .markertext {
+      font-weight: 560;
+      font-size: .93rem;
+      line-height: 1.35;
+    }
+
+    .que.ddmarker .marker:hover {
+      border-color: rgba(53, 88, 246, 0.52);
+      background: rgba(238, 242, 255, 0.72);
+      box-shadow: none !important;
+    }
+
+    .que.ddmarker .marker:focus-visible {
+      outline: none;
+      box-shadow: none !important;
+      border-color: rgba(53, 88, 246, 0.62);
+    }
+
+    .que.ddmarker .marker:active,
+    .que.ddmarker .droparea .marker,
+    .que.ddmarker .draghomes .marker {
+      box-shadow: none !important;
+      text-shadow: none !important;
+      filter: none !important;
+    }
+
+    .que.ddmarker .marker.unneeded {
+      opacity: .88;
+    }
+
+    .que.ddmarker .marker.dragplaceholder {
+      box-shadow: none;
+      background: transparent;
+      border-color: transparent;
+    }
+
     /* essay question */
     .que.essay .answer,
     .que.essay .qtype_essay_response {
@@ -869,24 +1021,12 @@
        7) RESPONSIVE (all types keep same rhythm)
        ========================================================= */
     @media (max-width: 900px) {
-      .que.multichoice.deferredfeedback,
-      .que.truefalse.deferredfeedback,
-      .que.match,
-      .que.shortanswer,
-      .que.numerical,
-      .que.ddwtos,
-      .que.essay {
+      :is(.que.multichoice.deferredfeedback, .que.truefalse.deferredfeedback, .que.match, .que.shortanswer, .que.numerical, .que.ddwtos, .que.ddmarker, .que.essay) {
         --card-pad-y: 1.35rem;
         --card-pad-x: 1.15rem;
         padding: var(--card-pad-y) var(--card-pad-x) calc(var(--card-pad-y) - .25rem);
       }
-      .que.multichoice .qtext,
-      .que.truefalse .qtext,
-      .que.match .qtext,
-      .que.shortanswer .qtext,
-      .que.numerical .qtext,
-      .que.ddwtos .qtext,
-      .que.essay .qtext { font-size: 1.05rem; }
+      :is(.que.multichoice, .que.truefalse, .que.match, .que.shortanswer, .que.numerical, .que.ddwtos, .que.ddmarker, .que.essay) .qtext { font-size: 1.05rem; }
 
       .que.match .answer.table-reboot tr {
         grid-template-columns: minmax(0, 1fr);
@@ -905,30 +1045,20 @@
       --row-py: 0.85rem;
       --row-px: 0.85rem;
   
-      .que.multichoice.deferredfeedback,
-      .que.truefalse.deferredfeedback,
-      .que.match,
-      .que.shortanswer,
-      .que.numerical,
-      .que.ddwtos,
-      .que.essay {
+      :is(.que.multichoice.deferredfeedback, .que.truefalse.deferredfeedback, .que.match, .que.shortanswer, .que.numerical, .que.ddwtos, .que.ddmarker, .que.essay) {
         --card-pad-y: 1rem;
         --card-pad-x: .9rem;
         padding: var(--card-pad-y) var(--card-pad-x) calc(var(--card-pad-y) - .2rem);
         border-radius: 16px;
       }
   
-      .que.multichoice .answer > .r0,
-      .que.multichoice .answer > .r1,
-      .que.truefalse .answer > .r0,
-      .que.truefalse .answer > .r1 {
+      :is(.que.multichoice, .que.truefalse) .answer > :is(.r0, .r1) {
         padding: var(--row-py) var(--row-px);
         border-radius: 14px;
       }
   
       .que.multichoice .answer p,
-      .que.truefalse .answer > .r0 label[for],
-      .que.truefalse .answer > .r1 label[for] {
+      .que.truefalse .answer > :is(.r0, .r1) label[for] {
         font-size: 1rem;
         font-weight: 500;
       }
@@ -954,40 +1084,47 @@
         min-width: 1.9rem;
         min-height: 1.9rem;
       }
+
+      .submitbtns {
+        justify-content: stretch;
+      }
+
+      #mod_quiz-next-nav {
+        width: 100%;
+      }
+
+      .que.ddmarker .droparea,
+      .que.ddmarker .draghomes {
+        width: 100%;
+      }
+
+      .que.ddmarker .marker .markertext {
+        font-size: .86rem;
+      }
     }
 
     @media (prefers-reduced-motion: reduce) {
-      .que.multichoice.deferredfeedback,
-      .que.truefalse.deferredfeedback,
-      .que.match,
-      .que.shortanswer,
-      .que.numerical,
-      .que.ddwtos,
-      .que.essay,
-      .que.multichoice .answer > .r0,
-      .que.multichoice .answer > .r1,
-      .que.truefalse .answer > .r0,
-      .que.truefalse .answer > .r1,
-      .que.match .answer.table-reboot tr {
+      :is(.que.multichoice.deferredfeedback, .que.truefalse.deferredfeedback, .que.match, .que.shortanswer, .que.numerical, .que.ddwtos, .que.ddmarker, .que.essay, .que.multichoice .answer > .r0, .que.multichoice .answer > .r1, .que.truefalse .answer > .r0, .que.truefalse .answer > .r1),
+      .que.match .answer.table-reboot tr,
+      .que.ddmarker .marker,
+      #mod_quiz-next-nav {
         transition: none !important;
         animation: none !important;
       }
 
-      .que.multichoice.deferredfeedback:hover,
-      .que.truefalse.deferredfeedback:hover,
-      .que.match:hover,
-      .que.shortanswer:hover,
-      .que.numerical:hover,
-      .que.ddwtos:hover,
-      .que.essay:hover,
-      .que.multichoice .answer > .r0:hover,
-      .que.multichoice .answer > .r1:hover,
-      .que.truefalse .answer > .r0:hover,
-      .que.truefalse .answer > .r1:hover,
-      .que.match .answer.table-reboot tr:hover {
+      :is(.que.multichoice.deferredfeedback:hover, .que.truefalse.deferredfeedback:hover, .que.match:hover, .que.shortanswer:hover, .que.numerical:hover, .que.ddwtos:hover, .que.ddmarker:hover, .que.essay:hover, .que.multichoice .answer > .r0:hover, .que.multichoice .answer > .r1:hover, .que.truefalse .answer > .r0:hover, .que.truefalse .answer > .r1:hover),
+      .que.match .answer.table-reboot tr:hover,
+      #mod_quiz-next-nav:hover {
         transform: none !important;
       }
     }
-  
+
+    /* .drawer-right {
+      background:none!important;
+      .drawercontent{
+        background:none!important;
+      }
+    } */
+
   }
-  
+

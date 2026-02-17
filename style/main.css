@@ -42,3 +42,52 @@ a:focus {
         box-shadow: none !important;
     }
 }
+
+
+
+
+/* ddmarker preview hard override (outside attempt/review scope) */
+form.mform fieldset#id_previewareaheader .marker,
+form.mform fieldset#id_previewareaheader .marker:hover,
+form.mform fieldset#id_previewareaheader .marker:focus-visible,
+form.mform fieldset#id_previewareaheader .marker:active,
+form.mform fieldset#id_previewareaheader div.markertexts .markertext,
+form.mform fieldset#id_previewareaheader div.markertexts .markertext:hover,
+form.mform fieldset#id_previewareaheader div.markertexts .markertext:focus-visible,
+form.mform fieldset#id_previewareaheader div.markertexts .markertext:active {
+  box-shadow: none !important;
+  text-shadow: none !important;
+  filter: none !important;
+}
+
+@media (min-width: 992px) {
+  /* Global drawers layout sync (all pages, not only quiz attempt/review). */
+  body.drawer-open-right #page.drawers,
+  #page.drawers.show-drawer-right,
+  #theme_aurora-drawers-blocks.show ~ #page.drawers {
+    width: calc(100% - 325px) !important;
+    margin-right: 0 !important;
+    margin-left: 0 !important;
+    max-width: none;
+    padding-right: 1rem;
+  }
+
+  body.drawer-open-left.drawer-open-right #page.drawers,
+  #page.drawers.show-drawer-left.show-drawer-right,
+  #theme_aurora-drawers-courseindex.show ~ #theme_aurora-drawers-blocks.show ~ #page.drawers {
+    width: calc(100% - 610px) !important;
+    margin-left: 285px !important;
+    margin-right: 0 !important;
+    max-width: none;
+  }
+
+  body.drawer-open-left:not(.drawer-open-right) #page.drawers,
+  #page.drawers.show-drawer-left,
+  #theme_aurora-drawers-courseindex.show ~ #page.drawers {
+    width: calc(100% - 285px) !important;
+    margin-left: 285px !important;
+    margin-right: 0 !important;
+    max-width: none;
+    padding-left: 1rem;
+  }
+}
