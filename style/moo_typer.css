@@ -88,10 +88,10 @@
     #texttoenter {
         position: relative;
         padding: 18px 16px !important;
-        background: linear-gradient(135deg, #fcfcfd 78%, #f2f0f8 100%) !important;
-        border: 1.7px solid #dad7f6 !important;
+        background: linear-gradient(135deg, #fcfdfc 78%, #eef8f1 100%) !important;
+        border: 1.5px solid #d8eedd !important;
         border-radius: 8px !important;
-        box-shadow: 0 2px 8px rgba(67,56,202,.07), 0 1.5px 5px rgba(92,80,214,0.045) !important;
+        box-shadow: 0 3px 10px rgba(15, 23, 42, 0.06), 0 1px 4px rgba(47, 158, 68, 0.08) !important;
         font-size: 1.14rem !important;
         line-height: 2;
         margin-bottom: 18px;
@@ -179,9 +179,9 @@
         font-weight: 500;
     }
     .txtBlue {
-        color: #3576bd;
+        color: #2f9e44;
         font-weight: 500;
-        background: #e1ecf7;
+        background: #eaf7ee;
         padding: 0 2px;
         border-radius: 1px;
     }

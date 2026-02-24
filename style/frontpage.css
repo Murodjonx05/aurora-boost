@@ -1,9 +1,13 @@
 :root {
     --aurora-course-radius: 1rem;
-    --aurora-course-shadow: 0 .125rem .25rem rgba(0,0,0,.075);
-    --aurora-course-shadow-hover: 0 20px 40px rgba(0, 0, 0, 0.15);
-    --aurora-course-bg: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    --aurora-course-overlay: linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 50%, transparent 100%);
+    --aurora-course-shadow: 0 3px 12px rgba(15, 23, 42, 0.06);
+    --aurora-course-shadow-hover: 0 10px 26px rgba(15, 23, 42, 0.10);
+    --aurora-course-bg: linear-gradient(
+        135deg,
+        var(--aurora_course_block_color_start, #f3f6fb) 0%,
+        var(--aurora_course_block_color_end, #e5ebf3) 100%
+    );
+    --aurora-course-overlay: linear-gradient(to top, rgba(15, 23, 42, 0.42) 0%, transparent 58%, transparent 100%);
     --aurora-navbar-height: 60px;
 
 }
@@ -37,11 +41,11 @@
 
     .simplesearchform input:focus {
         outline: none;
-        border-color: #667eea;
+        border-color: #2f9e44;
         /* Very soft shadow, subtle color accent */
         box-shadow:
-            inset 0 2px 12px 0 rgba(102, 126, 234, 0.13),
-            inset 0 0 0 2px rgba(102, 126, 234, 0.18);
+            inset 0 2px 12px 0 rgba(47, 158, 68, 0.12),
+            inset 0 0 0 2px rgba(47, 158, 68, 0.16);
     }
 
     /* Responsive adaptive grid: only show spaces for actually rendered cairds */
@@ -76,7 +80,7 @@
         min-height: 180px;
     }
     .courses.frontpage-course-list-all .coursebox:hover {
-        transform: translateY(-4px) scale(1.02);
+        transform: translateY(-2px) scale(1.01);
         box-shadow: var(--aurora-course-shadow-hover);
         z-index: 10;
     }

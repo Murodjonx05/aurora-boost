@@ -202,6 +202,53 @@ if ($ADMIN->fulltree) {
 
     $settings->add($page);
 
+    // Additional settings.
+    $page = new admin_settingpage('theme_aurora_additional', get_string('additionalsettings', 'theme_aurora'));
+
+    $name = 'theme_aurora/linkcolor';
+    $title = get_string('linkcolor', 'theme_aurora');
+    $description = get_string('linkcolor_desc', 'theme_aurora');
+    $setting = new admin_setting_configcolourpicker($name, $title, $description, '#2561f0');
+    $setting->set_updatedcallback('theme_reset_all_caches');
+    $page->add($setting);
+
+    $name = 'theme_aurora/linkvisitedcolor';
+    $title = get_string('linkvisitedcolor', 'theme_aurora');
+    $description = get_string('linkvisitedcolor_desc', 'theme_aurora');
+    $setting = new admin_setting_configcolourpicker($name, $title, $description, '#690daf');
+    $setting->set_updatedcallback('theme_reset_all_caches');
+    $page->add($setting);
+
+    $name = 'theme_aurora/linkhovercolor';
+    $title = get_string('linkhovercolor', 'theme_aurora');
+    $description = get_string('linkhovercolor_desc', 'theme_aurora');
+    $setting = new admin_setting_configcolourpicker($name, $title, $description, '#1c3498');
+    $setting->set_updatedcallback('theme_reset_all_caches');
+    $page->add($setting);
+
+    $name = 'theme_aurora/linkactivecolor';
+    $title = get_string('linkactivecolor', 'theme_aurora');
+    $description = get_string('linkactivecolor_desc', 'theme_aurora');
+    $setting = new admin_setting_configcolourpicker($name, $title, $description, '#1c3498');
+    $setting->set_updatedcallback('theme_reset_all_caches');
+    $page->add($setting);
+
+    $name = 'theme_aurora/courseblockcolorstart';
+    $title = get_string('courseblockcolorstart', 'theme_aurora');
+    $description = get_string('courseblockcolorstart_desc', 'theme_aurora');
+    $setting = new admin_setting_configcolourpicker($name, $title, $description, '#f3f6fb');
+    $setting->set_updatedcallback('theme_reset_all_caches');
+    $page->add($setting);
+
+    $name = 'theme_aurora/courseblockcolorend';
+    $title = get_string('courseblockcolorend', 'theme_aurora');
+    $description = get_string('courseblockcolorend_desc', 'theme_aurora');
+    $setting = new admin_setting_configcolourpicker($name, $title, $description, '#e5ebf3');
+    $setting->set_updatedcallback('theme_reset_all_caches');
+    $page->add($setting);
+
+    $settings->add($page);
+
     // Footer settings.
     $page = new admin_settingpage('theme_aurora_footer', get_string('footersettings', 'theme_aurora'));
 

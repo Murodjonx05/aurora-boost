@@ -1,18 +1,50 @@
-a,
-a:hover,
-a:link,
-a:visited,
-a:focus {
-
+a {
+    color: var(--aurora_link_color, #2561f0) ; /* brighter blue */
+    /* background: unset !important; */
+    border: unset !important;
+    outline: unset !important;
+    box-shadow: unset !important;
     text-decoration: none !important;
-    /* background: none !important; */
-
-    border: none !important;
-    outline: none !important;
-    box-shadow: none !important;
     cursor: pointer !important;
-    transition: none !important;
+    pointer-events: auto !important;
+    transition: color 0.2s !important;
+}
 
+a:visited {
+    color: var(--aurora_link_visited_color, #690daf) ; /* more distinct purple */
+    /* background: unset !important; */
+    border: unset !important;
+    outline: unset !important;
+    box-shadow: unset !important;
+    text-decoration: none !important;
+    cursor: pointer !important;
+    pointer-events: auto !important;
+    transition: color 0.2s !important;
+}
+
+a:hover,
+a:focus {
+    color: var(--aurora_link_hover_color, #1c3498) ; /* bolder blue */
+    /* background: unset !important; */
+    border: unset !important;
+    outline: unset !important;
+    box-shadow: unset !important;
+    text-decoration: none !important;
+    cursor: pointer !important;
+    pointer-events: auto !important;
+    transition: color 0.2s !important;
+}
+
+a:active {
+    color: var(--aurora_link_active_color, #1c3498) ; /* bolder blue */
+    /* background: unset !important; */
+    border: unset !important;
+    outline: unset !important;
+    box-shadow: unset !important;
+    text-decoration: none !important;
+    cursor: pointer !important;
+    pointer-events: auto !important;
+    transition: color 0.2s !important;
 }
 
 #page-site-index{

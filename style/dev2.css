@@ -21,35 +21,39 @@
     color-scheme: light;
     --quiz-bg: #ffffff;
     --quiz-card-bg:
-      radial-gradient(900px 240px at 18% -30px, rgba(59, 91, 253, 0.09), transparent 60%),
-      radial-gradient(900px 240px at 85% 0px, rgba(56, 189, 248, 0.065), transparent 60%),
+      radial-gradient(900px 240px at 18% -30px, rgba(47, 158, 68, 0.09), transparent 60%),
+      radial-gradient(900px 240px at 85% 0px, rgba(116, 198, 157, 0.08), transparent 60%),
       var(--quiz-bg);
-    --quiz-border: rgba(15, 23, 42, 0.11);
-    --quiz-border-hover: rgba(59, 91, 253, 0.34);
-    --quiz-shadow: 0 10px 26px rgba(15, 23, 42, 0.08);
-    --quiz-shadow-hover: 0 18px 42px rgba(59, 91, 253, 0.14);
+    --quiz-border: rgba(15, 23, 42, 0.065);
+    --quiz-border-hover: rgba(47, 158, 68, 0.22);
+    --quiz-shadow: 0 2px 8px rgba(15, 23, 42, 0.04), 0 10px 26px rgba(15, 23, 42, 0.05);
+    --quiz-shadow-hover: 0 4px 14px rgba(15, 23, 42, 0.05), 0 18px 36px rgba(47, 158, 68, 0.10);
   
-    --text-main: #0f172a;
-    --text-muted: #5f6f85;
-    --text-accent: #3558f6;
+    --text-main: #162032;
+    --text-muted: #6c778c;
+    --text-accent: #2b8a3e;
+    --quiz-font-sans: "Inter", "Segoe UI Variable", "Segoe UI", "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
   
-    --option-bg: rgba(248, 250, 252, 0.95);
-    --option-border: rgba(15, 23, 42, 0.09);
-    --option-hover: rgba(238, 242, 255, 0.95);
-    --option-active: rgba(226, 233, 255, 0.96);
+    --option-bg: rgba(251, 253, 252, 0.98);
+    --option-border: rgba(15, 23, 42, 0.06);
+    --option-hover: rgba(243, 251, 244, 0.98);
+    --option-hover-border: rgba(47, 158, 68, 0.24);
+    --option-active: rgba(226, 250, 229, 0.94);
+    --option-active-border: rgba(47, 158, 68, 0.48);
+    --option-active-shadow: 0 8px 20px rgba(47, 158, 68, 0.11);
   
-    --radius-lg: 20px;
-    --radius-md: 15px;
+    --radius-lg: 22px;
+    --radius-md: 16px;
   
-    --ring: 0 0 0 4px rgba(147, 197, 253, 0.55);
+    --ring: 0 0 0 3px rgba(116, 198, 157, 0.35);
     --trans-fast: .16s ease;
     --trans-main: .22s ease;
-    --card-pad-y: 2rem;
-    --card-pad-x: 2.2rem;
+    --card-pad-y: 2.1rem;
+    --card-pad-x: 2.3rem;
   
     /* Keep these in sync with option padding (used by fallback bleed) */
-    --row-py: 0.95rem;
-    --row-px: 1rem;
+    --row-py: 1rem;
+    --row-px: 1.08rem;
   
     /* =========================================================
        0) BASE TYPOGRAPHY FOR QUIZ QUESTIONS
@@ -59,7 +63,7 @@
     :is(.que.multichoice, .que.truefalse, .que.match, .que.shortanswer, .que.numerical, .que.ddwtos, .que.ddmarker, .que.essay) span,
     :is(.que.multichoice, .que.truefalse, .que.match, .que.shortanswer, .que.numerical, .que.ddwtos, .que.ddmarker, .que.essay) div,
     :is(.que.multichoice, .que.truefalse, .que.match, .que.shortanswer, .que.numerical, .que.ddwtos, .que.ddmarker, .que.essay) label {
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Arial, sans-serif;
+      font-family: var(--quiz-font-sans);
       color: var(--text-main);
       -webkit-font-smoothing: antialiased;
       text-rendering: optimizeLegibility;
@@ -88,7 +92,7 @@
     }
 
     .tertiary-navigation .btn {
-      min-height: 40px;
+      min-height: 42px;
       border-radius: 11px;
       border: 1px solid var(--option-border);
       background: #fff;
@@ -98,8 +102,8 @@
     }
 
     .tertiary-navigation .btn:hover {
-      border-color: rgba(59, 91, 253, 0.32);
-      background: rgba(238, 242, 255, 0.65);
+      border-color: var(--option-hover-border);
+      background: var(--option-hover);
     }
 
     .tertiary-navigation .btn:focus-visible {
@@ -114,26 +118,26 @@
     }
 
     #mod_quiz-next-nav {
-      min-height: 44px;
+      min-height: 46px;
       border-radius: 12px;
-      border: 1px solid rgba(59, 91, 253, 0.34);
-      background: linear-gradient(180deg, #4f72ff 0%, #3558f6 100%);
+      border: 1px solid rgba(47, 158, 68, 0.32);
+      background: linear-gradient(180deg, #51cf66 0%, #2b8a3e 100%);
       color: #fff;
       font-weight: 650;
       letter-spacing: .01em;
-      box-shadow: 0 10px 22px rgba(59, 91, 253, 0.26);
+      box-shadow: 0 6px 14px rgba(47, 158, 68, 0.18);
       transition: transform .12s ease, box-shadow var(--trans-fast), filter var(--trans-fast);
     }
 
     #mod_quiz-next-nav:hover {
       filter: brightness(1.02);
-      box-shadow: 0 14px 28px rgba(59, 91, 253, 0.30);
-      transform: translateY(-1px);
+      box-shadow: 0 10px 20px rgba(47, 158, 68, 0.22);
+      transform: translateY(-0.5px);
     }
 
     #mod_quiz-next-nav:focus-visible {
       outline: none;
-      box-shadow: var(--ring), 0 14px 28px rgba(59, 91, 253, 0.30);
+      box-shadow: var(--ring), 0 10px 20px rgba(47, 158, 68, 0.22);
     }
 
     #connection-error,
@@ -142,7 +146,7 @@
       padding: .9rem 1rem;
       margin: 1rem 0;
       border: 1px solid transparent;
-      box-shadow: 0 8px 20px rgba(15, 23, 42, 0.05);
+      box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04);
     }
 
     #connection-error {
@@ -202,14 +206,14 @@
       top: 0;
       width: 100%;
       height: 3px;
-      background: linear-gradient(90deg, rgba(59, 91, 253, .65), rgba(56, 189, 248, .45), transparent 92%);
+      background: linear-gradient(90deg, rgba(47, 158, 68, .72), rgba(116, 198, 157, .48), transparent 92%);
       pointer-events: none;
     }
   
     .que.multichoice.deferredfeedback:hover {
       border-color: var(--quiz-border-hover);
       box-shadow: var(--quiz-shadow-hover);
-      transform: translateY(-1px);
+      transform: translateY(-0.5px);
     }
   
     /* Header bits */
@@ -225,9 +229,9 @@
       padding: .24rem .75rem;
       font-size: .82rem;
       border-radius: 999px;
-      background: rgba(59, 91, 253, 0.11);
+      background: rgba(47, 158, 68, 0.11);
       color: var(--text-accent);
-      border: 1px solid rgba(59, 91, 253, 0.22);
+      border: 1px solid rgba(47, 158, 68, 0.24);
       font-weight: 600;
     }
   
@@ -249,9 +253,9 @@
     }
   
     :is(.que.multichoice, .que.truefalse, .que.match, .que.shortanswer, .que.numerical, .que.ddwtos, .que.ddmarker, .que.essay) .qtext {
-      margin: 1.1rem 0 1.6rem;
-      font-size: 1.16rem;
-      line-height: 1.7;
+      margin: 1.05rem 0 1.5rem;
+      font-size: 1.13rem;
+      line-height: 1.66;
       font-weight: 600;
       color: var(--text-main);
     }
@@ -270,15 +274,15 @@
       background: var(--option-bg);
       border: 1px solid var(--option-border);
       padding: var(--row-py) var(--row-px);
-      transition: background var(--trans-fast), border var(--trans-fast), box-shadow var(--trans-fast), transform .08s ease;
+      transition: background var(--trans-fast), border-color var(--trans-fast), box-shadow var(--trans-fast), transform .08s ease;
     }
   
     .que.multichoice .answer > .r0:hover,
     .que.multichoice .answer > .r1:hover {
       background: var(--option-hover);
-      border-color: rgba(59, 91, 253, 0.22);
-      box-shadow: 0 10px 22px rgba(15, 23, 42, 0.06);
-      transform: translateY(-1px);
+      border-color: var(--option-hover-border);
+      box-shadow: 0 6px 16px rgba(15, 23, 42, 0.05);
+      transform: translateY(-0.5px);
     }
   
     /* Moodle label layouts */
@@ -348,8 +352,8 @@
       .que.multichoice .answer > .r0:has(input[type="radio"]:checked),
       .que.multichoice .answer > .r1:has(input[type="radio"]:checked) {
         background: var(--option-active);
-        border-color: rgba(59, 91, 253, 0.55);
-        box-shadow: 0 14px 28px rgba(59, 91, 253, 0.12);
+        border-color: var(--option-active-border);
+        box-shadow: var(--option-active-shadow);
       }
   
       /* neutralize inner highlight */
@@ -366,17 +370,30 @@
   
       .que.multichoice .answer > .r0:has(input[type="radio"]:focus-visible),
       .que.multichoice .answer > .r1:has(input[type="radio"]:focus-visible) {
-        box-shadow: var(--ring), 0 14px 28px rgba(59, 91, 253, 0.12);
-        border-color: rgba(59, 91, 253, 0.55);
+        box-shadow: var(--ring), var(--option-active-shadow);
+        border-color: var(--option-active-border);
       }
     }
   
     @supports not selector(:has(*)) {
       .que.multichoice .answer input[type="radio"]:checked + .d-flex {
         background: var(--option-active) !important;
-        border: 1px solid rgba(59, 91, 253, 0.55) !important;
+        border: 1px solid var(--option-active-border) !important;
         border-radius: var(--radius-md) !important;
-        box-shadow: 0 14px 28px rgba(59, 91, 253, 0.12) !important;
+        box-shadow: var(--option-active-shadow) !important;
+ 
+        margin: calc(var(--row-py) * -1) calc(var(--row-px) * -1) !important;
+        padding: var(--row-py) var(--row-px) !important;
+ 
+        width: auto !important;
+        height: auto !important;
+      }
+
+      .que.multichoice .answer input[type="radio"]:checked + label .d-flex {
+        background: var(--option-active) !important;
+        border: 1px solid var(--option-active-border) !important;
+        border-radius: var(--radius-md) !important;
+        box-shadow: var(--option-active-shadow) !important;
   
         margin: calc(var(--row-py) * -1) calc(var(--row-px) * -1) !important;
         padding: var(--row-py) var(--row-px) !important;
@@ -430,14 +447,14 @@
       top: 0;
       width: 100%;
       height: 3px;
-      background: linear-gradient(90deg, rgba(59, 91, 253, .65), rgba(56, 189, 248, .45), transparent 92%);
+      background: linear-gradient(90deg, rgba(47, 158, 68, .72), rgba(116, 198, 157, .48), transparent 92%);
       pointer-events: none;
     }
   
     .que.truefalse.deferredfeedback:hover {
       border-color: var(--quiz-border-hover) !important;
       box-shadow: var(--quiz-shadow-hover) !important;
-      transform: translateY(-1px) !important;
+      transform: translateY(-0.5px) !important;
     }
   
     /* =========================================================
@@ -463,9 +480,9 @@
     .que.truefalse .answer > .r0:hover,
     .que.truefalse .answer > .r1:hover {
       background: var(--option-hover) !important;
-      border-color: rgba(59, 91, 253, 0.22) !important;
-      box-shadow: 0 10px 22px rgba(15, 23, 42, 0.06) !important;
-      transform: translateY(-1px) !important;
+      border-color: var(--option-hover-border) !important;
+      box-shadow: 0 6px 16px rgba(15, 23, 42, 0.05) !important;
+      transform: translateY(-0.5px) !important;
     }
   
     /* FULL-CARD INPUT OVERLAY + HARD HIDE native radio */
@@ -521,14 +538,14 @@
       .que.truefalse .answer > .r0:has(input[type="radio"]:checked),
       .que.truefalse .answer > .r1:has(input[type="radio"]:checked) {
         background: var(--option-active) !important;
-        border-color: rgba(59, 91, 253, 0.55) !important;
-        box-shadow: 0 14px 28px rgba(59, 91, 253, 0.12) !important;
+        border-color: var(--option-active-border) !important;
+        box-shadow: var(--option-active-shadow) !important;
       }
   
       .que.truefalse .answer > .r0:has(input[type="radio"]:focus-visible),
       .que.truefalse .answer > .r1:has(input[type="radio"]:focus-visible) {
-        box-shadow: var(--ring), 0 14px 28px rgba(59, 91, 253, 0.12) !important;
-        border-color: rgba(59, 91, 253, 0.55) !important;
+        box-shadow: var(--ring), var(--option-active-shadow) !important;
+        border-color: var(--option-active-border) !important;
       }
     }
   
@@ -542,7 +559,7 @@
   
       .que.truefalse .answer > .r0 input[type="radio"]:focus-visible + label[for],
       .que.truefalse .answer > .r1 input[type="radio"]:focus-visible + label[for] {
-        box-shadow: 0 0 0 4px rgba(147, 197, 253, 0.55),
+        box-shadow: var(--ring),
                     0 0 0 9999px var(--option-active) inset !important;
         border-radius: var(--radius-md) !important;
       }
@@ -581,7 +598,7 @@
       top: 0;
       width: 100%;
       height: 3px;
-      background: linear-gradient(90deg, rgba(59, 91, 253, .65), rgba(56, 189, 248, .45), transparent 92%);
+      background: linear-gradient(90deg, rgba(47, 158, 68, .72), rgba(116, 198, 157, .48), transparent 92%);
       pointer-events: none;
     }
 
@@ -593,7 +610,7 @@
     .que.essay:hover {
       border-color: var(--quiz-border-hover);
       box-shadow: var(--quiz-shadow-hover);
-      transform: translateY(-1px);
+      transform: translateY(-0.5px);
     }
 
     .que.match .content,
@@ -660,14 +677,14 @@
 
     .que.shortanswer input[type="text"]:hover,
     .que.numerical input[type="text"]:hover {
-      border-color: rgba(59, 91, 253, 0.32);
+      border-color: var(--option-hover-border);
       background: #fff;
     }
 
     .que.shortanswer input[type="text"]:focus-visible,
     .que.numerical input[type="text"]:focus-visible {
       outline: none;
-      border-color: rgba(59, 91, 253, 0.55);
+      border-color: var(--option-active-border);
       box-shadow: var(--ring);
       background: #fff;
     }
@@ -696,15 +713,15 @@
       background: var(--option-bg);
       border: 1px solid var(--option-border);
       border-radius: var(--radius-md);
-      box-shadow: 0 8px 20px rgba(15, 23, 42, 0.05);
+      box-shadow: 0 4px 14px rgba(15, 23, 42, 0.045);
       padding: .72rem .86rem;
       transition: background var(--trans-fast), border-color var(--trans-fast), box-shadow var(--trans-fast);
     }
 
     .que.match .answer.table-reboot tr:hover {
       background: var(--option-hover);
-      border-color: rgba(59, 91, 253, 0.26);
-      box-shadow: 0 12px 24px rgba(59, 91, 253, 0.10);
+      border-color: var(--option-hover-border);
+      box-shadow: 0 8px 20px rgba(47, 158, 68, 0.09);
     }
 
     .que.match .answer.table-reboot td.text p {
@@ -733,12 +750,12 @@
     }
 
     .que.match .answer.table-reboot select.form-select:hover {
-      border-color: rgba(59, 91, 253, 0.32);
+      border-color: var(--option-hover-border);
     }
 
     .que.match .answer.table-reboot select.form-select:focus-visible {
       outline: none;
-      border-color: rgba(59, 91, 253, 0.55);
+      border-color: var(--option-active-border);
       box-shadow: var(--ring);
     }
 
@@ -756,8 +773,8 @@
       justify-content: center;
       padding: 0 .38rem;
       border-radius: 10px;
-      border: 1px dashed rgba(59, 91, 253, 0.55);
-      background: rgba(238, 242, 255, 0.92);
+      border: 1px dashed var(--option-active-border);
+      background: var(--option-hover);
       box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9);
       font-weight: 650;
       color: var(--text-accent);
@@ -790,15 +807,15 @@
       justify-content: center;
       padding: 0 .45rem;
       border-radius: 10px;
-      border: 1px solid rgba(59, 91, 253, 0.28);
+      border: 1px solid var(--option-hover-border);
       background: #fff;
       color: var(--text-accent);
       font-weight: 700;
-      box-shadow: 0 6px 14px rgba(15, 23, 42, 0.08);
+      box-shadow: 0 3px 10px rgba(15, 23, 42, 0.06);
     }
 
     .que.ddwtos .draghome.beingdragged {
-      box-shadow: 0 10px 26px rgba(15, 23, 42, 0.24);
+      box-shadow: 0 8px 18px rgba(15, 23, 42, 0.14);
       cursor: grabbing;
     }
 
@@ -840,7 +857,7 @@
       border-radius: 14px;
       border: 1px solid var(--option-border);
       background: #fff;
-      box-shadow: 0 10px 22px rgba(15, 23, 42, 0.08);
+      box-shadow: 0 5px 16px rgba(15, 23, 42, 0.055);
       overflow: hidden;
       position: relative;
     }
@@ -896,7 +913,7 @@
     form.mform fieldset#id_previewareaheader div.markertexts .markertext:focus-visible,
     form.mform fieldset#id_previewareaheader div.markertexts .markertext:active {
         opacity: 1;
-        outline: 2px solid #4477ee22;
+        outline: 2px solid rgba(116, 198, 157, 0.45);
         outline-offset: 1px;
         box-shadow: none !important;
         text-shadow: none !important;
@@ -906,17 +923,17 @@
 
     .que.ddmarker .dropzones [class*="drop"],
     .que.ddmarker .dropzones .dropzone {
-      border: 2px dashed rgba(53, 88, 246, 0.35);
+      border: 2px dashed rgba(47, 158, 68, 0.35);
       border-radius: 12px;
-      background: rgba(238, 242, 255, 0.32);
+      background: rgba(236, 253, 250, 0.42);
       transition: border-color var(--trans-fast), background var(--trans-fast), box-shadow var(--trans-fast);
     }
 
     .que.ddmarker .dropzones [class*="drop"]:hover,
     .que.ddmarker .dropzones .dropzone:hover {
-      border-color: rgba(53, 88, 246, 0.55);
-      background: rgba(224, 231, 255, 0.45);
-      box-shadow: inset 0 0 0 1px rgba(53, 88, 246, 0.15);
+      border-color: var(--option-active-border);
+      background: rgba(204, 251, 241, 0.50);
+      box-shadow: inset 0 0 0 1px rgba(47, 158, 68, 0.18);
     }
 
     .que.ddmarker .draghomes {
@@ -931,7 +948,7 @@
 
     .que.ddmarker .marker {
       border-radius: 999px;
-      border: 1px solid rgba(53, 88, 246, 0.32);
+      border: 1px solid rgba(47, 158, 68, 0.32);
       background: #fff;
       color: var(--text-main);
       box-shadow: none !important;
@@ -946,15 +963,15 @@
     }
 
     .que.ddmarker .marker:hover {
-      border-color: rgba(53, 88, 246, 0.52);
-      background: rgba(238, 242, 255, 0.72);
+      border-color: var(--option-active-border);
+      background: rgba(204, 251, 241, 0.52);
       box-shadow: none !important;
     }
 
     .que.ddmarker .marker:focus-visible {
       outline: none;
       box-shadow: none !important;
-      border-color: rgba(53, 88, 246, 0.62);
+      border-color: var(--option-active-border);
     }
 
     .que.ddmarker .marker:active,
@@ -991,7 +1008,7 @@
     }
 
     .que.essay .qtype_essay_response:focus-within {
-      border-color: rgba(59, 91, 253, 0.55);
+      border-color: var(--option-active-border);
       box-shadow: var(--ring);
     }
 
@@ -1006,15 +1023,167 @@
 
     .que.essay textarea.form-control:focus-visible {
       outline: none;
-      border-color: rgba(59, 91, 253, 0.55);
+      border-color: var(--option-active-border);
       box-shadow: var(--ring);
     }
 
     .que.essay .tox.tox-tinymce {
-      border: 1px solid rgba(15, 23, 42, 0.10) !important;
+      border: 1px solid rgba(15, 23, 42, 0.07) !important;
       border-radius: 12px !important;
       box-shadow: none !important;
       overflow: hidden;
+    }
+
+    /* =========================================================
+       6A) ORDERING QUESTION (qtype_ordering)
+       ========================================================= */
+    .que.ordering.deferredfeedback {
+      position: relative;
+      background: var(--quiz-card-bg);
+      border: 1px solid var(--quiz-border);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--quiz-shadow);
+      padding: var(--card-pad-y) var(--card-pad-x) calc(var(--card-pad-y) - .2rem);
+      margin: 0 0 2.2rem 0;
+      transition: border-color var(--trans-main), box-shadow var(--trans-main), transform .12s ease;
+      overflow: clip;
+    }
+
+    .que.ordering.deferredfeedback::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 3px;
+      background: linear-gradient(90deg, rgba(47, 158, 68, .72), rgba(116, 198, 157, .48), transparent 92%);
+      pointer-events: none;
+    }
+
+    .que.ordering.deferredfeedback:hover {
+      border-color: var(--quiz-border-hover);
+      box-shadow: var(--quiz-shadow-hover);
+      transform: translateY(-0.5px);
+    }
+
+    .que.ordering .ablock {
+      margin: 0;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      box-shadow: none;
+    }
+
+    .que.ordering .qtext {
+      margin: 1.05rem 0 1.5rem;
+      font-size: 1.13rem;
+      line-height: 1.66;
+      font-weight: 600;
+      color: var(--text-main);
+    }
+
+    .que.ordering .answer.ordering {
+      margin-top: .2rem;
+    }
+
+    .que.ordering .answer.ordering .sortablelist {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: .68rem;
+    }
+
+    .que.ordering .answer.ordering .sortableitem {
+      margin: 0;
+      padding: 0 !important;
+      border-radius: var(--radius-md);
+      background: var(--option-bg);
+      border: 1px solid var(--option-border);
+      box-shadow: 0 4px 14px rgba(15, 23, 42, 0.045);
+      transition: background var(--trans-fast), border-color var(--trans-fast), box-shadow var(--trans-fast), transform .08s ease;
+    }
+
+    .que.ordering .answer.ordering .sortableitem:hover {
+      background: var(--option-hover);
+      border-color: var(--option-hover-border);
+      box-shadow: 0 8px 20px rgba(47, 158, 68, 0.09);
+      transform: translateY(-0.5px);
+    }
+
+    .que.ordering .answer.ordering .sortableitem > .d-flex {
+      align-items: center;
+      gap: .7rem;
+      min-height: 56px;
+      padding: .42rem .52rem;
+      border-radius: inherit;
+    }
+
+    .que.ordering .answer.ordering .grip {
+      color: var(--text-muted);
+      border-radius: 10px;
+      min-width: 2.15rem;
+      justify-content: center;
+      cursor: grab;
+      user-select: none;
+    }
+
+    .que.ordering .answer.ordering .grip .fa-grip-vertical {
+      opacity: .75;
+      font-size: .95rem;
+    }
+
+    .que.ordering .answer.ordering .sortableitem:active .grip {
+      cursor: grabbing;
+    }
+
+    .que.ordering .answer.ordering [id$="-text"] {
+      color: var(--text-main);
+      font-size: 1.03rem;
+      line-height: 1.5;
+      font-weight: 540;
+      min-height: 2rem;
+      display: flex;
+      align-items: center;
+      word-break: break-word;
+    }
+
+    .que.ordering .answer.ordering [id$="-text"] p {
+      margin: 0;
+    }
+
+    .que.ordering .answer.ordering .btn.btn-icon {
+      width: 2rem;
+      height: 2rem;
+      border-radius: 10px;
+      border: 1px solid var(--option-border);
+      background: #fff;
+      color: var(--text-accent);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: border-color var(--trans-fast), background var(--trans-fast), box-shadow var(--trans-fast), transform .08s ease;
+    }
+
+    .que.ordering .answer.ordering .btn.btn-icon:hover {
+      border-color: var(--option-hover-border);
+      background: var(--option-hover);
+      box-shadow: 0 4px 10px rgba(47, 158, 68, 0.08);
+      transform: translateY(-0.5px);
+    }
+
+    .que.ordering .answer.ordering .btn.btn-icon:focus-visible {
+      outline: none;
+      border-color: var(--option-active-border);
+      box-shadow: var(--ring);
+    }
+
+    .que.ordering .answer.ordering .sortableitem.sortable-placeholder {
+      background: transparent;
+      border: 1px dashed var(--option-hover-border);
+      box-shadow: none;
+      min-height: 56px;
     }
   
     /* =========================================================
@@ -1038,6 +1207,12 @@
 
       .que.match .answer.table-reboot select.form-select {
         max-width: 100%;
+      }
+
+      .que.ordering.deferredfeedback {
+        --card-pad-y: 1.35rem;
+        --card-pad-x: 1.15rem;
+        padding: var(--card-pad-y) var(--card-pad-x) calc(var(--card-pad-y) - .25rem);
       }
     }
   
@@ -1101,10 +1276,25 @@
       .que.ddmarker .marker .markertext {
         font-size: .86rem;
       }
+
+      .que.ordering .answer.ordering .sortableitem > .d-flex {
+        gap: .45rem;
+        min-height: 50px;
+        padding: .35rem .38rem;
+      }
+
+      .que.ordering .answer.ordering [id$="-text"] {
+        font-size: .98rem;
+      }
+
+      .que.ordering .answer.ordering .btn.btn-icon {
+        width: 1.9rem;
+        height: 1.9rem;
+      }
     }
 
     @media (prefers-reduced-motion: reduce) {
-      :is(.que.multichoice.deferredfeedback, .que.truefalse.deferredfeedback, .que.match, .que.shortanswer, .que.numerical, .que.ddwtos, .que.ddmarker, .que.essay, .que.multichoice .answer > .r0, .que.multichoice .answer > .r1, .que.truefalse .answer > .r0, .que.truefalse .answer > .r1),
+      :is(.que.multichoice.deferredfeedback, .que.truefalse.deferredfeedback, .que.match, .que.shortanswer, .que.numerical, .que.ddwtos, .que.ddmarker, .que.essay, .que.ordering.deferredfeedback, .que.multichoice .answer > .r0, .que.multichoice .answer > .r1, .que.truefalse .answer > .r0, .que.truefalse .answer > .r1, .que.ordering .answer.ordering .sortableitem, .que.ordering .answer.ordering .btn.btn-icon),
       .que.match .answer.table-reboot tr,
       .que.ddmarker .marker,
       #mod_quiz-next-nav {
@@ -1112,7 +1302,7 @@
         animation: none !important;
       }
 
-      :is(.que.multichoice.deferredfeedback:hover, .que.truefalse.deferredfeedback:hover, .que.match:hover, .que.shortanswer:hover, .que.numerical:hover, .que.ddwtos:hover, .que.ddmarker:hover, .que.essay:hover, .que.multichoice .answer > .r0:hover, .que.multichoice .answer > .r1:hover, .que.truefalse .answer > .r0:hover, .que.truefalse .answer > .r1:hover),
+      :is(.que.multichoice.deferredfeedback:hover, .que.truefalse.deferredfeedback:hover, .que.match:hover, .que.shortanswer:hover, .que.numerical:hover, .que.ddwtos:hover, .que.ddmarker:hover, .que.essay:hover, .que.ordering.deferredfeedback:hover, .que.multichoice .answer > .r0:hover, .que.multichoice .answer > .r1:hover, .que.truefalse .answer > .r0:hover, .que.truefalse .answer > .r1:hover, .que.ordering .answer.ordering .sortableitem:hover, .que.ordering .answer.ordering .btn.btn-icon:hover),
       .que.match .answer.table-reboot tr:hover,
       #mod_quiz-next-nav:hover {
         transform: none !important;
@@ -1127,4 +1317,3 @@
     } */
 
   }
-

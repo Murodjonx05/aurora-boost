@@ -1,0 +1,238 @@
+#page-my-index {
+    --aurora-cabinet-surface: #ffffff;
+    --aurora-cabinet-surface-soft: #f7fafc;
+    --aurora-cabinet-border: rgba(15, 23, 42, 0.08);
+    --aurora-cabinet-border-strong: rgba(15, 23, 42, 0.14);
+    --aurora-cabinet-shadow: 0 6px 20px rgba(15, 23, 42, 0.07);
+    --aurora-cabinet-shadow-hover: 0 12px 28px rgba(15, 23, 42, 0.11);
+    --aurora-cabinet-title: #1f2a3d;
+    --aurora-cabinet-text: #334155;
+}
+
+#page-my-index #region-main {
+    display: grid;
+    gap: 1rem;
+}
+
+#page-my-index .block.card {
+    border: 1px solid var(--aurora-cabinet-border) !important;
+    border-radius: 16px !important;
+    box-shadow: var(--aurora-cabinet-shadow);
+    background: var(--aurora-cabinet-surface);
+    overflow: hidden;
+    transition: box-shadow 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+
+#page-my-index .block.card:hover,
+#page-my-index .block.card:focus-within {
+    border-color: var(--aurora-cabinet-border-strong) !important;
+    box-shadow: var(--aurora-cabinet-shadow-hover);
+    transform: translateY(-1px);
+}
+
+#page-my-index .block.card .card-body {
+    padding: 1rem 1.1rem !important;
+}
+
+#page-my-index .block.card .card-title {
+    font-size: 1.02rem;
+    font-weight: 650;
+    color: var(--aurora-cabinet-title);
+}
+
+#page-my-index .block.card .card-text {
+    color: var(--aurora-cabinet-text);
+}
+
+/* Recently accessed items. */
+#page-my-index .block-recentlyaccesseditems .card[role="listitem"] {
+    border: 1px solid var(--aurora-cabinet-border);
+    border-radius: 12px;
+    background: var(--aurora-cabinet-surface-soft);
+    transition: border-color 0.16s ease, background-color 0.16s ease, box-shadow 0.16s ease;
+}
+
+#page-my-index .block-recentlyaccesseditems .card[role="listitem"]:hover {
+    border-color: rgba(37, 97, 240, 0.28);
+    background: #ffffff;
+    box-shadow: 0 8px 18px rgba(37, 97, 240, 0.1);
+}
+
+#page-my-index .block-recentlyaccesseditems .activityiconcontainer .activityicon.icon {
+    border-radius: 10px;
+}
+
+/* Recently accessed courses carousel cards. */
+#page-my-index .block-recentlyaccessedcourses .paging-bar-container {
+    margin-bottom: 0.9rem !important;
+}
+
+#page-my-index .block-recentlyaccessedcourses [data-region="paging-bar-container"] {
+    display: flex !important;
+}
+
+#page-my-index .block-recentlyaccessedcourses .card-carousel {
+    display: flex !important;
+    gap: 0.7rem !important;
+    overflow: hidden !important;
+    justify-content: center !important;
+}
+
+#page-my-index .block-recentlyaccessedcourses .course-card,
+#page-my-index .block-recentlyaccessedcourses .aurora-cabinet-course-card,
+#page-my-index .block-recentlyaccessedcourses .aurora-myoverview-card {
+    position: relative;
+    border: 1px solid var(--aurora-cabinet-border);
+    border-radius: 16px;
+    overflow: hidden;
+    background: linear-gradient(
+        135deg,
+        var(--aurora_course_block_color_start, #f3f6fb) 0%,
+        var(--aurora_course_block_color_end, #e5ebf3) 100%
+    );
+    box-shadow: 0 6px 16px rgba(15, 23, 42, 0.08);
+    transition: box-shadow 0.3s ease, border-color 0.25s ease, transform 0.3s ease;
+    min-height: 215px;
+    aspect-ratio: 16 / 10;
+    margin: 0 !important;
+    width: clamp(260px, 19vw, 330px) !important;
+    max-width: clamp(260px, 19vw, 330px) !important;
+    flex: 0 0 clamp(260px, 19vw, 330px);
+}
+
+#page-my-index .block-recentlyaccessedcourses .course-card:hover,
+#page-my-index .block-recentlyaccessedcourses .aurora-cabinet-course-card:hover,
+#page-my-index .block-recentlyaccessedcourses .aurora-myoverview-card:hover,
+#page-my-index .block-recentlyaccessedcourses .aurora-myoverview-card:focus-within {
+    border-color: rgba(37, 97, 240, 0.28);
+    box-shadow: 0 14px 30px rgba(15, 23, 42, 0.13);
+    transform: translateY(-2px) scale(1.01);
+}
+
+#page-my-index .block-recentlyaccessedcourses .course-card .card-img-top,
+#page-my-index .block-recentlyaccessedcourses .aurora-cabinet-course-media,
+#page-my-index .block-recentlyaccessedcourses .aurora-myoverview-media {
+    position: absolute;
+    inset: 0;
+    height: 100%;
+    margin: 0;
+    background-size: cover !important;
+    background-position: center !important;
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+#page-my-index .block-recentlyaccessedcourses .course-card:hover .card-img-top,
+#page-my-index .block-recentlyaccessedcourses .aurora-cabinet-course-card:hover .aurora-cabinet-course-media,
+#page-my-index .block-recentlyaccessedcourses .aurora-myoverview-card:hover .aurora-cabinet-course-media {
+    transform: scale(1.04);
+}
+
+#page-my-index .block-recentlyaccessedcourses .aurora-cabinet-course-overlay,
+#page-my-index .block-recentlyaccessedcourses .aurora-myoverview-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        to top,
+        rgba(15, 23, 42, 0.5) 0%,
+        rgba(15, 23, 42, 0.2) 42%,
+        rgba(15, 23, 42, 0.04) 72%,
+        transparent 100%
+    );
+    pointer-events: none;
+    z-index: 1;
+}
+
+#page-my-index .block-recentlyaccessedcourses .course-card .card-body.course-info-container,
+#page-my-index .block-recentlyaccessedcourses .aurora-cabinet-course-info,
+#page-my-index .block-recentlyaccessedcourses .aurora-myoverview-info {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 2;
+    padding: 1rem !important;
+    background: transparent !important;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+#page-my-index .block-recentlyaccessedcourses .aurora-myoverview-title,
+#page-my-index .block-recentlyaccessedcourses .aurora-cabinet-course-title {
+    margin: 0;
+    font-size: 1.05rem;
+    font-weight: 600;
+    line-height: 1.35;
+}
+
+#page-my-index .block-recentlyaccessedcourses .course-card .coursename,
+#page-my-index .block-recentlyaccessedcourses .aurora-cabinet-course-name,
+#page-my-index .block-recentlyaccessedcourses .aurora-myoverview-link {
+    color: #fff !important;
+    font-weight: 600;
+    text-shadow: 0 1px 2px rgba(15, 23, 42, 0.5);
+    text-decoration: none;
+}
+
+#page-my-index .block-recentlyaccessedcourses .course-card .coursename .text-truncate,
+#page-my-index .block-recentlyaccessedcourses .aurora-cabinet-course-name .text-truncate {
+    color: inherit !important;
+}
+
+#page-my-index .block-recentlyaccessedcourses .course-card .text-muted,
+#page-my-index .block-recentlyaccessedcourses .course-card .muted,
+#page-my-index .block-recentlyaccessedcourses .aurora-cabinet-course-category,
+#page-my-index .block-recentlyaccessedcourses .aurora-cabinet-course-shortname,
+#page-my-index .block-recentlyaccessedcourses .aurora-myoverview-meta {
+    color: rgba(255, 255, 255, 0.82) !important;
+}
+
+#page-my-index .block-recentlyaccessedcourses .course-card [data-region="favourite-icon"] .icon,
+#page-my-index .block-recentlyaccessedcourses .aurora-cabinet-course-card [data-region="favourite-icon"] .icon {
+    color: #facc15 !important;
+    text-shadow: 0 1px 2px rgba(15, 23, 42, 0.45);
+}
+
+/* Timeline controls. */
+#page-my-index .block-timeline .btn.btn-outline-secondary {
+    border-radius: 10px;
+    border-color: var(--aurora-cabinet-border-strong);
+    background: #fff;
+}
+
+#page-my-index .block-timeline .btn.btn-outline-secondary:hover,
+#page-my-index .block-timeline .btn.btn-outline-secondary:focus-visible {
+    border-color: rgba(37, 97, 240, 0.35);
+    background: rgba(37, 97, 240, 0.08);
+}
+
+#page-my-index .block-timeline .list-group-item {
+    border-color: var(--aurora-cabinet-border);
+}
+
+#page-my-index .block-timeline .list-group-item:hover {
+    background: rgba(37, 97, 240, 0.05);
+}
+
+@media (max-width: 767.98px) {
+    #page-my-index .block.card .card-body {
+        padding: 0.85rem 0.85rem !important;
+    }
+
+    #page-my-index .block-recentlyaccessedcourses .course-card .card-img-top,
+    #page-my-index .block-recentlyaccessedcourses .aurora-cabinet-course-media {
+        height: 100%;
+    }
+
+    #page-my-index .block-recentlyaccessedcourses .course-card,
+    #page-my-index .block-recentlyaccessedcourses .aurora-cabinet-course-card {
+        min-height: 180px;
+    }
+
+    #page-my-index .block-recentlyaccessedcourses .course-card,
+    #page-my-index .block-recentlyaccessedcourses .aurora-cabinet-course-card {
+        width: 100% !important;
+        max-width: 100% !important;
+        flex-basis: 100%;
+    }
+}

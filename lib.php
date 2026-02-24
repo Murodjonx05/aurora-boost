@@ -139,6 +139,20 @@ function theme_aurora_get_pre_scss($theme)
     $scss .= "  --aurora_nav_border_radius: " . $navborderradius . ";\n";
     $scss .= "  --aurora_nav_text_weight: " . $navtextweight . ";\n";
     $scss .= "  --aurora_nav_links_align: " . $navlinksalign . ";\n";
+
+    // Additional link color variables.
+    $linkcolor = !empty($theme->settings->linkcolor) ? $theme->settings->linkcolor : '#2561f0';
+    $linkvisitedcolor = !empty($theme->settings->linkvisitedcolor) ? $theme->settings->linkvisitedcolor : '#690daf';
+    $linkhovercolor = !empty($theme->settings->linkhovercolor) ? $theme->settings->linkhovercolor : '#1c3498';
+    $linkactivecolor = !empty($theme->settings->linkactivecolor) ? $theme->settings->linkactivecolor : '#1c3498';
+    $courseblockcolorstart = !empty($theme->settings->courseblockcolorstart) ? $theme->settings->courseblockcolorstart : '#f3f6fb';
+    $courseblockcolorend = !empty($theme->settings->courseblockcolorend) ? $theme->settings->courseblockcolorend : '#e5ebf3';
+    $scss .= "  --aurora_link_color: " . $linkcolor . ";\n";
+    $scss .= "  --aurora_link_visited_color: " . $linkvisitedcolor . ";\n";
+    $scss .= "  --aurora_link_hover_color: " . $linkhovercolor . ";\n";
+    $scss .= "  --aurora_link_active_color: " . $linkactivecolor . ";\n";
+    $scss .= "  --aurora_course_block_color_start: " . $courseblockcolorstart . ";\n";
+    $scss .= "  --aurora_course_block_color_end: " . $courseblockcolorend . ";\n";
     $scss .= "}\n";
 
     // Add a new variable to indicate that we are running behat.

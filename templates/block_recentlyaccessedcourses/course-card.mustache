@@ -1,0 +1,77 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template block_recentlyaccessedcourses/course-card
+
+    Theme override for recently accessed course card.
+}}
+<div class="card course-card mx-1 aurora-cabinet-course-card" role="listitem"
+    data-region="course-content"
+    data-course-id="{{{id}}}">
+    <a href="{{viewurl}}" tabindex="-1" class="aurora-cabinet-course-media-link aurora-myoverview-media">
+        <div class="card-img-top aurora-cabinet-course-media" style='background-image: url("{{{courseimage}}}");'>
+            <span class="visually-hidden">{{fullname}}</span>
+        </div>
+    </a>
+
+    <div class="aurora-myoverview-overlay aurora-cabinet-course-overlay" aria-hidden="true"></div>
+
+    <div class="card-body pe-1 course-info-container aurora-myoverview-info aurora-cabinet-course-info" id="course-info-container-{{id}}-{{uniqid}}">
+        <div class="d-flex align-items-start">
+            <div class="w-100 text-truncate">
+                {{#showshortname}}
+                    <div class="muted d-flex mb-1 flex-wrap aurora-cabinet-course-shortname">
+                        <span class="visually-hidden">
+                            {{#str}}aria:courseshortname, core_course{{/str}}
+                        </span>
+                        <small class="aurora-myoverview-meta">{{{shortname}}}</small>
+                    </div>
+                {{/showshortname}}
+
+                <h3 class="aurora-myoverview-title aurora-cabinet-course-title">
+                    <a href="{{viewurl}}" class="aalink coursename me-2 mb-1 aurora-myoverview-link aurora-cabinet-course-name">
+                        {{> core_course/favouriteicon }}
+                        <span class="visually-hidden">
+                            {{#str}}aria:coursename, core_course{{/str}}
+                        </span>
+                        <span class="text-truncate">{{{fullname}}}</span>
+                    </a>
+                </h3>
+
+                {{#showcoursecategory}}
+                    <div class="muted d-flex flex-wrap aurora-cabinet-course-category">
+                        <span class="visually-hidden">
+                            {{#str}}aria:coursecategory, core_course{{/str}}
+                        </span>
+                        <small class="text-truncate aurora-myoverview-meta">{{{coursecategory}}}</small>
+                    </div>
+                {{/showcoursecategory}}
+
+                {{^visible}}
+                    <div class="d-flex flex-wrap">
+                        <span class="badge bg-info text-white">{{#str}} hiddenfromstudents {{/str}}</span>
+                    </div>
+                {{/visible}}
+            </div>
+        </div>
+    </div>
+
+    <div class="d-flex align-items-start aurora-cabinet-course-footer">
+        {{$progress}}{{/progress}}
+        {{$menu}}{{/menu}}
+    </div>
+</div>
