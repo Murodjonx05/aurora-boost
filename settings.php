@@ -108,6 +108,19 @@ if ($ADMIN->fulltree) {
     $setting->set_updatedcallback('theme_reset_all_caches');
     $page->add($setting);
 
+    // Navbar opacity.
+    $name = 'theme_aurora/aurora_nav_opacity';
+    $title = get_string('auroranavopacity', 'theme_aurora');
+    $description = get_string('auroranavopacitydesc', 'theme_aurora');
+    $default = '35%';
+    $choices = [];
+    for ($i = 0; $i <= 100; $i += 5) {
+        $choices["$i%"] = "$i%";
+    }
+    $setting = new admin_setting_configselect($name, $title, $description, $default, $choices);
+    $setting->set_updatedcallback('theme_reset_all_caches');
+    $page->add($setting);
+
     // Navbar secondary color.
     $name = 'theme_aurora/aurora_nav_secondary';
     $title = get_string('auroranavsecondary', 'theme_aurora');

@@ -4,24 +4,22 @@
  */
  #page-wrapper nav.navbar.fixed-top.bg-body,
  #PRIMARY-NAVBAR.bg-body {
-     background-color: rgba(var(--aurora_nav_primary, #2f9e44),0.85) !important;
+     background-color: color-mix(in srgb, var(--aurora_nav_primary, #10b981) var(--aurora_nav_opacity, 35%), transparent) !important;
      border-bottom: 0;
-     box-shadow: 0 1px 10px rgba(255, 255, 255, 0.18);
-     backdrop-filter: blur(20px);
+     box-shadow: none!important;
+     backdrop-filter: blur(24px);
      font-family:
+         "Outfit",
+         "Inter",
          "Noto Sans",
-         "PT Sans",
          "Segoe UI",
-         "Roboto",
-         "Tahoma",
-         "Arial",
-         "Liberation Sans",
-         "Arial Unicode MS",
          sans-serif;
-     font-size: 1.02rem;
-     font-weight: var(--aurora_nav_text_weight, 500);
+     font-size: 1rem;
+     border-bottom: 1px solid rgba(228, 228, 228, 0.516);
+     font-weight: var(--aurora_nav_text_weight, 580);
      line-height: 1.4;
  }
+ 
  
  #page-wrapper nav.navbar.fixed-top .navbar-brand,
  #PRIMARY-NAVBAR .navbar-brand {

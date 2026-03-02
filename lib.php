@@ -116,6 +116,7 @@ function theme_aurora_get_pre_scss($theme)
 
     // Add navbar variables.
     $navprimary = !empty($theme->settings->aurora_nav_primary) ? $theme->settings->aurora_nav_primary : '#007bff';
+    $navopacity = !empty($theme->settings->aurora_nav_opacity) ? $theme->settings->aurora_nav_opacity : '35%';
     $navsecondary = !empty($theme->settings->aurora_nav_secondary) ? $theme->settings->aurora_nav_secondary : '#6c757d';
     $navtext = !empty($theme->settings->aurora_nav_text) ? $theme->settings->aurora_nav_text : '#ffffff';
     $navtexthover = !empty($theme->settings->aurora_nav_text_hover) ? $theme->settings->aurora_nav_text_hover : '#e9ecef';
@@ -133,6 +134,7 @@ function theme_aurora_get_pre_scss($theme)
     $scss .= "/* Navbar variables */\n";
     $scss .= ":root {\n";
     $scss .= "  --aurora_nav_primary: " . $navprimary . ";\n";
+    $scss .= "  --aurora_nav_opacity: " . $navopacity . ";\n";
     $scss .= "  --aurora_nav_secondary: " . $navsecondary . ";\n";
     $scss .= "  --aurora_nav_text: " . $navtext . ";\n";
     $scss .= "  --aurora_nav_text_hover: " . $navtexthover . ";\n";
@@ -336,8 +338,6 @@ function theme_aurora_get_template_context(): array
         }
     }
 
-    $navbarlinks = theme_aurora_parse_link_lines($theme->settings->navbarcustomlinks ?? '');
-    $navbarlinks = theme_aurora_ensure_courses_nav_link($navbarlinks);
     $footernavlinks = theme_aurora_parse_link_lines($theme->settings->footernavlinks ?? '');
 
     $footerenabled = !isset($theme->settings->footerenabled) || (int)$theme->settings->footerenabled === 1;
@@ -345,8 +345,6 @@ function theme_aurora_get_template_context(): array
     return [
         'auroranavbar' => [
             'customlogo' => !empty($navbarlogo) ? $navbarlogo : null,
-            'customlinks' => $navbarlinks,
-            'hascustomlinks' => !empty($navbarlinks),
         ],
         'aurorafooter' => [
             'enabled' => $footerenabled,
@@ -422,6 +420,33 @@ function theme_aurora_relocate_dashboard_link(array $primarymenu): array
         $dashboarditem
     );
     theme_aurora_insert_dashboard_into_usermenu($primarymenu['user'], $dashboarditem);
+
+    // Merge custom links into primary and mobile navigation.
+    $theme = theme_config::load('aurora');
+    $navbarlinks = theme_aurora_parse_link_lines($theme->settings->navbarcustomlinks ?? '');
+    $navbarlinks = theme_aurora_ensure_courses_nav_link($navbarlinks);
+
+    global $PAGE;
+    $currenturl = new moodle_url($PAGE->url);
+
+    foreach ($navbarlinks as $link) {
+        $linkurl = new moodle_url($link['url']);
+        // Use Moodle's compare method for reliable matching.
+        $isactive = $currenturl->compare($linkurl, URL_MATCH_BASE);
+
+        $node = [
+            'text' => $link['text'],
+            'url' => $link['url'],
+            'isactive' => $isactive,
+            'classes' => $isactive ? 'active' : '',
+            'iscurrent' => $isactive, // Some templates use this for aria-current.
+        ];
+
+        // Add to desktop more menu.
+        $primarymenu['moremenu']['nodearray'][] = $node;
+        // Add to mobile primary nav.
+        $primarymenu['mobileprimarynav'][] = $node;
+    }
 
     return $primarymenu;
 }
