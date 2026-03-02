@@ -118,24 +118,25 @@
     object-position: center;
   }
   .aurora-hero-slider__bg-img {
-    filter: brightness(0.92) saturate(1.02);
+    filter: none;
     transition: filter 0.18s ease;
   }
   .aurora-hero-slider:hover .aurora-hero-slider__bg-img {
-    filter: brightness(0.95) saturate(1.05); /* Subtle hover lift */
+    filter: none;
   }
   .aurora-hero-slider__bg-fallback {
     background:
-      radial-gradient(circle at 25% 20%, rgba(13, 110, 253, 0.22) 0%, transparent 56%),
-      radial-gradient(circle at 80% 50%, rgba(25, 135, 84, 0.21) 0%, transparent 60%),
-      linear-gradient(120deg, rgba(18, 15, 38, 0.9), rgba(38, 40, 82, 0.72) 60%, rgba(12, 13, 25, 0.4) 100%);
+      radial-gradient(circle at 25% 20%, rgba(13, 110, 253, 0.12) 0%, transparent 56%),
+      radial-gradient(circle at 80% 50%, rgba(25, 135, 84, 0.10) 0%, transparent 60%),
+      linear-gradient(120deg, rgba(255, 255, 255, 0.96), rgba(244, 248, 255, 0.9) 60%, rgba(238, 246, 255, 0.82) 100%);
   }
   
-  /* 7) Shade layer - reduced intensity for image visibility */
+  /* 7) Shade layer - disabled to keep the slide image clean */
   .aurora-hero-slider__shade {
     position: absolute;
     inset: 0;
     z-index: 1;
+    background: transparent;
   }
   
   /* 8) Content container - SAFE pointer events */

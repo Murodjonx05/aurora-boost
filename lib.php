@@ -337,6 +337,7 @@ function theme_aurora_get_template_context(): array
     }
 
     $navbarlinks = theme_aurora_parse_link_lines($theme->settings->navbarcustomlinks ?? '');
+    $navbarlinks = theme_aurora_ensure_courses_nav_link($navbarlinks);
     $footernavlinks = theme_aurora_parse_link_lines($theme->settings->footernavlinks ?? '');
 
     $footerenabled = !isset($theme->settings->footerenabled) || (int)$theme->settings->footerenabled === 1;
@@ -362,6 +363,217 @@ function theme_aurora_get_template_context(): array
             'bottomright' => $footerbottomright,
         ],
     ];
+}
+
+/**
+ * Ensure the "All courses" link is present in the navbar custom links.
+ *
+ * @param array $links
+ * @return array
+ */
+function theme_aurora_ensure_courses_nav_link(array $links): array
+{
+    $coursesurl = (new moodle_url('/course/'))->out(false);
+    $normalize = static function(string $url): string {
+        return rtrim($url, '/');
+    };
+
+    foreach ($links as $link) {
+        if ($normalize((string)($link['url'] ?? '')) === $normalize($coursesurl)) {
+            return $links;
+        }
+    }
+
+    $courseslink = [
+        'text' => format_string(get_string('courses')),
+        'url' => $coursesurl,
+    ];
+
+    $inserted = false;
+    foreach ($links as $index => $link) {
+        if ($normalize((string)($link['url'] ?? '')) === $normalize((new moodle_url('/my/courses.php'))->out(false))) {
+            array_splice($links, $index + 1, 0, [$courseslink]);
+            $inserted = true;
+            break;
+        }
+    }
+
+    if (!$inserted) {
+        $links[] = $courseslink;
+    }
+
+    return $links;
+}
+
+/**
+ * Remove the dashboard link from primary navigation and move it into the user menu.
+ *
+ * @param array $primarymenu
+ * @return array
+ */
+function theme_aurora_relocate_dashboard_link(array $primarymenu): array
+{
+    theme_aurora_remove_primary_nav_item($primarymenu['moremenu'], 'home');
+    theme_aurora_remove_mobile_primary_nav_item($primarymenu['mobileprimarynav'], 'home');
+
+    $dashboarditem = theme_aurora_extract_dashboard_from_moremenu($primarymenu['moremenu']);
+    $dashboarditem = theme_aurora_extract_dashboard_from_mobileprimarynav(
+        $primarymenu['mobileprimarynav'],
+        $dashboarditem
+    );
+    theme_aurora_insert_dashboard_into_usermenu($primarymenu['user'], $dashboarditem);
+
+    return $primarymenu;
+}
+
+/**
+ * Remove a specific item from the desktop primary menu export.
+ *
+ * @param array $moremenu
+ * @param string $itemkey
+ * @return void
+ */
+function theme_aurora_remove_primary_nav_item(array &$moremenu, string $itemkey): void
+{
+    if (empty($moremenu['nodearray']) || !is_array($moremenu['nodearray'])) {
+        return;
+    }
+
+    foreach ($moremenu['nodearray'] as $index => $item) {
+        if (($item['key'] ?? null) !== $itemkey) {
+            continue;
+        }
+
+        array_splice($moremenu['nodearray'], $index, 1);
+        return;
+    }
+}
+
+/**
+ * Remove the dashboard item from the desktop primary menu export.
+ *
+ * @param array $moremenu
+ * @return array|null
+ */
+function theme_aurora_extract_dashboard_from_moremenu(array &$moremenu): ?array
+{
+    if (empty($moremenu['nodearray']) || !is_array($moremenu['nodearray'])) {
+        return null;
+    }
+
+    foreach ($moremenu['nodearray'] as $index => $item) {
+        if (($item['key'] ?? null) !== 'myhome') {
+            continue;
+        }
+
+        $dashboarditem = [
+            'text' => $item['text'] ?? get_string('myhome'),
+            'url' => ($item['url'] ?? '') . ($item['action'] ?? ''),
+        ];
+        array_splice($moremenu['nodearray'], $index, 1);
+        return $dashboarditem;
+    }
+
+    return null;
+}
+
+/**
+ * Remove the dashboard item from the mobile primary nav export.
+ *
+ * @param array $mobileprimarynav
+ * @param array|null $dashboarditem
+ * @return array|null
+ */
+function theme_aurora_extract_dashboard_from_mobileprimarynav(array &$mobileprimarynav, ?array $dashboarditem = null): ?array
+{
+    foreach ($mobileprimarynav as $index => $item) {
+        if (($item['key'] ?? null) !== 'myhome') {
+            continue;
+        }
+
+        if ($dashboarditem === null) {
+            $dashboarditem = [
+                'text' => $item['text'] ?? get_string('myhome'),
+                'url' => $item['url'] ?? '',
+            ];
+        }
+
+        array_splice($mobileprimarynav, $index, 1);
+        break;
+    }
+
+    return $dashboarditem;
+}
+
+/**
+ * Remove a specific item from the mobile primary nav export.
+ *
+ * @param array $mobileprimarynav
+ * @param string $itemkey
+ * @return void
+ */
+function theme_aurora_remove_mobile_primary_nav_item(array &$mobileprimarynav, string $itemkey): void
+{
+    foreach ($mobileprimarynav as $index => $item) {
+        if (($item['key'] ?? null) !== $itemkey) {
+            continue;
+        }
+
+        array_splice($mobileprimarynav, $index, 1);
+        return;
+    }
+}
+
+/**
+ * Insert the dashboard item into the user menu, right after Private files when available.
+ *
+ * @param array $usermenu
+ * @param array|null $dashboarditem
+ * @return void
+ */
+function theme_aurora_insert_dashboard_into_usermenu(array &$usermenu, ?array $dashboarditem): void
+{
+    if ($dashboarditem === null || empty($dashboarditem['url']) || empty($usermenu['items']) || !is_array($usermenu['items'])) {
+        return;
+    }
+
+    foreach ($usermenu['items'] as $item) {
+        if (($item->url ?? null) === $dashboarditem['url']) {
+            return;
+        }
+    }
+
+    $newitem = (object) [
+        'itemtype' => 'link',
+        'link' => true,
+        'divider' => false,
+        'title' => $dashboarditem['text'],
+        'url' => $dashboarditem['url'],
+    ];
+
+    $insertindex = null;
+    foreach ($usermenu['items'] as $index => $item) {
+        if (strpos((string)($item->url ?? ''), '/user/files.php') !== false) {
+            $insertindex = $index + 1;
+            break;
+        }
+    }
+
+    if ($insertindex === null) {
+        foreach ($usermenu['items'] as $index => $item) {
+            if (!empty($item->divider)) {
+                $insertindex = $index;
+                break;
+            }
+        }
+    }
+
+    if ($insertindex === null) {
+        $usermenu['items'][] = $newitem;
+        return;
+    }
+
+    array_splice($usermenu['items'], $insertindex, 0, [$newitem]);
 }
 
 function theme_aurora_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, array $options = array())

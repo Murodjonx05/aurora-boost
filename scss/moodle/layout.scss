@@ -251,3 +251,34 @@
         z-index: 1;
     }
 }
+
+// Keep the main content area stretched even on sparse pages.
+#page-wrapper {
+    min-height: calc(100vh - #{$navbar-height});
+    display: flex;
+    flex-direction: column;
+
+    > #page:not(.drawers) {
+        flex: 1 0 auto;
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
+
+        #page-content {
+            flex: 1 0 auto;
+        }
+    }
+
+    > #aurora-footer {
+        flex-shrink: 0;
+        margin-top: auto;
+    }
+}
+
+#page.drawers {
+    flex: 1 0 auto;
+
+    #page-content {
+        flex: 1 0 auto;
+    }
+}
