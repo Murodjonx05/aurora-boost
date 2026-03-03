@@ -19,8 +19,8 @@
      /* ── Core palette ─────────────────────────────────────────── */
      --c-bg:           #f8fafc;
      --c-white:        #ffffff;
-     --c-text:         #0f172a;
-     --c-muted:        #64748b;
+     --c-text:         #1e293b;
+     --c-muted:        #8492a6;
      --c-error:        rgba(181,1,1,.75);     /* validation / clear-choice */
 
      /* ── Accent (teal) ───────────────────────────────────────── */
@@ -34,34 +34,30 @@
      --c-border:        rgba(226,232,240,.8);  /* card default */
      --c-border-hover:  rgba(203,213,225,.9);  /* card hover   */
      --c-border-focus:  rgba(20,184,94,.3);    /* card focus   */
-     --c-opt-border:    rgba(15,23,42,.06);    /* option rows  */
+     --c-opt-border:    rgba(15,23,42,.035);    /* option rows  */
 
      /* ── Shadow ink (shared alpha channel key) ───────────────── */
      --c-ink:           15,23,42;              /* used as rgb(var(--c-ink),.X) */
      --c-ink-accent:    13,148,136;            /* teal shadow key */
 
      /* ── Semantic states ─────────────────────────────────────── */
-     --c-correct-bg:     rgba(16,185,129,.15);
+     --c-correct-bg:     rgba(16,185,129,.08);
      --c-correct-border: rgba(16,185,129,.4);
      --c-correct-text:   #065f46;
-     --c-wrong-bg:       rgba(239,68,68,.08);
-     --c-wrong-opt:      linear-gradient(115deg,rgba(247,63,63,.88),rgba(239,68,68,.76));
-     --c-wrong-border:   rgba(239,68,68,.5);
+     --c-wrong-bg:       rgba(239,68,68,.05);
+     --c-wrong-opt:      #fef2f2;
+     --c-wrong-border:   rgba(239,68,68,.3);
      --c-wrong-text:     #b91c1c;
-     --c-partial-bg:     rgba(245,158,11,.08);
+     --c-partial-bg:     rgba(245,158,11,.05);
      --c-partial-border: rgba(245,158,11,.3);
      --c-partial-text:   #b45309;
 
      /* ── Option rows ─────────────────────────────────────────── */
      --opt-bg:         var(--c-white);
      --opt-hover:      #fcfdfd;
-     --opt-active:     linear-gradient(90deg,#16e07e,#31c48d);
-     --opt-active-bdr: rgba(235,235,235,.6);
+     --opt-active:     #f0fdf4;
+     --opt-active-bdr: rgba(74,222,128,.35);
 
-     /* ── Cards ───────────────────────────────────────────────── */
-     --card-bg:          var(--c-white);
-     --card-shadow:      0 6px 20px rgba(15,23,42,.035);
-     --card-shadow-hover:0 16px 40px rgba(15,23,42,.07);
 
      /* ── Geometry ────────────────────────────────────────────── */
      --r-lg:   1.25rem;   /* card corners   */
@@ -231,7 +227,7 @@
        min-height: 42px;
        font-weight: 540 !important;
        color: var(--c-text) !important;
-       box-shadow: 0 2px 8px rgba(15,23,42,.03) !important;
+       box-shadow: 0 4px 12px rgba(15,23,42,.02) !important;
        transition: all var(--t-fast) !important;
      }
      .tertiary-navigation .btn:hover,
@@ -239,7 +235,7 @@
        background: var(--c-bg) !important;
        border-color: var(--c-muted) !important;
        transform: translateY(-2px) !important;
-       box-shadow: 0 6px 16px rgba(15,23,42,.06) !important;
+       box-shadow: 0 8px 24px rgba(15,23,42,.03) !important;
      }
      .tertiary-navigation .btn:focus-visible {
        outline: none; box-shadow: var(--ring) !important;
@@ -255,12 +251,12 @@
        border: 1px solid rgba(255,255,255,.1);
        background: linear-gradient(135deg,var(--c-accent-2),var(--c-accent));
        color: #fff; font-weight: 600; letter-spacing: .02em;
-       box-shadow: 0 8px 20px -6px rgba(13,148,136,.4), inset 0 1px 0 rgba(255,255,255,.2);
+       box-shadow: 0 10px 30px -5px rgba(13,148,136,.2), inset 0 1px 0 rgba(255,255,255,.2);
        transition: all var(--t-fast);
      }
      #mod_quiz-next-nav:hover {
        filter: brightness(1.05);
-       box-shadow: 0 12px 24px -8px rgba(13,148,136,.5),
+       box-shadow: 0 14px 35px -5px rgba(13,148,136,.25),
                    inset 0 1px 0 rgba(255,255,255,.3),
                    0 0 15px var(--c-accent-light);
        transform: translateY(-1.5px);
@@ -288,7 +284,7 @@
    
      /* Floating timer */
      #quiz-timer-wrapper {
-       position: sticky !important; top: 1rem !important; z-index: 1000 !important;
+       position: sticky !important; top: 5.5rem !important; z-index: 1000 !important;
        display: flex; justify-content: flex-end; align-items: center;
        margin-bottom: 2rem !important;
        pointer-events: none;
@@ -304,28 +300,18 @@
        padding: .6rem 1.25rem !important;
        font-size: 1.05rem !important; font-weight: 600 !important;
        color: var(--c-text) !important;
-       box-shadow: 0 8px 32px rgba(15,23,42,.08), inset 0 1px 0 rgba(255,255,255,.9) !important;
+       box-shadow: 0 10px 40px rgba(15,23,42,.04), inset 0 1px 0 rgba(255,255,255,.9) !important;
        transition: all var(--t-main) !important;
        animation: timerPulse 3.5s infinite ease-in-out !important;
      }
      @keyframes timerPulse {
-       0%,100% { box-shadow: 0 8px 32px rgba(15,23,42,.08), inset 0 1px 0 rgba(255,255,255,.9); transform: scale(1); }
-       50%      { box-shadow: 0 12px 36px rgba(15,23,42,.12), inset 0 1px 0 rgba(255,255,255,.9); transform: scale(1.02); }
+       0%,100% { box-shadow: 0 10px 40px rgba(15,23,42,.04), inset 0 1px 0 rgba(255,255,255,.9); transform: scale(1); }
+       50%      { box-shadow: 0 14px 45px rgba(15,23,42,.06), inset 0 1px 0 rgba(255,255,255,.9); transform: scale(1.02); }
      }
    
+     /* The user requested the timer cannot be hidden */
      #toggle-timer {
-       border-radius: 999px !important;
-       background: var(--c-white) !important;
-       border: 1px solid var(--c-border-hover) !important;
-       color: var(--c-text) !important;
-       box-shadow: 0 2px 8px rgba(15,23,42,.03) !important;
-       transition: all var(--t-fast) !important;
-       padding: .6rem 1rem !important;
-     }
-     #toggle-timer:hover {
-       background: var(--c-bg) !important;
-       transform: translateY(-2px) !important;
-       box-shadow: 0 6px 16px rgba(15,23,42,.06) !important;
+       display: none !important;
      }
    
    
@@ -335,63 +321,16 @@
    
      /* All question type cards */
      :is(.que.multichoice, .que.truefalse, .que.match, .que.shortanswer,
-         .que.numerical, .que.ddwtos, .que.ddmarker, .que.essay,
-         .que.ordering):is(.deferredfeedback, .que.match, .que.shortanswer,
-         .que.numerical, .que.ddwtos, .que.ddmarker, .que.essay) {
+         .que.numerical, .que.ddwtos, .que.ddmarker, .que.essay, .que.ordering) {
        position: relative;
-       overflow: clip;
-       background: var(--card-bg) !important;
-       border: 1px solid var(--c-border) !important;
-       border-radius: var(--r-lg) !important;
-       box-shadow: var(--card-shadow) !important;
+       background: transparent !important;
+       border: none !important;
+       border-radius: 0 !important;
+       box-shadow: none !important;
+       /* Restore original padding to maintain consistent internal layout */
        padding: var(--pad-y) var(--pad-x) calc(var(--pad-y) - .2rem);
        margin: 0 0 2.2rem;
-       transition: border-color var(--t-main), box-shadow var(--t-main),
-                   transform .25s cubic-bezier(.2,.8,.2,1) !important;
-     }
-   
-     /* Simpler targeting (also catches non-.deferredfeedback types) */
-     .que.multichoice.deferredfeedback,
-     .que.truefalse.deferredfeedback,
-     .que.ordering.deferredfeedback,
-     .que.match,
-     .que.shortanswer,
-     .que.numerical,
-     .que.ddwtos,
-     .que.ddmarker,
-     .que.essay {
-       position: relative;
-       overflow: clip;
-       background: var(--card-bg) !important;
-       border: 1px solid var(--c-border) !important;
-       border-radius: var(--r-lg) !important;
-       box-shadow: var(--card-shadow) !important;
-       padding: var(--pad-y) var(--pad-x) calc(var(--pad-y) - .2rem);
-       margin: 0 0 2.2rem;
-       transition: border-color var(--t-main), box-shadow var(--t-main),
-                   transform .25s cubic-bezier(.2,.8,.2,1) !important;
-     }
-   
-     .que.multichoice.deferredfeedback:hover,
-     .que.truefalse.deferredfeedback:hover,
-     .que.ordering.deferredfeedback:hover,
-     .que.match:hover,
-     .que.shortanswer:hover,
-     .que.numerical:hover,
-     .que.ddwtos:hover,
-     .que.ddmarker:hover {
-       border-color: var(--c-border-hover) !important;
-       box-shadow: var(--card-shadow-hover) !important;
-       transform: translateY(-3px) !important;
-     }
-   
-     /* Essay doesn't lift on hover (avoids jarring resize with TinyMCE) */
-     .que.essay { transition: border-color var(--t-main), box-shadow var(--t-main); }
-     .que.essay:hover,
-     .que.essay:focus-within {
-       border-color: var(--c-border-hover) !important;
-       box-shadow: var(--card-shadow-hover) !important;
-       transform: none !important;
+       transition: none !important;
      }
    
      /* ablock resets shared across types */
@@ -442,7 +381,7 @@
      .que.truefalse  .answer > :is(.r0,.r1):hover {
        background: var(--opt-hover) !important;
        border-color: var(--opt-active-bdr) !important;
-       box-shadow: 0 6px 16px rgba(15,23,42,.05) !important;
+       box-shadow: 0 8px 24px rgba(15,23,42,.02) !important;
        transform: translateY(-.5px) !important;
      }
    
@@ -459,7 +398,7 @@
      }
    
      /* ── Multichoice: label & text ───────────────────────────── */
-     .que.multichoice *:not(input):not(label):not(svg):not(path) {
+     .que.multichoice .answer *:not(input):not(label):not(svg):not(path) {
        all: unset; box-sizing: border-box; display: revert;
      }
      .que.multichoice,
@@ -490,11 +429,6 @@
      }
    
      /* ── True/False: label styling ───────────────────────────── */
-     .que.truefalse .ablock {
-       border: 0 !important; margin: 0 !important;
-       padding: 0 !important; background: transparent !important;
-       box-shadow: none !important;
-     }
      .que.truefalse .answer .ms-1 { margin-left: 0 !important; }
    
      .que.truefalse .answer > :is(.r0,.r1) label[for] {
@@ -519,6 +453,11 @@
          background: var(--opt-active) !important;
          border-color: var(--opt-active-bdr) !important;
          box-shadow: none !important;
+       }
+       /* Ensure text is readable on pastel active bg */
+       .que.multichoice .answer > :is(.r0,.r1):has(input[type="radio"]:checked) *,
+       .que.truefalse   .answer > :is(.r0,.r1):has(input[type="radio"]:checked) * {
+         color: var(--c-accent) !important;
        }
        /* Neutralise inner d-flex highlight */
        .que.multichoice .answer input[type="radio"]:checked + .d-flex {
@@ -617,7 +556,7 @@
      .que.numerical   input[type="text"]:focus-visible {
        outline: none !important;
        border-color: var(--c-accent) !important;
-       box-shadow: 0 0 0 4px rgba(13,148,136,.15),
+       box-shadow: 0 0 0 4px rgba(13,148,136,.08),
                    inset 0 2px 4px rgba(15,23,42,.02) !important;
        background: var(--c-white) !important;
      }
@@ -654,14 +593,14 @@
        background: var(--opt-bg);
        border: 1px solid var(--c-opt-border);
        border-radius: var(--r-md);
-       box-shadow: 0 4px 14px rgba(15,23,42,.045);
+       box-shadow: 0 6px 20px rgba(15,23,42,.02);
        padding: .72rem .86rem;
        transition: background var(--t-fast), border-color var(--t-fast), box-shadow var(--t-fast);
      }
      .que.match .answer.table-reboot tr:hover {
        background: var(--opt-hover);
        border-color: var(--opt-active-bdr);
-       box-shadow: 0 8px 20px rgba(47,158,68,.09);
+       box-shadow: 0 12px 30px rgba(47,158,68,.04);
      }
      .que.match .answer.table-reboot td.text p {
        margin: 0; font-size: 1.01rem;
@@ -715,9 +654,9 @@
        padding: 0 .45rem; border-radius: 10px;
        border: 1px solid var(--opt-active-bdr);
        background: var(--c-white); color: var(--c-accent);
-       font-weight: 700; box-shadow: 0 3px 10px rgba(15,23,42,.06);
+       font-weight: 700; box-shadow: 0 6px 16px rgba(15,23,42,.03);
      }
-     .que.ddwtos .draghome.beingdragged { box-shadow: 0 8px 18px rgba(15,23,42,.14); cursor: grabbing; }
+     .que.ddwtos .draghome.beingdragged { box-shadow: 0 12px 30px rgba(15,23,42,.08); cursor: grabbing; }
      .que.ddwtos .draghome.placed { margin-bottom: 2px; vertical-align: middle; }
      .que.ddwtos .qtext .draghome.placed { display: inline-flex !important; margin: 0 2px 2px 0; }
      .que.ddwtos .draghome.dragplaceholder { display: none !important; }
@@ -874,14 +813,14 @@
        border-radius: var(--r-md);
        background: var(--opt-bg);
        border: 1px solid var(--c-opt-border);
-       box-shadow: 0 4px 14px rgba(15,23,42,.045);
+       box-shadow: 0 6px 20px rgba(15,23,42,.02);
        transition: background var(--t-fast), border-color var(--t-fast),
                    box-shadow var(--t-fast), transform .08s ease;
      }
      .que.ordering .answer.ordering .sortableitem:hover {
        background: var(--opt-hover);
        border-color: var(--opt-active-bdr);
-       box-shadow: 0 8px 20px rgba(47,158,68,.09);
+       box-shadow: 0 12px 30px rgba(47,158,68,.04);
        transform: translateY(-.5px);
      }
    
@@ -917,7 +856,7 @@
      }
      .que.ordering .answer.ordering .btn.btn-icon:hover {
        border-color: var(--opt-active-bdr); background: var(--opt-hover);
-       box-shadow: 0 4px 10px rgba(47,158,68,.08); transform: translateY(-.5px);
+       box-shadow: 0 6px 20px rgba(47,158,68,.04); transform: translateY(-.5px);
      }
      .que.ordering .answer.ordering .btn.btn-icon:focus-visible {
        outline: none; border-color: var(--opt-active-bdr); box-shadow: var(--ring);
@@ -954,7 +893,7 @@
         ============================================================ */
    
      #mod_quiz_navblock {
-       background: var(--card-bg) !important;
+       background: var(--c-white) !important;
        border: 1px solid var(--c-border) !important;
        border-radius: 1.5rem !important;
        padding: 1.5rem !important;
@@ -974,18 +913,35 @@
      #mod_quiz_navblock .qn_buttons {
        display: grid; grid-template-columns: repeat(auto-fill,minmax(42px,1fr));
        gap: .6rem; margin-bottom: 1.5rem;
+       counter-reset: qn-button; /* Prepare counter for questions */
      }
      #mod_quiz_navblock .qnbutton {
        display: flex !important; align-items: center; justify-content: center;
-       font-family: var(--font); font-size: 1rem; font-weight: 600;
+       font-size: 0 !important; /* Hides the broken Uzbek text "{$a->raqam}" */
        width: 42px; height: 42px; padding: 0;
        border-radius: var(--r-sm); border: 1px solid var(--c-opt-border);
        background: var(--opt-bg); color: var(--c-text);
        transition: all var(--t-fast); position: relative;
        text-decoration: none; box-shadow: 0 2px 4px rgba(15,23,42,.02);
        float: none !important; margin: 0 !important;
+       counter-increment: qn-button;
      }
-     #mod_quiz_navblock .qnbutton :is(.thispageholder,.trafficlight) { display: none !important; }
+     
+     /* Inject the pure CSS number counter instead of broken text */
+     #mod_quiz_navblock .qnbutton::after {
+       content: counter(qn-button);
+       font-family: var(--font); font-size: 1rem; font-weight: 600;
+       color: inherit; /* will automatically get correct/wrong color state */
+     }
+ 
+     #mod_quiz_navblock .qnbutton :is(.thispageholder, .trafficlight, .accessshide, .accesshide, .sr-only, .visually-hidden) { 
+       display: none !important; 
+     }
+ 
+     /* Ensure flagged icon isn't hidden by font-size 0 */
+     #mod_quiz_navblock .qnbutton .flagstate {
+       position: absolute; top: .2rem; right: .3rem; font-size: .8rem;
+     }
    
      /* Button states */
      #mod_quiz_navblock .qnbutton.answersaved,
