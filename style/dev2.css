@@ -38,9 +38,9 @@
     --option-border: rgba(15, 23, 42, 0.06);
     --option-hover: #fcfdfd;
     --option-hover-border: rgba(235, 235, 235, 0.6);
-    --option-active: #f0fdfa;
+    --option-active: linear-gradient(90deg, #16e07e 0%, #31c48d 100%);
     --option-active-border: rgba(235, 235, 235, 0.6);
-    --option-active-shadow: 0 8px 24px -6px rgba(13, 148, 136, 0.16);
+    --option-active-shadow: none;
   
     --radius-lg: 28px;
     --radius-md: 18px;
@@ -76,6 +76,32 @@
     .que .validationerror {
       padding-top: 20px!important;
       color:rgba(181, 1, 1, 0.746)!important;
+    }
+    .qtype_multichoice_clearchoice{
+      padding-top:20px!important;
+      * {
+        color:rgba(181, 1, 1, 0.746)!important;
+      }
+      
+      
+
+    }
+    .que.ordering .sortablelist {
+      float: none !important;
+      list-style-type: none;
+      border: none !important;
+      margin: 0 0 0 8px;
+    }
+    .que.ordering .answer.ordering .sortableitem {
+      box-shadow: none !important;
+    }
+
+    .que.ordering .answer.ordering .sortableitem.current-drop,
+    .que.ordering .answer.ordering .p-2.sortableitem.current-drop {
+      background: unset !important;
+      border-color: unset !important;
+      box-shadow: unset !important;
+      transition: unset !important;
     }
 
     /* =========================================================
@@ -297,7 +323,10 @@
     .que.multichoice .answer > .r1 label {
       position: relative;
       width: 100%;
-      display: block;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
     }
   
     .que.multichoice .answer > .r0 label > *,
@@ -499,7 +528,10 @@
     .que.truefalse .answer > .r1 label[for] {
       position: relative !important;
       z-index: 1 !important;
-      display: block !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: space-between !important;
+      gap: 0.5rem !important;
       width: 100% !important;
       padding-left: 0 !important;
       font-size: 1.05rem !important;
@@ -581,6 +613,15 @@
       border-color: var(--quiz-border-hover);
       /* box-shadow: var(--quiz-shadow-hover); */
       transform: translateY(-1px);
+    }
+
+    .que.essay {
+      transition: border-color var(--trans-main), box-shadow var(--trans-main);
+    }
+
+    .que.essay:hover,
+    .que.essay:focus-within {
+      transform: none;
     }
 
     .que.match .content,
@@ -976,6 +1017,7 @@
     /* essay question */
     .que.essay .answer,
     .que.essay .qtype_essay_response {
+      border:none!important;
       width: 100%;
     }
 
@@ -1013,6 +1055,47 @@
       border-radius: 12px !important;
       box-shadow: none !important;
       overflow: hidden;
+    }
+
+    .que.essay .tox.tox-tinymce.tox-fullscreen,
+    .tox.tox-tinymce.tox-fullscreen {
+      position: fixed !important;
+      inset: 0 !important;
+      width: 100vw !important;
+      height: 100vh !important;
+      max-width: none !important;
+      max-height: none !important;
+      margin: 0 !important;
+      border: 0 !important;
+      border-radius: 0 !important;
+      background: #fff !important;
+      box-shadow: none !important;
+      overflow: hidden !important;
+      z-index: 2000 !important;
+    }
+
+    .que.essay .tox.tox-tinymce.tox-fullscreen .tox-editor-container,
+    .tox.tox-tinymce.tox-fullscreen .tox-editor-container,
+    .que.essay .tox.tox-tinymce.tox-fullscreen .tox-sidebar-wrap,
+    .tox.tox-tinymce.tox-fullscreen .tox-sidebar-wrap,
+    .que.essay .tox.tox-tinymce.tox-fullscreen .tox-edit-area,
+    .tox.tox-tinymce.tox-fullscreen .tox-edit-area,
+    .que.essay .tox.tox-tinymce.tox-fullscreen .tox-edit-area__iframe,
+    .tox.tox-tinymce.tox-fullscreen .tox-edit-area__iframe {
+      height: 100% !important;
+      max-height: none !important;
+      min-height: 0 !important;
+    }
+
+    .que.essay .tox.tox-tinymce.tox-fullscreen .tox-editor-header,
+    .tox.tox-tinymce.tox-fullscreen .tox-editor-header,
+    .que.essay .tox.tox-tinymce.tox-fullscreen .tox-statusbar,
+    .tox.tox-tinymce.tox-fullscreen .tox-statusbar {
+      flex: 0 0 auto;
+    }
+
+    .tox.tox-tinymce-aux {
+      z-index: 2100 !important;
     }
 
     /* =========================================================
@@ -1150,10 +1233,43 @@
     }
 
     .que.ordering .answer.ordering .sortableitem.sortable-placeholder {
-      background: transparent;
-      border: 1px dashed var(--option-hover-border);
-      box-shadow: none;
+      background: rgba(241, 245, 249, 0.4) !important;
+      border: 2px dashed var(--option-hover-border) !important;
+      box-shadow: none !important;
       min-height: 56px;
+      visibility: visible !important;
+    }
+
+    /* Modern Dragging States - fixing "ugly" design when draggable */
+    .que.ordering .answer.ordering .sortableitem.ui-sortable-helper,
+    .que.ordering .answer.ordering .sortableitem.sortable-drag,
+    .que.ordering .answer.ordering .sortableitem.dragging {
+      opacity: 0.98 !important;
+      background: #fff !important;
+      border-color: var(--option-active-border) !important;
+      box-shadow: 0 20px 40px -10px rgba(15, 23, 42, 0.18) !important;
+      cursor: grabbing !important;
+      transform: scale(1.01) !important;
+      z-index: 9999 !important;
+    }
+
+    /* Override the "current-drop" class which often adds ugly backgrounds in Moodle */
+    .que.ordering .answer.ordering .sortableitem.current-drop,
+    .que.ordering .answer.ordering .p-2.sortableitem.current-drop {
+      background: var(--option-active) !important;
+      border-color: var(--option-active-border) !important;
+      box-shadow: var(--option-active-shadow) !important;
+      color: var(--text-main) !important;
+      padding: 0 !important; /* Keep our consistent internal padding */
+    }
+
+    .que.ordering .answer.ordering .sortableitem.ui-sortable-placeholder,
+    .que.ordering .answer.ordering .sortableitem.sortable-ghost {
+      visibility: visible !important;
+      background: rgba(241, 245, 249, 0.5) !important;
+      border: 2px dashed var(--option-hover-border) !important;
+      box-shadow: none !important;
+      opacity: 0.6;
     }
   
     /* =========================================================
@@ -1278,5 +1394,226 @@
       #mod_quiz-next-nav:hover {
         transform: none !important;
       }
+    }
+
+    /* =========================================================
+       8) QUIZ NAVIGATION BLOCK (#mod_quiz_navblock)
+       ========================================================= */
+    #mod_quiz_navblock {
+      background: var(--quiz-card-bg) !important;
+      border: 1px solid var(--quiz-border) !important;
+      border-radius: var(--radius-lg) !important;
+      padding: 1.5rem !important;
+      box-shadow: none !important;
+      margin-bottom: 2rem !important;
+    }
+
+    #mod_quiz_navblock .card-body {
+      padding: 0 !important;
+    }
+
+    #mod_quiz_navblock .card-title {
+      font-family: var(--quiz-font-sans);
+      color: var(--text-main);
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 1.2rem;
+      display: block;
+    }
+
+    #mod_quiz_navblock .qn_buttons {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(42px, 1fr));
+      gap: 0.6rem;
+      margin-bottom: 1.5rem;
+    }
+
+    #mod_quiz_navblock .qnbutton {
+      display: flex !important;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--quiz-font-sans);
+      font-size: 1rem;
+      font-weight: 600;
+      width: 42px;
+      height: 42px;
+      padding: 0;
+      border-radius: 12px;
+      border: 1px solid var(--option-border);
+      background: var(--option-bg);
+      color: var(--text-main);
+      transition: all var(--trans-fast);
+      position: relative;
+      text-decoration: none;
+      box-shadow: 0 2px 4px rgba(15, 23, 42, 0.02);
+      float: none; /* override moodle default */
+      margin: 0; /* override moodle default */
+    }
+    
+    #mod_quiz_navblock .qnbutton .thispageholder,
+    #mod_quiz_navblock .qnbutton .trafficlight {
+      display: none !important;
+    }
+
+    /* States */
+    #mod_quiz_navblock .qnbutton.answersaved {
+      background: rgba(16, 185, 129, 0.1);
+      border-color: rgba(16, 185, 129, 0.3);
+      color: #065f46;
+    }
+
+    #mod_quiz_navblock .qnbutton.correct {
+      background: rgba(16, 185, 129, 0.12);
+      border-color: rgba(16, 185, 129, 0.4);
+      color: #065f46;
+    }
+
+    #mod_quiz_navblock .qnbutton.notyetanswered {
+      background: var(--option-bg);
+      color: var(--text-muted);
+    }
+
+    #mod_quiz_navblock .qnbutton.invalidanswer,
+    #mod_quiz_navblock .qnbutton.incorrect {
+      background: rgba(239, 68, 68, 0.12);
+      border-color: rgba(239, 68, 68, 0.4);
+      color: #991b1b;
+    }
+
+    #mod_quiz_navblock .qnbutton.partiallycorrect {
+      background: rgba(245, 158, 11, 0.12);
+      border-color: rgba(245, 158, 11, 0.4);
+      color: #b45309;
+    }
+
+    /* Current page indicator */
+    #mod_quiz_navblock .qnbutton.thispage {
+      box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.2);
+      border-color: #0d9488;
+      transform: translateY(-1px);
+    }
+
+    /* Hover */
+    #mod_quiz_navblock .qnbutton:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(15, 23, 42, 0.06);
+    }
+
+    /* Other Navigation / Finish Attempt */
+    #mod_quiz_navblock .othernav {
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+      margin-top: 1.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--quiz-border);
+    }
+
+    #mod_quiz_navblock .endtestlink {
+      display: inline-flex !important;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      min-height: 44px;
+      padding: 0 1.5rem;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%);
+      color: #fff;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all var(--trans-fast);
+      box-shadow: 0 4px 12px rgba(13, 148, 136, 0.3);
+      margin: 0;
+    }
+
+    #mod_quiz_navblock .endtestlink:hover {
+      transform: translateY(-1.5px);
+      box-shadow: 0 8px 16px rgba(13, 148, 136, 0.4);
+      color: #fff;
+      filter: brightness(1.05);
+    }
+
+    #mod_quiz_navblock .singlebutton form {
+      margin: 0;
+      width: 100%;
+    }
+
+    #mod_quiz_navblock .singlebutton .btn {
+      width: 100%;
+      min-height: 44px;
+      border-radius: 12px;
+      font-weight: 600;
+      border: 1px solid var(--option-border);
+      background: #fff;
+      color: var(--text-main);
+      transition: all var(--trans-fast);
+      box-shadow: 0 2px 4px rgba(15, 23, 42, 0.03);
+    }
+
+    #mod_quiz_navblock .singlebutton .btn:hover {
+      background: var(--option-hover);
+      border-color: var(--option-hover-border);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(15, 23, 42, 0.06);
+    }
+
+    /* =========================================================
+       9) REVIEW MODE FEEDBACK BLOCKS
+       ========================================================= */
+       
+    :is(.que) .outcome,
+    :is(.que) .comment {
+      margin-top: 1rem;
+      padding: 1.25rem 1.5rem;
+      border-radius: var(--radius-md);
+      background: rgba(248, 250, 252, 0.8) !important;
+      border: 1px solid var(--option-border) !important;
+      color: var(--text-main);
+      font-size: 1.02rem;
+      line-height: 1.6;
+      box-shadow: none !important;
+    }
+
+    :is(.que) .outcome .specificfeedback {
+      margin-bottom: 0.75rem;
+    }
+    
+    :is(.que) .outcome .rightanswer {
+      font-weight: 560;
+      color: #0d9488;
+    }
+
+    /* Override Moodle's default ugly review backgrounds */
+    :is(.que.correct) .outcome,
+    :is(.que) .outcome.correct {
+      background: rgba(16, 185, 129, 0.06) !important;
+      border-color: rgba(16, 185, 129, 0.25) !important;
+      color: #065f46 !important;
+      border-radius: var(--radius-md) !important;
+    }
+    
+    :is(.que.incorrect) .outcome,
+    :is(.que.notanswered) .outcome,
+    :is(.que) .outcome.incorrect {
+      background: rgba(239, 68, 68, 0.06) !important;
+      border-color: rgba(239, 68, 68, 0.25) !important;
+      color: #b91c1c !important;
+      border-radius: var(--radius-md) !important;
+    }
+    
+    :is(.que.partiallycorrect) .outcome,
+    :is(.que) .outcome.partiallycorrect {
+      background: rgba(245, 158, 11, 0.06) !important;
+      border-color: rgba(245, 158, 11, 0.25) !important;
+      color: #b45309 !important;
+      border-radius: var(--radius-md) !important;
+    }
+
+    /* General feedback container */
+    :is(.que) .generalfeedback,
+    :is(.que) .rightanswer {
+      border: none !important;
+      background: none !important;
+      padding: 0 !important;
     }
   }
