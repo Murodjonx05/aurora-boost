@@ -16,59 +16,78 @@
         ============================================================ */
      color-scheme: light;
    
-     /* Palette */
+     /* ── Core palette ─────────────────────────────────────────── */
      --c-bg:           #f8fafc;
      --c-white:        #ffffff;
      --c-text:         #0f172a;
      --c-muted:        #64748b;
-     --c-accent:       #0d9488;
-     --c-accent-light: rgba(20, 184, 166, 0.12);
-     --c-accent-ring:  rgba(20, 184, 166, 0.15);
-     --c-border:       rgba(226, 232, 240, 0.8);
-     --c-border-hover: rgba(203, 213, 225, 0.9);
-     --c-border-focus: rgba(20, 184, 94, 0.3);
-   
-     /* Semantic states */
-     --c-correct-bg:     rgba(16, 185, 129, 0.15);
-     --c-correct-border: rgba(16, 185, 129, 0.4);
+     --c-error:        rgba(181,1,1,.75);     /* validation / clear-choice */
+
+     /* ── Accent (teal) ───────────────────────────────────────── */
+     --c-accent:        #0d9488;
+     --c-accent-2:      #14b8a6;               /* lighter teal for gradients */
+     --c-accent-light:  rgba(20,184,166,.12);
+     --c-accent-border: rgba(20,184,166,.24);
+     --c-accent-ring:   rgba(20,184,166,.15);
+
+     /* ── Borders ─────────────────────────────────────────────── */
+     --c-border:        rgba(226,232,240,.8);  /* card default */
+     --c-border-hover:  rgba(203,213,225,.9);  /* card hover   */
+     --c-border-focus:  rgba(20,184,94,.3);    /* card focus   */
+     --c-opt-border:    rgba(15,23,42,.06);    /* option rows  */
+
+     /* ── Shadow ink (shared alpha channel key) ───────────────── */
+     --c-ink:           15,23,42;              /* used as rgb(var(--c-ink),.X) */
+     --c-ink-accent:    13,148,136;            /* teal shadow key */
+
+     /* ── Semantic states ─────────────────────────────────────── */
+     --c-correct-bg:     rgba(16,185,129,.15);
+     --c-correct-border: rgba(16,185,129,.4);
      --c-correct-text:   #065f46;
-     --c-wrong-bg:       rgba(239, 68, 68, 0.08);
-     --c-wrong-opt:      linear-gradient(115deg, rgba(247,63,63,.88), rgba(239,68,68,.76));
-     --c-wrong-border:   rgba(239, 68, 68, 0.5);
+     --c-wrong-bg:       rgba(239,68,68,.08);
+     --c-wrong-opt:      linear-gradient(115deg,rgba(247,63,63,.88),rgba(239,68,68,.76));
+     --c-wrong-border:   rgba(239,68,68,.5);
      --c-wrong-text:     #b91c1c;
-     --c-partial-bg:     rgba(245, 158, 11, 0.08);
-     --c-partial-border: rgba(245, 158, 11, 0.3);
+     --c-partial-bg:     rgba(245,158,11,.08);
+     --c-partial-border: rgba(245,158,11,.3);
      --c-partial-text:   #b45309;
-   
-     /* Option rows */
-     --opt-bg:          var(--c-white);
-     --opt-hover:       #fcfdfd;
-     --opt-active:      linear-gradient(90deg, #16e07e, #31c48d);
-     --opt-active-bdr:  rgba(235, 235, 235, 0.6);
-   
-     /* Card */
-     --card-bg:     var(--c-white);
-     --card-shadow: 0 6px 20px rgba(15, 23, 42, 0.035);
-     --card-shadow-hover: 0 16px 40px rgba(15, 23, 42, 0.07);
-   
-     /* Geometry */
-     --r-lg:   1.25rem;      /* card corners   */
-     --r-md:   18px;         /* option corners */
-     --r-sm:   12px;         /* input corners  */
+
+     /* ── Option rows ─────────────────────────────────────────── */
+     --opt-bg:         var(--c-white);
+     --opt-hover:      #fcfdfd;
+     --opt-active:     linear-gradient(90deg,#16e07e,#31c48d);
+     --opt-active-bdr: rgba(235,235,235,.6);
+
+     /* ── Cards ───────────────────────────────────────────────── */
+     --card-bg:          var(--c-white);
+     --card-shadow:      0 6px 20px rgba(15,23,42,.035);
+     --card-shadow-hover:0 16px 40px rgba(15,23,42,.07);
+
+     /* ── Geometry ────────────────────────────────────────────── */
+     --r-lg:   1.25rem;   /* card corners   */
+     --r-md:   18px;      /* option corners */
+     --r-sm:   12px;      /* input corners  */
      --pad-y:  2.25rem;
      --pad-x:  2.5rem;
      --row-py: 1rem;
      --row-px: 1.08rem;
-   
-     /* Transitions */
-     --t-fast: 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-     --t-main: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-   
-     /* Ring / focus */
+
+     /* ── Transitions ─────────────────────────────────────────── */
+     --t-fast: 0.2s cubic-bezier(0.16,1,.3,1);
+     --t-main: 0.4s cubic-bezier(0.16,1,.3,1);
+
+     /* ── Focus ring ──────────────────────────────────────────── */
      --ring: 0 0 0 4px var(--c-accent-ring);
-   
-     /* Typography */
+
+     /* ── Typography ──────────────────────────────────────────── */
      --font: "Outfit","Inter","Segoe UI Variable","SF Pro Text","Helvetica Neue",Arial,sans-serif;
+
+     /* ── Question number badge ───────────────────────────────── */
+     --qnum-size:  2.6rem;     /* badge circle diameter       */
+     --qnum-font:  3rem;       /* displayed numeral size      */
+     --qnum-color: rgb(119, 119, 119);   /* badge text colour   */
+     --qnum-offset:calc(var(--pad-x) + var(--qnum-size) + .75rem); /* left push */
+     --qnum-gap:   .9rem;      /* margin between number & card */
    
    
      /* ============================================================
@@ -90,12 +109,59 @@
    
      /* Clear-choice link */
      .qtype_multichoice_clearchoice { padding-top: 20px !important; }
-     .qtype_multichoice_clearchoice * { color: rgba(181,1,1,.75) !important; }
-   
+     .qtype_multichoice_clearchoice * { color: var(--c-error) !important; }
+
      /* Validation error */
      .que .validationerror {
        padding-top: 20px !important;
-       color: rgba(181,1,1,.75) !important;
+       color: var(--c-error) !important;
+     }
+
+     /* ============================================================
+        §2b  QUESTION NUMBER BADGES
+        Displays a large counter outside (to the left of) each card.
+        Requires the quiz-form ancestor to have enough left margin/padding
+        (Bootstrap's row/col usually provides this).
+        ============================================================ */
+
+     /* Reset counter once on the quiz form wrapper */
+     #responseform { counter-reset: que-counter; }
+
+     /* Every main question card increments the counter */
+     .que[id].multichoice,
+     .que[id].truefalse,
+     .que[id].match,
+     .que[id].shortanswer,
+     .que[id].numerical,
+     .que[id].ddwtos,
+     .que[id].ddmarker,
+     .que[id].essay,
+     .que[id].ordering { counter-increment: que-counter; }
+ 
+     /* The big number is rendered via ::before on the main .que wrapper only. */
+     .que[id].multichoice::before,
+     .que[id].truefalse::before,
+     .que[id].match::before,
+     .que[id].shortanswer::before,
+     .que[id].numerical::before,
+     .que[id].ddwtos::before,
+     .que[id].ddmarker::before,
+     .que[id].essay::before,
+     .que[id].ordering::before {
+       content: counter(que-counter) ")";
+       position: absolute;
+       top: .55rem;
+       left: .75rem;
+       font-family: var(--font);
+       font-size: 2.4rem;
+       font-weight: 900;
+       line-height: 1;
+       color: var(--qnum-color);
+       opacity: 0.6;
+       letter-spacing: -.02em;
+       pointer-events: none;
+       user-select: none;
+       z-index: 2;
      }
    
      /* Hide icon decorations inside answers/feedback */
@@ -121,7 +187,7 @@
        border-radius: 999px;
        background: var(--c-accent-light);
        color: var(--c-accent);
-       border: 1px solid rgba(20,184,166,.24);
+       border: 1px solid var(--c-accent-border);
      }
    
      /* Edit-question link */
@@ -159,7 +225,7 @@
      .tertiary-navigation .btn,
      .tertiary-navigation .btn-secondary {
        background: var(--c-white) !important;
-       border: 1px solid rgba(203,213,225,.8) !important;
+       border: 1px solid var(--c-border-hover) !important;
        border-radius: 999px !important;
        padding: .5rem 1.25rem !important;
        min-height: 42px;
@@ -170,8 +236,8 @@
      }
      .tertiary-navigation .btn:hover,
      .tertiary-navigation .btn-secondary:hover {
-       background: #f8fafc !important;
-       border-color: rgba(148,163,184,.6) !important;
+       background: var(--c-bg) !important;
+       border-color: var(--c-muted) !important;
        transform: translateY(-2px) !important;
        box-shadow: 0 6px 16px rgba(15,23,42,.06) !important;
      }
@@ -187,7 +253,7 @@
        min-height: 48px; padding: 0 1.5rem;
        border-radius: 14px;
        border: 1px solid rgba(255,255,255,.1);
-       background: linear-gradient(135deg, #14b8a6, #0d9488);
+       background: linear-gradient(135deg,var(--c-accent-2),var(--c-accent));
        color: #fff; font-weight: 600; letter-spacing: .02em;
        box-shadow: 0 8px 20px -6px rgba(13,148,136,.4), inset 0 1px 0 rgba(255,255,255,.2);
        transition: all var(--t-fast);
@@ -196,7 +262,7 @@
        filter: brightness(1.05);
        box-shadow: 0 12px 24px -8px rgba(13,148,136,.5),
                    inset 0 1px 0 rgba(255,255,255,.3),
-                   0 0 15px rgba(20,184,166,.4);
+                   0 0 15px var(--c-accent-light);
        transform: translateY(-1.5px);
      }
      #mod_quiz-next-nav:focus-visible {
@@ -250,14 +316,14 @@
      #toggle-timer {
        border-radius: 999px !important;
        background: var(--c-white) !important;
-       border: 1px solid rgba(203,213,225,.8) !important;
+       border: 1px solid var(--c-border-hover) !important;
        color: var(--c-text) !important;
        box-shadow: 0 2px 8px rgba(15,23,42,.03) !important;
        transition: all var(--t-fast) !important;
        padding: .6rem 1rem !important;
      }
      #toggle-timer:hover {
-       background: #f8fafc !important;
+       background: var(--c-bg) !important;
        transform: translateY(-2px) !important;
        box-shadow: 0 6px 16px rgba(15,23,42,.06) !important;
      }
@@ -366,7 +432,7 @@
        position: relative !important;
        border-radius: var(--r-md) !important;
        background: var(--opt-bg) !important;
-       border: 1px solid rgba(15,23,42,.06) !important;
+       border: 1px solid var(--c-opt-border) !important;
        padding: var(--row-py) var(--row-px) !important;
        transition: background var(--t-fast), border-color var(--t-fast),
                    box-shadow var(--t-fast), transform .08s ease !important;
@@ -586,7 +652,7 @@
        grid-template-columns: minmax(0,1fr) minmax(220px,340px);
        gap: .8rem; align-items: center;
        background: var(--opt-bg);
-       border: 1px solid rgba(15,23,42,.06);
+       border: 1px solid var(--c-opt-border);
        border-radius: var(--r-md);
        box-shadow: 0 4px 14px rgba(15,23,42,.045);
        padding: .72rem .86rem;
@@ -604,7 +670,7 @@
      .que.match .answer.table-reboot td.control { width: 100%; text-align: right; }
      .que.match .answer.table-reboot select.form-select {
        width: 100%; max-width: 340px; min-height: 42px;
-       border: 1px solid rgba(15,23,42,.06);
+       border: 1px solid var(--c-opt-border);
        border-radius: 10px; background: var(--c-white);
        color: var(--c-text);
        box-shadow: inset 0 1px 0 rgba(255,255,255,.95);
@@ -638,7 +704,7 @@
      .que.ddwtos .answercontainer {
        margin-top: .8rem; padding: .72rem;
        border-radius: var(--r-md);
-       border: 1px solid rgba(15,23,42,.06);
+       border: 1px solid var(--c-opt-border);
        background: linear-gradient(180deg, rgba(255,255,255,.96), rgba(248,250,252,.95));
        box-shadow: inset 0 1px 0 rgba(255,255,255,.95);
      }
@@ -673,7 +739,7 @@
      .que.ddmarker .droparea {
        width: min(100%,1140px); margin-inline: auto;
        border-radius: 14px;
-       border: 1px solid rgba(15,23,42,.06);
+       border: 1px solid var(--c-opt-border);
        background: var(--c-white);
        box-shadow: 0 5px 16px rgba(15,23,42,.055);
        overflow: hidden; position: relative;
@@ -748,7 +814,7 @@
      .que.essay .qtype_essay_response { border: none !important; width: 100%; }
      .que.essay .qtype_essay_response {
        padding: .45rem;
-       border: 1px solid rgba(15,23,42,.06);
+       border: 1px solid var(--c-opt-border);
        border-radius: var(--r-md);
        background: rgba(255,255,255,.94);
        box-shadow: inset 0 1px 0 rgba(255,255,255,.95);
@@ -758,7 +824,7 @@
        border-color: var(--opt-active-bdr); box-shadow: var(--ring);
      }
      .que.essay textarea.form-control {
-       min-height: 220px; border: 1px solid rgba(15,23,42,.06);
+       min-height: 220px; border: 1px solid var(--c-opt-border);
        border-radius: var(--r-sm); background: var(--c-white); color: var(--c-text);
        transition: border-color var(--t-fast), box-shadow var(--t-fast);
      }
@@ -807,7 +873,7 @@
        margin: 0; padding: 0 !important;
        border-radius: var(--r-md);
        background: var(--opt-bg);
-       border: 1px solid rgba(15,23,42,.06);
+       border: 1px solid var(--c-opt-border);
        box-shadow: 0 4px 14px rgba(15,23,42,.045);
        transition: background var(--t-fast), border-color var(--t-fast),
                    box-shadow var(--t-fast), transform .08s ease;
@@ -843,7 +909,7 @@
    
      .que.ordering .answer.ordering .btn.btn-icon {
        width: 2rem; height: 2rem; border-radius: 10px;
-       border: 1px solid rgba(15,23,42,.06);
+       border: 1px solid var(--c-opt-border);
        background: var(--c-white); color: var(--c-accent);
        display: inline-flex; align-items: center; justify-content: center;
        transition: border-color var(--t-fast), background var(--t-fast),
@@ -913,7 +979,7 @@
        display: flex !important; align-items: center; justify-content: center;
        font-family: var(--font); font-size: 1rem; font-weight: 600;
        width: 42px; height: 42px; padding: 0;
-       border-radius: var(--r-sm); border: 1px solid rgba(15,23,42,.06);
+       border-radius: var(--r-sm); border: 1px solid var(--c-opt-border);
        background: var(--opt-bg); color: var(--c-text);
        transition: all var(--t-fast); position: relative;
        text-decoration: none; box-shadow: 0 2px 4px rgba(15,23,42,.02);
@@ -956,7 +1022,7 @@
      #mod_quiz_navblock .singlebutton form { margin: 0; width: 100%; }
      #mod_quiz_navblock .singlebutton .btn {
        width: 100%; min-height: 44px; border-radius: var(--r-sm);
-       font-weight: 600; border: 1px solid rgba(15,23,42,.06);
+       font-weight: 600; border: 1px solid var(--c-opt-border);
        background: var(--c-white); color: var(--c-text);
        transition: all var(--t-fast); box-shadow: 0 2px 4px rgba(15,23,42,.03);
      }
