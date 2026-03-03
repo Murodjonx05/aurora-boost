@@ -1,1619 +1,1106 @@
-/* =========================================================
-   AURORA — MODERN QUIZ ATTEMPT UI (Moodle) — ONE CLEAN BLOCK
-   Scope: #page-mod-quiz-attempt
-   Covers:
-   - multichoice (que.multichoice.*)
-   - true/false (que.truefalse.*)
-   - match / shortanswer / numerical / ddwtos / ddmarker / essay
-   Features:
-   - controlled reset (kills Moodle/Bootstrap leftovers)
-   - premium card + premium option rows
-   - full-row clickable input overlay (both types)
-   - selected state: :has() + fallback
-   ========================================================= */
-
-   #page-mod-quiz-attempt,#page-mod-quiz-review {
-
-    /* Hide default info panel */
-    #page-content .info { display: none !important; }
-  
-    /* ================== DESIGN TOKENS ================== */
-    color-scheme: light;
-    --quiz-bg: #f8fafc;
-    --quiz-card-bg:
-      radial-gradient(1200px 600px at 0% -20%, rgba(20, 184, 166, 0.08), transparent 50%),
-      radial-gradient(1200px 600px at 100% 120%, rgba(16, 185, 129, 0.08), transparent 50%),
-      #ffffff;
-    --quiz-border: rgba(15, 23, 42, 0.05);
-    --quiz-border-hover: rgba(20, 184, 94, 0.3);
-    /* --quiz-shadow: 0 12px 36px -10px rgba(15, 23, 42, 0.06), 0 2px 12px -3px rgba(15, 23, 42, 0.03);
-    --quiz-shadow-hover: 0 24px 48px -12px rgba(20, 184, 166, 0.12), 0 4px 16px -4px rgba(16, 185, 129, 0.08); */
-  
-    --text-main: #0f172a;
-    --text-muted: #64748b;
-    --text-accent: #0d9488;
-    --quiz-font-sans: "Outfit", "Inter", "Segoe UI Variable", "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
-  
-    --option-bg: #ffffff;
-    --option-border: rgba(15, 23, 42, 0.06);
-    --option-hover: #fcfdfd;
-    --option-hover-border: rgba(235, 235, 235, 0.6);
-    --option-active: linear-gradient(90deg, #16e07e 0%, #31c48d 100%);
-    --option-active-border: rgba(235, 235, 235, 0.6);
-    --option-active-shadow: none;
-  
-    --radius-lg: 28px;
-    --radius-md: 18px;
-  
-    --ring: 0 0 0 4px rgba(20, 184, 166, 0.15);
-    --trans-fast: 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-    --trans-main: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-    --card-pad-y: 2.25rem;
-    --card-pad-x: 2.5rem;
-  
-    /* Keep these in sync with option padding (used by fallback bleed) */
-    --row-py: 1rem;
-    --row-px: 1.08rem;
-  
-    /* =========================================================
-       0) BASE TYPOGRAPHY FOR QUIZ QUESTIONS
-       ========================================================= */
-    :is(.que.multichoice, .que.truefalse, .que.match, .que.shortanswer, .que.numerical, .que.ddwtos, .que.ddmarker, .que.essay),
-    :is(.que.multichoice, .que.truefalse, .que.match, .que.shortanswer, .que.numerical, .que.ddwtos, .que.ddmarker, .que.essay) p,
-    :is(.que.multichoice, .que.truefalse, .que.match, .que.shortanswer, .que.numerical, .que.ddwtos, .que.ddmarker, .que.essay) span,
-    :is(.que.multichoice, .que.truefalse, .que.match, .que.shortanswer, .que.numerical, .que.ddwtos, .que.ddmarker, .que.essay) div,
-    :is(.que.multichoice, .que.truefalse, .que.match, .que.shortanswer, .que.numerical, .que.ddwtos, .que.ddmarker, .que.essay) label {
-      font-family: var(--quiz-font-sans);
-      color: var(--text-main);
-      -webkit-font-smoothing: antialiased;
-      text-rendering: optimizeLegibility;
-    }
-
-    .que .formulation{
-      background: none !important;
-      border: none !important;
-    }
-    .que .validationerror {
-      padding-top: 20px!important;
-      color:rgba(181, 1, 1, 0.746)!important;
-    }
-    .qtype_multichoice_clearchoice{
-      padding-top:20px!important;
-      * {
-        color:rgba(181, 1, 1, 0.746)!important;
-      }
-      
-      
-
-    }
-    .que.ordering .sortablelist {
-      float: none !important;
-      list-style-type: none;
-      border: none !important;
-      margin: 0 0 0 8px;
-    }
-    .que.ordering .answer.ordering .sortableitem {
-      box-shadow: none !important;
-    }
-
-    .que.ordering .answer.ordering .sortableitem.current-drop,
-    .que.ordering .answer.ordering .p-2.sortableitem.current-drop {
-      background: unset !important;
-      border-color: unset !important;
-      box-shadow: unset !important;
-      transition: unset !important;
-    }
-
-    /* =========================================================
-       0A) ATTEMPT SHELL — NAV / TIMER / SUBMIT / ALERTS
-       ========================================================= */
-    .tertiary-navigation {
-      margin: .2rem 0 1rem;
-    }
-
-    .tertiary-navigation .row {
-      margin: 0;
-    }
-
-    .tertiary-navigation .navitem {
-      display: flex;
-      align-items: center;
-      gap: .55rem;
-    }
-
-    .tertiary-navigation .btn {
-      min-height: 42px;
-      border-radius: 11px;
-      border: 1px solid var(--option-border);
-      background: #fff;
-      color: var(--text-main);
-      font-weight: 560;
-      transition: border-color var(--trans-fast), box-shadow var(--trans-fast), background var(--trans-fast);
-    }
-
-    .tertiary-navigation .btn:hover {
-      border-color: var(--option-hover-border);
-      background: var(--option-hover);
-    }
-
-    .tertiary-navigation .btn:focus-visible {
-      outline: none;
-      box-shadow: var(--ring);
-    }
-
-    .submitbtns {
-      display: flex;
-      justify-content: flex-end;
-      margin-top: 1rem;
-    }
-
-    #mod_quiz-next-nav {
-      min-height: 48px;
-      padding: 0 1.5rem;
-      border-radius: 14px;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      background: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%);
-      color: #fff;
-      font-weight: 600;
-      letter-spacing: 0.02em;
-      box-shadow: 0 8px 20px -6px rgba(13, 148, 136, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2);
-      transition: all var(--trans-fast);
-    }
-
-    #mod_quiz-next-nav:hover {
-      filter: brightness(1.05);
-      box-shadow: 0 12px 24px -8px rgba(13, 148, 136, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.3);
-      transform: translateY(-1.5px);
-    }
-
-    #mod_quiz-next-nav:focus-visible {
-      outline: none;
-      box-shadow: var(--ring), 0 10px 20px rgba(47, 158, 68, 0.22);
-    }
-
-    #connection-error,
-    #connection-ok {
-      border-radius: 12px;
-      padding: .9rem 1rem;
-      margin: 1rem 0;
-      border: 1px solid transparent;
-      box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04);
-    }
-
-    #connection-error {
-      background: rgba(254, 242, 242, 0.9);
-      border-color: rgba(239, 68, 68, 0.32);
-      color: #991b1b;
-    }
-
-    #connection-ok {
-      background: rgba(236, 253, 245, 0.88);
-      border-color: rgba(16, 185, 129, 0.32);
-      color: #065f46;
-    }
-  
-    /* =========================================================
-       1) CONTROLLED RESET — MULTICHOICE
-       ========================================================= */
-    .que.multichoice *:not(input):not(label):not(svg):not(path) {
-      all: unset;
-      box-sizing: border-box;
-      display: revert;
-    }
-  
-    .que.multichoice,
-    .que.multichoice .content,
-    .que.multichoice .formulation {
-      display: block;
-      position: relative;
-    }
-  
-    .que.multichoice input[type="radio"] {
-      all: revert;
-      accent-color: var(--text-accent);
-    }
-  
-    .que.multichoice label { cursor: pointer; }
-  
-    /* =========================================================
-       2) QUESTION CARD — MULTICHOICE
-       ========================================================= */
-    .que.multichoice.deferredfeedback {
-      background: var(--quiz-card-bg);
-      border: 1px solid var(--quiz-border);
-      border-radius: var(--radius-lg);
-      /* box-shadow: var(--quiz-shadow); */
-      padding: var(--card-pad-y) var(--card-pad-x) calc(var(--card-pad-y) - .2rem);
-      margin: 0 0 2.2rem 0;
-      transition: border-color var(--trans-main), box-shadow var(--trans-main), transform .12s ease;
-      position: relative;
-      overflow: clip;
-    }
-
-  
-    .que.multichoice.deferredfeedback:hover {
-      border-color: var(--quiz-border-hover);
-      /* box-shadow: var(--quiz-shadow-hover); */
-      transform: translateY(-1px);
-    }
-  
-    /* Header bits */
-    :is(.que.multichoice, .que.truefalse, .que.match, .que.shortanswer, .que.numerical, .que.ddwtos, .que.ddmarker, .que.essay) :is(.no, .qno) {
-      font-size: 1.02rem;
-      font-weight: 750;
-      color: var(--text-accent);
-      letter-spacing: .01em;
-    }
-  
-    :is(.que.multichoice, .que.truefalse, .que.match, .que.shortanswer, .que.numerical, .que.ddwtos, .que.ddmarker, .que.essay) :is(.state, .badge) {
-      margin-left: .65rem;
-      padding: .25rem .85rem;
-      font-size: .82rem;
-      border-radius: 999px;
-      background: rgba(20, 184, 166, 0.12);
-      color: var(--text-accent);
-      border: 1px solid rgba(20, 184, 166, 0.24);
-      font-weight: 600;
-    }
-  
-    :is(.que.multichoice, .que.truefalse, .que.match, .que.shortanswer, .que.numerical, .que.ddwtos, .que.ddmarker, .que.essay) .editquestion {
-      position: absolute;
-      top: 14px;
-      right: 14px;
-      font-size: .88rem;
-      opacity: .9;
-    }
-  
-    :is(.que.multichoice, .que.truefalse, .que.match, .que.shortanswer, .que.numerical, .que.ddwtos, .que.ddmarker, .que.essay) .editquestion a {
-      color: var(--text-muted);
-      text-decoration: underline dotted;
-    }
-    :is(.que.multichoice, .que.truefalse, .que.match, .que.shortanswer, .que.numerical, .que.ddwtos, .que.ddmarker, .que.essay) .editquestion a:hover {
-      color: var(--text-accent);
-      text-decoration: underline;
-    }
-  
-    :is(.que.multichoice, .que.truefalse, .que.match, .que.shortanswer, .que.numerical, .que.ddwtos, .que.ddmarker, .que.essay) .qtext {
-      margin: 1.05rem 0 1.5rem;
-      font-size: 1.13rem;
-      line-height: 1.66;
-      font-weight: 600;
-      color: var(--text-main);
-    }
-  
-    /* Answers wrap */
-    .que.multichoice .answer {
-      display: flex;
-      flex-direction: column;
-      gap: .72rem;
-    }
-  
-    .que.multichoice .answer > .r0,
-    .que.multichoice .answer > .r1 {
-      position: relative;
-      border-radius: var(--radius-md);
-      background: var(--option-bg);
-      border: 1px solid var(--option-border);
-      padding: var(--row-py) var(--row-px);
-      transition: background var(--trans-fast), border-color var(--trans-fast), box-shadow var(--trans-fast), transform .08s ease;
-    }
-  
-    .que.multichoice .answer > .r0:hover,
-    .que.multichoice .answer > .r1:hover {
-      background: var(--option-hover);
-      border-color: var(--option-hover-border);
-      box-shadow: 0 6px 16px rgba(15, 23, 42, 0.05);
-      transform: translateY(-0.5px);
-    }
-  
-    /* Moodle label layouts */
-    .que.multichoice .answer .d-flex {
-      display: flex;
-      align-items: flex-start;
-      gap: .9rem;
-      width: 100%;
-    }
-  
-    /* ================== FULL-ROW CLICK — MULTICHOICE ==================
-       We must NOT rely on "label wraps input" because Moodle often has siblings.
-       Solution: make the real input full overlay per row (click anywhere selects),
-       but keep visible content above it.
-    */
-    .que.multichoice .answer > .r0 label,
-    .que.multichoice .answer > .r1 label {
-      position: relative;
-      width: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 0.5rem;
-    }
-  
-    .que.multichoice .answer > .r0 label > *,
-    .que.multichoice .answer > .r1 label > * {
-      position: relative;
-      z-index: 2;
-    }
-  
-    .que.multichoice .answer > .r0 input[type="radio"],
-    .que.multichoice .answer > .r1 input[type="radio"] {
-      position: absolute !important;
-      inset: 0 !important;
-      width: 100% !important;
-      height: 100% !important;
-      margin: 0 !important;
-  
-      opacity: 0 !important;
-      cursor: pointer !important;
-      z-index: 3 !important;
-  
-      appearance: none !important;
-      -webkit-appearance: none !important;
-      background: transparent !important;
-      border: 0 !important;
-      box-shadow: none !important;
-      outline: 0 !important;
-    }
-  
-    /* Keep the classic small radio visual (optional).
-       If you want ONLY fake bullet like truefalse, tell me and I’ll unify both. */
-    .que.multichoice .answer input[type="radio"] {
-      width: 18px;
-      height: 18px;
-      accent-color: var(--text-accent);
-    }
-  
-    .que.multichoice .answer p {
-      margin: 0;
-      font-size: 1.04rem;
-      color: var(--text-main);
-      line-height: 1.55;
-      font-weight: 520;
-    }
-  
-    /* Selected state (no double box) */
-    @supports selector(:has(*)) {
-      .que.multichoice .answer > .r0:has(input[type="radio"]:checked),
-      .que.multichoice .answer > .r1:has(input[type="radio"]:checked) {
-        background: var(--option-active);
-        border-color: var(--option-active-border);
-        box-shadow: var(--option-active-shadow);
-      }
-  
-      /* neutralize inner highlight */
-      .que.multichoice .answer input[type="radio"]:checked + .d-flex {
-        background: transparent !important;
-        border: 0 !important;
-        box-shadow: none !important;
-        border-radius: 0 !important;
-        width: auto !important;
-        height: auto !important;
-        margin: 0 !important;
-        padding: 0 !important;
-      }
-  
-      .que.multichoice .answer > .r0:has(input[type="radio"]:focus-visible),
-      .que.multichoice .answer > .r1:has(input[type="radio"]:focus-visible) {
-        box-shadow: var(--ring), var(--option-active-shadow);
-        border-color: var(--option-active-border);
-      }
-    }
-  
-    @supports not selector(:has(*)) {
-      .que.multichoice .answer input[type="radio"]:checked + .d-flex {
-        background: var(--option-active) !important;
-        border: 1px solid var(--option-active-border) !important;
-        border-radius: var(--radius-md) !important;
-        box-shadow: var(--option-active-shadow) !important;
- 
-        margin: calc(var(--row-py) * -1) calc(var(--row-px) * -1) !important;
-        padding: var(--row-py) var(--row-px) !important;
- 
-        width: auto !important;
-        height: auto !important;
-      }
-
-      .que.multichoice .answer input[type="radio"]:checked + label .d-flex {
-        background: var(--option-active) !important;
-        border: 1px solid var(--option-active-border) !important;
-        border-radius: var(--radius-md) !important;
-        box-shadow: var(--option-active-shadow) !important;
-  
-        margin: calc(var(--row-py) * -1) calc(var(--row-px) * -1) !important;
-        padding: var(--row-py) var(--row-px) !important;
-  
-        width: auto !important;
-        height: auto !important;
-      }
-    }
-  
-    .que.multichoice input[type="radio"]:focus-visible {
-      outline: none;
-      box-shadow: var(--ring);
-      border-radius: 50%;
-    }
-  
-    /* =========================================================
-       3) CONTROLLED RESET — TRUE/FALSE (hard)
-       ========================================================= */
-    .que.truefalse .ablock {
-      border: 0 !important;
-      margin: 0 !important;
-      padding: 0 !important;
-      background: transparent !important;
-      box-shadow: none !important;
-    }
-  
-    .que.truefalse .answer,
-    .que.truefalse .answer * { box-sizing: border-box; }
-  
-    .que.truefalse .answer label.ms-1 { margin-left: 0 !important; }
-  
-    /* =========================================================
-       4) QUESTION CARD — TRUE/FALSE (same premium as multichoice)
-       ========================================================= */
-    .que.truefalse.deferredfeedback {
-      background: var(--quiz-card-bg) !important;
-      border: 1px solid var(--quiz-border) !important;
-      border-radius: var(--radius-lg) !important;
-      /* box-shadow: var(--quiz-shadow) !important; */
-      padding: var(--card-pad-y) var(--card-pad-x) calc(var(--card-pad-y) - .2rem) !important;
-      margin: 0 0 2.2rem 0 !important;
-      transition: border-color var(--trans-main), box-shadow var(--trans-main), transform .12s ease !important;
-      position: relative;
-      overflow: clip;
-    }
-
-  
-    .que.truefalse.deferredfeedback:hover {
-      border-color: var(--quiz-border-hover) !important;
-      /* box-shadow: var(--quiz-shadow-hover) !important; */
-      transform: translateY(-1px) !important;
-    }
-  
-    /* =========================================================
-       5) ANSWERS — TRUE/FALSE (premium rows + hidden native radio)
-       DOM: <div class="r0"><input ...><label for=...>Text</label></div>
-       ========================================================= */
-    .que.truefalse .answer {
-      display: flex !important;
-      flex-direction: column !important;
-      gap: .72rem !important;
-    }
-  
-    .que.truefalse .answer > .r0,
-    .que.truefalse .answer > .r1 {
-      position: relative !important;
-      border-radius: var(--radius-md) !important;
-      background: var(--option-bg) !important;
-      border: 1px solid var(--option-border) !important;
-      padding: var(--row-py) var(--row-px) !important;
-      transition: background var(--trans-fast), border-color var(--trans-fast), box-shadow var(--trans-fast), transform .08s ease !important;
-    }
-  
-    .que.truefalse .answer > .r0:hover,
-    .que.truefalse .answer > .r1:hover {
-      background: var(--option-hover) !important;
-      border-color: var(--option-hover-border) !important;
-      box-shadow: 0 6px 16px rgba(15, 23, 42, 0.05) !important;
-      transform: translateY(-0.5px) !important;
-    }
-  
-    /* FULL-CARD INPUT OVERLAY + HARD HIDE native radio */
-    .que.truefalse .answer > .r0 input[type="radio"],
-    .que.truefalse .answer > .r1 input[type="radio"] {
-      position: absolute !important;
-      inset: 0 !important;
-      width: 100% !important;
-      height: 100% !important;
-  
-      margin: 0 !important;
-  
-      opacity: 0 !important;
-      cursor: pointer !important;
-      z-index: 3 !important;
-  
-      appearance: none !important;
-      -webkit-appearance: none !important;
-      -moz-appearance: none !important;
-  
-      background: transparent !important;
-      border: 0 !important;
-      outline: 0 !important;
-      box-shadow: none !important;
-    }
-  
-    /* Visible label */
-    .que.truefalse .answer > .r0 label[for],
-    .que.truefalse .answer > .r1 label[for] {
-      position: relative !important;
-      z-index: 1 !important;
-      display: flex !important;
-      align-items: center !important;
-      justify-content: space-between !important;
-      gap: 0.5rem !important;
-      width: 100% !important;
-      padding-left: 0 !important;
-      font-size: 1.05rem !important;
-      line-height: 1.55 !important;
-      font-weight: 520 !important;
-      color: var(--text-main) !important;
-      user-select: none !important;
-    }
-  
-    /* Keep only one control visual (no pseudo radio) */
-    .que.truefalse .answer > .r0 label[for]::before,
-    .que.truefalse .answer > .r1 label[for]::before,
-    .que.truefalse .answer > .r0 label[for]::after,
-    .que.truefalse .answer > .r1 label[for]::after {
-      content: none !important;
-      display: none !important;
-    }
-  
-    /* Selected state */
-    @supports selector(:has(*)) {
-      .que.truefalse .answer > .r0:has(input[type="radio"]:checked),
-      .que.truefalse .answer > .r1:has(input[type="radio"]:checked) {
-        background: var(--option-active) !important;
-        border-color: var(--option-active-border) !important;
-        box-shadow: var(--option-active-shadow) !important;
-      }
-  
-      .que.truefalse .answer > .r0:has(input[type="radio"]:focus-visible),
-      .que.truefalse .answer > .r1:has(input[type="radio"]:focus-visible) {
-        box-shadow: var(--ring), var(--option-active-shadow) !important;
-        border-color: var(--option-active-border) !important;
-      }
-    }
-  
-    @supports not selector(:has(*)) {
-      /* Fallback paint via label (cannot select parent in old CSS) */
-      .que.truefalse .answer > .r0 input[type="radio"]:checked + label[for],
-      .que.truefalse .answer > .r1 input[type="radio"]:checked + label[for] {
-        box-shadow: 0 0 0 9999px var(--option-active) inset !important;
-        border-radius: var(--radius-md) !important;
-      }
-  
-      .que.truefalse .answer > .r0 input[type="radio"]:focus-visible + label[for],
-      .que.truefalse .answer > .r1 input[type="radio"]:focus-visible + label[for] {
-        box-shadow: var(--ring),
-                    0 0 0 9999px var(--option-active) inset !important;
-        border-radius: var(--radius-md) !important;
-      }
-    }
-
-    /* =========================================================
-       6) QUESTION CARD + INPUTS — OTHER TYPES
-       match / shortanswer / numerical / ddwtos / essay
-       ========================================================= */
-    .que.match,
-    .que.shortanswer,
-    .que.numerical,
-    .que.ddwtos,
-    .que.ddmarker,
-    .que.essay {
-      position: relative;
-      background: var(--quiz-card-bg);
-      border: 1px solid var(--quiz-border);
-      border-radius: var(--radius-lg);
-      /* box-shadow: var(--quiz-shadow); */
-      padding: var(--card-pad-y) var(--card-pad-x) calc(var(--card-pad-y) - .2rem);
-      margin: 0 0 2.2rem 0;
-      transition: border-color var(--trans-main), box-shadow var(--trans-main), transform .12s ease;
-      overflow: clip;
-    }
-
-
-    .que.match:hover,
-    .que.shortanswer:hover,
-    .que.numerical:hover,
-    .que.ddwtos:hover,
-    .que.ddmarker:hover,
-    .que.essay:hover {
-      border-color: var(--quiz-border-hover);
-      /* box-shadow: var(--quiz-shadow-hover); */
-      transform: translateY(-1px);
-    }
-
-    .que.essay {
-      transition: border-color var(--trans-main), box-shadow var(--trans-main);
-    }
-
-    .que.essay:hover,
-    .que.essay:focus-within {
-      transform: none;
-    }
-
-    .que.match .content,
-    .que.shortanswer .content,
-    .que.numerical .content,
-    .que.ddwtos .content,
-    .que.ddmarker .content,
-    .que.essay .content,
-    .que.match .formulation,
-    .que.shortanswer .formulation,
-    .que.numerical .formulation,
-    .que.ddwtos .formulation,
-    .que.ddmarker .formulation,
-    .que.essay .formulation {
-      position: relative;
-      display: block;
-    }
-
-    .que.match .ablock,
-    .que.shortanswer .ablock,
-    .que.numerical .ablock,
-    .que.essay .ablock {
-      margin: 0;
-      padding: 0;
-      border: 0;
-      background: transparent;
-      box-shadow: none;
-    }
-
-    .que.shortanswer .ablock,
-    .que.numerical .ablock {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: .7rem;
-    }
-
-    .que.shortanswer .ablock > label,
-    .que.numerical .ablock > label {
-      font-size: 1rem;
-      font-weight: 600;
-      color: var(--text-muted);
-    }
-
-    .que.shortanswer .answer,
-    .que.numerical .answer {
-      display: inline-block;
-      min-width: min(100%, 320px);
-    }
-
-    .que.shortanswer input[type="text"],
-    .que.numerical input[type="text"] {
-      width: min(100%, 560px);
-      max-width: 100%;
-      min-height: 44px;
-      border: 1px solid var(--option-border);
-      border-radius: 12px;
-      background: rgba(248, 250, 252, 0.9);
-      color: var(--text-main);
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9);
-      padding: .58rem .85rem;
-      transition: border-color var(--trans-fast), box-shadow var(--trans-fast), background var(--trans-fast);
-    }
-
-    .que.shortanswer input[type="text"]:hover,
-    .que.numerical input[type="text"]:hover {
-      border-color: var(--option-hover-border);
-      background: #fff;
-    }
-
-    .que.shortanswer input[type="text"]:focus-visible,
-    .que.numerical input[type="text"]:focus-visible {
-      outline: none;
-      border-color: var(--option-active-border);
-      box-shadow: var(--ring);
-      background: #fff;
-    }
-
-    /* match question */
-    .que.match .answer.table-reboot {
-      width: 100%;
-      border-collapse: separate;
-      border-spacing: 0 .72rem;
-      margin: 0;
-    }
-
-    .que.match .answer.table-reboot tbody,
-    .que.match .answer.table-reboot tr,
-    .que.match .answer.table-reboot td {
-      padding:0;
-      border: 0!important;
-      background: transparent;
-      box-shadow: none!important;
-      outline: none!important;
-    }
-
-    .que.match .answer.table-reboot tr {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) minmax(220px, 340px);
-      gap: .8rem;
-      align-items: center;
-      background: var(--option-bg);
-      border: 1px solid var(--option-border);
-      border-radius: var(--radius-md);
-      box-shadow: 0 4px 14px rgba(15, 23, 42, 0.045);
-      padding: .72rem .86rem;
-      transition: background var(--trans-fast), border-color var(--trans-fast), box-shadow var(--trans-fast);
-    }
-
-    .que.match .answer.table-reboot tr:hover {
-      background: var(--option-hover);
-      border-color: var(--option-hover-border);
-      box-shadow: 0 8px 20px rgba(47, 158, 68, 0.09);
-    }
-
-    .que.match .answer.table-reboot td.text p {
-      margin: 0;
-      font-size: 1.01rem;
-      line-height: 1.45;
-      font-weight: 520;
-      word-break: break-word;
-    }
-
-    .que.match .answer.table-reboot td.control {
-      width: 100%;
-      text-align: right;
-    }
-
-    .que.match .answer.table-reboot select.form-select {
-      width: 100%;
-      max-width: 340px;
-      min-height: 42px;
-      border: 1px solid var(--option-border);
-      border-radius: 10px;
-      background: #fff;
-      color: var(--text-main);
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.95);
-      transition: border-color var(--trans-fast), box-shadow var(--trans-fast);
-    }
-
-    .que.match .answer.table-reboot select.form-select:hover {
-      border-color: var(--option-hover-border);
-    }
-
-    .que.match .answer.table-reboot select.form-select:focus-visible {
-      outline: none;
-      border-color: var(--option-active-border);
-      box-shadow: var(--ring);
-    }
-
-    /* ddwtos question */
-    .que.ddwtos .qtext p {
-      margin: 0 0 .72rem;
-      font-size: 1.03rem;
-      line-height: 1.55;
-      font-weight: 520;
-    }
-
-    .que.ddwtos .qtext .drop {
-      display: none;
-      align-items: center;
-      justify-content: center;
-      padding: 0 .38rem;
-      border-radius: 10px;
-      border: 1px dashed var(--option-active-border);
-      background: var(--option-hover);
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9);
-      font-weight: 650;
-      color: var(--text-accent);
-      vertical-align: middle;
-    }
-
-    .que.ddwtos .qtext .drop.active {
-      display: inline-flex;
-      margin: 0 2px 2px 0;
-    }
-
-    .que.ddwtos .answercontainer {
-      margin-top: .8rem;
-      padding: .72rem;
-      border-radius: var(--radius-md);
-      border: 1px solid var(--option-border);
-      background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(248, 250, 252, 0.95));
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.95);
-    }
-
-    .que.ddwtos [class*="draggrouphomes"] {
-      display: flex;
-      flex-wrap: wrap;
-      gap: .45rem;
-    }
-
-    .que.ddwtos .draghome {
-      display: inline-flex !important;
-      align-items: center;
-      justify-content: center;
-      padding: 0 .45rem;
-      border-radius: 10px;
-      border: 1px solid var(--option-hover-border);
-      background: #fff;
-      color: var(--text-accent);
-      font-weight: 700;
-      box-shadow: 0 3px 10px rgba(15, 23, 42, 0.06);
-    }
-
-    .que.ddwtos .draghome.beingdragged {
-      box-shadow: 0 8px 18px rgba(15, 23, 42, 0.14);
-      cursor: grabbing;
-    }
-
-    .que.ddwtos .draghome.placed {
-      margin-bottom: 2px;
-      vertical-align: middle;
-    }
-
-    .que.ddwtos .qtext .draghome.placed {
-      display: inline-flex !important;
-      margin: 0 2px 2px 0;
-    }
-
-    .que.ddwtos .draghome.dragplaceholder {
-      display: none !important;
-    }
-
-    .que.ddwtos .draghome.dragplaceholder.active {
-      display: inline-flex !important;
-      visibility: hidden !important;
-      border-color: transparent !important;
-      background: transparent !important;
-      box-shadow: none;
-      pointer-events: none;
-    }
-
-    /* ddmarker question (image-based) */
-    .que.ddmarker .ddarea {
-      margin-top: .65rem;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: .85rem;
-    }
-
-    .que.ddmarker .droparea {
-      width: min(100%, 1140px);
-      margin-inline: auto;
-      border-radius: 14px;
-      border: 1px solid var(--option-border);
-      background: #fff;
-      box-shadow: 0 5px 16px rgba(15, 23, 42, 0.055);
-      overflow: hidden;
-      position: relative;
-    }
-
-    .que.ddmarker .dropbackground {
-      border:none!important;
-      box-shadow: none!important;
-      display: block;
-      width: 100%;
-      height: auto;
-      margin: 0;
-    }
-
-    /* 
-      Improved: Make .markertext highlight work for all interaction modes.
-      - Uses button-like styling for markertext elements.
-      - Ensures interaction feedback works (highlight) for mouse hover, keyboard tab, and touch.
-      - Only changes opacity and no shadow for highlight; keeps rules simple and robust.
-    */
-    .que.ddmarker .droparea .marker .markertext,
-    .que.ddmarker .draghomes .marker .markertext,
-    .que.ddmarker div.markertexts .markertext,
-    form.mform fieldset#id_previewareaheader div.markertexts .markertext {
-        margin: 0 5px;
-        z-index: 3;
-        background: #fff;
-        border: none !important;
-        padding: 5px 10px;
-        display: inline-block;
-        border-radius: 10px;
-        color: #222;
-        opacity: 0.6;
-        font-weight: 500;
-        font-size: .95rem;
-        line-height: 1.35;
-        cursor: pointer;
-        transition: opacity 0.16s;
-        outline: none;
-        box-shadow: none !important;
-        text-shadow: none !important;
-        filter: none !important;
-    }
-
-    /* Highlight markertext when hovered, focused (keyboard), or active (pressed/tapped) */
-    .que.ddmarker .droparea .marker .markertext:hover,
-    .que.ddmarker .droparea .marker .markertext:focus-visible,
-    .que.ddmarker .droparea .marker .markertext:active,
-    .que.ddmarker .draghomes .marker .markertext:hover,
-    .que.ddmarker .draghomes .marker .markertext:focus-visible,
-    .que.ddmarker .draghomes .marker .markertext:active,
-    .que.ddmarker div.markertexts .markertext:hover,
-    .que.ddmarker div.markertexts .markertext:focus-visible,
-    .que.ddmarker div.markertexts .markertext:active,
-    form.mform fieldset#id_previewareaheader div.markertexts .markertext:hover,
-    form.mform fieldset#id_previewareaheader div.markertexts .markertext:focus-visible,
-    form.mform fieldset#id_previewareaheader div.markertexts .markertext:active {
-        opacity: 1;
-        outline: 2px solid rgba(116, 198, 157, 0.45);
-        outline-offset: 1px;
-        box-shadow: none !important;
-        text-shadow: none !important;
-        filter: none !important;
-        /* Optional: background: #f3f7fd; */
-    }
-
-    .que.ddmarker .dropzones [class*="drop"],
-    .que.ddmarker .dropzones .dropzone {
-      border: 2px dashed rgba(47, 158, 68, 0.35);
-      border-radius: 12px;
-      background: rgba(236, 253, 250, 0.42);
-      transition: border-color var(--trans-fast), background var(--trans-fast), box-shadow var(--trans-fast);
-    }
-
-    .que.ddmarker .dropzones [class*="drop"]:hover,
-    .que.ddmarker .dropzones .dropzone:hover {
-      border-color: var(--option-active-border);
-      background: rgba(204, 251, 241, 0.50);
-      box-shadow: inset 0 0 0 1px rgba(47, 158, 68, 0.18);
-    }
-
-    .que.ddmarker .draghomes {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: .55rem;
-      width: min(100%, 1140px);
-      margin-inline: auto;
-      padding: .15rem 0 .3rem;
-    }
-
-    .que.ddmarker .marker {
-      border-radius: 999px;
-      border: 1px solid rgba(47, 158, 68, 0.32);
-      background: #fff;
-      color: var(--text-main);
-      box-shadow: none !important;
-      padding: .32rem .62rem;
-      transition: border-color var(--trans-fast), background var(--trans-fast);
-    }
-
-    .que.ddmarker .marker .markertext:hover {
-      background: none!important;
-      border:none!important;
-      outline:none!important;
-    }
-
-    .que.ddmarker .marker .markertext {
-      background: none!important;
-      font-weight: 560;
-      font-size: .93rem;
-      line-height: 1.35;
-    }
-
-    .que.ddmarker .marker:hover {
-      border-color: var(--option-active-border);
-      background: rgba(204, 251, 241, 0.52);
-      box-shadow: none !important;
-    }
-
-    .que.ddmarker .marker:focus-visible {
-      outline: none;
-      box-shadow: none !important;
-      border-color: var(--option-active-border);
-    }
-
-    .que.ddmarker .marker:active,
-    .que.ddmarker .droparea .marker,
-    .que.ddmarker .draghomes .marker {
-      box-shadow: none !important;
-      text-shadow: none !important;
-      filter: none !important;
-    }
-
-    .que.ddmarker .marker.unneeded {
-      opacity: .88;
-    }
-
-    .que.ddmarker .marker.dragplaceholder {
-      box-shadow: none;
-      background: transparent;
-      border-color: transparent;
-    }
-
-    /* essay question */
-    .que.essay .answer,
-    .que.essay .qtype_essay_response {
-      border:none!important;
-      width: 100%;
-    }
-
-    .que.essay .qtype_essay_response {
-      padding: .45rem;
-      border: 1px solid var(--option-border);
-      border-radius: var(--radius-md);
-      background: rgba(255, 255, 255, 0.94);
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.95);
-      transition: border-color var(--trans-fast), box-shadow var(--trans-fast);
-    }
-
-    .que.essay .qtype_essay_response:focus-within {
-      border-color: var(--option-active-border);
-      box-shadow: var(--ring);
-    }
-
-    .que.essay textarea.form-control {
-      min-height: 220px;
-      border: 1px solid var(--option-border);
-      border-radius: 12px;
-      background: #fff;
-      color: var(--text-main);
-      transition: border-color var(--trans-fast), box-shadow var(--trans-fast);
-    }
-
-    .que.essay textarea.form-control:focus-visible {
-      outline: none;
-      border-color: var(--option-active-border);
-      box-shadow: var(--ring);
-    }
-
-    .que.essay .tox.tox-tinymce {
-      border: 1px solid rgba(15, 23, 42, 0.07) !important;
-      border-radius: 12px !important;
-      box-shadow: none !important;
-      overflow: hidden;
-    }
-
-    .que.essay .tox.tox-tinymce.tox-fullscreen,
-    .tox.tox-tinymce.tox-fullscreen {
-      position: fixed !important;
-      inset: 0 !important;
-      width: 100vw !important;
-      height: 100vh !important;
-      max-width: none !important;
-      max-height: none !important;
-      margin: 0 !important;
-      border: 0 !important;
-      border-radius: 0 !important;
-      background: #fff !important;
-      box-shadow: none !important;
-      overflow: hidden !important;
-      z-index: 2000 !important;
-    }
-
-    .que.essay .tox.tox-tinymce.tox-fullscreen .tox-editor-container,
-    .tox.tox-tinymce.tox-fullscreen .tox-editor-container,
-    .que.essay .tox.tox-tinymce.tox-fullscreen .tox-sidebar-wrap,
-    .tox.tox-tinymce.tox-fullscreen .tox-sidebar-wrap,
-    .que.essay .tox.tox-tinymce.tox-fullscreen .tox-edit-area,
-    .tox.tox-tinymce.tox-fullscreen .tox-edit-area,
-    .que.essay .tox.tox-tinymce.tox-fullscreen .tox-edit-area__iframe,
-    .tox.tox-tinymce.tox-fullscreen .tox-edit-area__iframe {
-      height: 100% !important;
-      max-height: none !important;
-      min-height: 0 !important;
-    }
-
-    .que.essay .tox.tox-tinymce.tox-fullscreen .tox-editor-header,
-    .tox.tox-tinymce.tox-fullscreen .tox-editor-header,
-    .que.essay .tox.tox-tinymce.tox-fullscreen .tox-statusbar,
-    .tox.tox-tinymce.tox-fullscreen .tox-statusbar {
-      flex: 0 0 auto;
-    }
-
-    .tox.tox-tinymce-aux {
-      z-index: 2100 !important;
-    }
-
-    /* =========================================================
-       6A) ORDERING QUESTION (qtype_ordering)
-       ========================================================= */
-    .que.ordering.deferredfeedback {
-      position: relative;
-      background: var(--quiz-card-bg);
-      border: 1px solid var(--quiz-border);
-      border-radius: var(--radius-lg);
-      /* box-shadow: var(--quiz-shadow); */
-      padding: var(--card-pad-y) var(--card-pad-x) calc(var(--card-pad-y) - .2rem);
-      margin: 0 0 2.2rem 0;
-      transition: border-color var(--trans-main), box-shadow var(--trans-main), transform .12s ease;
-      overflow: clip;
-    }
-
-    .que.ordering.deferredfeedback:hover {
-      border-color: var(--quiz-border-hover);
-      /* box-shadow: var(--quiz-shadow-hover); */
-      transform: translateY(-0.5px);
-    }
-
-    .que.ordering .ablock {
-      margin: 0;
-      padding: 0;
-      border: 0;
-      background: transparent;
-      box-shadow: none;
-    }
-
-    .que.ordering .qtext {
-      margin: 1.05rem 0 1.5rem;
-      font-size: 1.13rem;
-      line-height: 1.66;
-      font-weight: 600;
-      color: var(--text-main);
-    }
-
-    .que.ordering .answer.ordering {
-      margin-top: .2rem;
-    }
-
-    .que.ordering .answer.ordering .sortablelist {
-      list-style: none;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      flex-direction: column;
-      gap: .68rem;
-    }
-
-    .que.ordering .answer.ordering .sortableitem {
-      margin: 0;
-      padding: 0 !important;
-      border-radius: var(--radius-md);
-      background: var(--option-bg);
-      border: 1px solid var(--option-border);
-      box-shadow: 0 4px 14px rgba(15, 23, 42, 0.045);
-      transition: background var(--trans-fast), border-color var(--trans-fast), box-shadow var(--trans-fast), transform .08s ease;
-    }
-
-    .que.ordering .answer.ordering .sortableitem:hover {
-      background: var(--option-hover);
-      border-color: var(--option-hover-border);
-      box-shadow: 0 8px 20px rgba(47, 158, 68, 0.09);
-      transform: translateY(-0.5px);
-    }
-
-    .que.ordering .answer.ordering .sortableitem > .d-flex {
-      align-items: center;
-      gap: .7rem;
-      min-height: 56px;
-      padding: .42rem .52rem;
-      border-radius: inherit;
-    }
-
-    .que.ordering .answer.ordering .grip {
-      color: var(--text-muted);
-      border-radius: 10px;
-      min-width: 2.15rem;
-      justify-content: center;
-      cursor: grab;
-      user-select: none;
-    }
-
-    .que.ordering .answer.ordering .grip .fa-grip-vertical {
-      opacity: .75;
-      font-size: .95rem;
-    }
-
-    .que.ordering .answer.ordering .sortableitem:active .grip {
-      cursor: grabbing;
-    }
-
-    .que.ordering .answer.ordering [id$="-text"] {
-      color: var(--text-main);
-      font-size: 1.03rem;
-      line-height: 1.5;
-      font-weight: 540;
-      min-height: 2rem;
-      display: flex;
-      align-items: center;
-      word-break: break-word;
-    }
-
-    .que.ordering .answer.ordering [id$="-text"] p {
-      margin: 0;
-    }
-
-    .que.ordering .answer.ordering .btn.btn-icon {
-      width: 2rem;
-      height: 2rem;
-      border-radius: 10px;
-      border: 1px solid var(--option-border);
-      background: #fff;
-      color: var(--text-accent);
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      transition: border-color var(--trans-fast), background var(--trans-fast), box-shadow var(--trans-fast), transform .08s ease;
-    }
-
-    .que.ordering .answer.ordering .btn.btn-icon:hover {
-      border-color: var(--option-hover-border);
-      background: var(--option-hover);
-      box-shadow: 0 4px 10px rgba(47, 158, 68, 0.08);
-      transform: translateY(-0.5px);
-    }
-
-    .que.ordering .answer.ordering .btn.btn-icon:focus-visible {
-      outline: none;
-      border-color: var(--option-active-border);
-      box-shadow: var(--ring);
-    }
-
-    .que.ordering .answer.ordering .sortableitem.sortable-placeholder {
-      background: rgba(241, 245, 249, 0.4) !important;
-      border: 2px dashed var(--option-hover-border) !important;
-      box-shadow: none !important;
-      min-height: 56px;
-      visibility: visible !important;
-    }
-
-    /* Modern Dragging States - fixing "ugly" design when draggable */
-    .que.ordering .answer.ordering .sortableitem.ui-sortable-helper,
-    .que.ordering .answer.ordering .sortableitem.sortable-drag,
-    .que.ordering .answer.ordering .sortableitem.dragging {
-      opacity: 0.98 !important;
-      background: #fff !important;
-      border-color: var(--option-active-border) !important;
-      box-shadow: 0 20px 40px -10px rgba(15, 23, 42, 0.18) !important;
-      cursor: grabbing !important;
-      transform: scale(1.01) !important;
-      z-index: 9999 !important;
-    }
-
-    /* Override the "current-drop" class which often adds ugly backgrounds in Moodle */
-    .que.ordering .answer.ordering .sortableitem.current-drop,
-    .que.ordering .answer.ordering .p-2.sortableitem.current-drop {
-      background: var(--option-active) !important;
-      border-color: var(--option-active-border) !important;
-      box-shadow: var(--option-active-shadow) !important;
-      color: var(--text-main) !important;
-      padding: 0 !important; /* Keep our consistent internal padding */
-    }
-
-    .que.ordering .answer.ordering .sortableitem.ui-sortable-placeholder,
-    .que.ordering .answer.ordering .sortableitem.sortable-ghost {
-      visibility: visible !important;
-      background: rgba(241, 245, 249, 0.5) !important;
-      border: 2px dashed var(--option-hover-border) !important;
-      box-shadow: none !important;
-      opacity: 0.6;
-    }
-  
-    /* =========================================================
-       7) RESPONSIVE (all types keep same rhythm)
-       ========================================================= */
-    @media (max-width: 900px) {
-      :is(.que.multichoice.deferredfeedback, .que.truefalse.deferredfeedback, .que.match, .que.shortanswer, .que.numerical, .que.ddwtos, .que.ddmarker, .que.essay) {
-        --card-pad-y: 1.35rem;
-        --card-pad-x: 1.15rem;
-        padding: var(--card-pad-y) var(--card-pad-x) calc(var(--card-pad-y) - .25rem);
-      }
-      :is(.que.multichoice, .que.truefalse, .que.match, .que.shortanswer, .que.numerical, .que.ddwtos, .que.ddmarker, .que.essay) .qtext { font-size: 1.05rem; }
-
-      .que.match .answer.table-reboot tr {
-        grid-template-columns: minmax(0, 1fr);
-      }
-
-      .que.match .answer.table-reboot td.control {
-        text-align: left;
-      }
-
-      .que.match .answer.table-reboot select.form-select {
-        max-width: 100%;
-      }
-
-      .que.ordering.deferredfeedback {
-        --card-pad-y: 1.35rem;
-        --card-pad-x: 1.15rem;
-        padding: var(--card-pad-y) var(--card-pad-x) calc(var(--card-pad-y) - .25rem);
-      }
-    }
-  
-    @media (max-width: 560px) {
-      --row-py: 0.85rem;
-      --row-px: 0.85rem;
-  
-      :is(.que.multichoice.deferredfeedback, .que.truefalse.deferredfeedback, .que.match, .que.shortanswer, .que.numerical, .que.ddwtos, .que.ddmarker, .que.essay) {
-        --card-pad-y: 1rem;
-        --card-pad-x: .9rem;
-        padding: var(--card-pad-y) var(--card-pad-x) calc(var(--card-pad-y) - .2rem);
-        border-radius: 16px;
-      }
-  
-      :is(.que.multichoice, .que.truefalse) .answer > :is(.r0, .r1) {
-        padding: var(--row-py) var(--row-px);
-        border-radius: 14px;
-      }
-  
-      .que.multichoice .answer p,
-      .que.truefalse .answer > :is(.r0, .r1) label[for] {
-        font-size: 1rem;
-        font-weight: 500;
-      }
-
-      .que.shortanswer .ablock,
-      .que.numerical .ablock {
-        align-items: stretch;
-      }
-
-      .que.shortanswer .answer,
-      .que.numerical .answer {
-        width: 100%;
-        min-width: 0;
-      }
-
-      .que.shortanswer input[type="text"],
-      .que.numerical input[type="text"] {
-        width: 100%;
-      }
-
-      .que.ddwtos .draghome,
-      .que.ddwtos .qtext .drop {
-        min-width: 1.9rem;
-        min-height: 1.9rem;
-      }
-
-      .submitbtns {
-        justify-content: stretch;
-      }
-
-      #mod_quiz-next-nav {
-        width: 100%;
-      }
-
-      .que.ddmarker .droparea,
-      .que.ddmarker .draghomes {
-        width: 100%;
-      }
-
-      .que.ddmarker .marker .markertext {
-
-        font-size: .86rem;
-      }
-
-      .que.ordering .answer.ordering .sortableitem > .d-flex {
-        gap: .45rem;
-        min-height: 50px;
-        padding: .35rem .38rem;
-      }
-
-      .que.ordering .answer.ordering [id$="-text"] {
-        font-size: .98rem;
-      }
-
-      .que.ordering .answer.ordering .btn.btn-icon {
-        width: 1.9rem;
-        height: 1.9rem;
-      }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      :is(.que.multichoice.deferredfeedback, .que.truefalse.deferredfeedback, .que.match, .que.shortanswer, .que.numerical, .que.ddwtos, .que.ddmarker, .que.essay, .que.ordering.deferredfeedback, .que.multichoice .answer > .r0, .que.multichoice .answer > .r1, .que.truefalse .answer > .r0, .que.truefalse .answer > .r1, .que.ordering .answer.ordering .sortableitem, .que.ordering .answer.ordering .btn.btn-icon),
-      .que.match .answer.table-reboot tr,
-      .que.ddmarker .marker,
-      #mod_quiz-next-nav {
-        transition: none !important;
-        animation: none !important;
-      }
-
-      :is(.que.multichoice.deferredfeedback:hover, .que.truefalse.deferredfeedback:hover, .que.match:hover, .que.shortanswer:hover, .que.numerical:hover, .que.ddwtos:hover, .que.ddmarker:hover, .que.essay:hover, .que.ordering.deferredfeedback:hover, .que.multichoice .answer > .r0:hover, .que.multichoice .answer > .r1:hover, .que.truefalse .answer > .r0:hover, .que.truefalse .answer > .r1:hover, .que.ordering .answer.ordering .sortableitem:hover, .que.ordering .answer.ordering .btn.btn-icon:hover),
-      .que.match .answer.table-reboot tr:hover,
-      #mod_quiz-next-nav:hover {
-        transform: none !important;
-      }
-    }
-
-    /* =========================================================
-       8) QUIZ NAVIGATION BLOCK (#mod_quiz_navblock)
-       ========================================================= */
-    #mod_quiz_navblock {
-      background: var(--quiz-card-bg) !important;
-      border: 1px solid var(--quiz-border) !important;
-      border-radius: var(--radius-lg) !important;
-      padding: 1.5rem !important;
-      box-shadow: none !important;
-      margin-bottom: 2rem !important;
-    }
-
-    #mod_quiz_navblock .card-body {
-      padding: 0 !important;
-    }
-
-    #mod_quiz_navblock .card-title {
-      font-family: var(--quiz-font-sans);
-      color: var(--text-main);
-      font-size: 1.25rem;
-      font-weight: 700;
-      margin-bottom: 1.2rem;
-      display: block;
-    }
-
-    #mod_quiz_navblock .qn_buttons {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(42px, 1fr));
-      gap: 0.6rem;
-      margin-bottom: 1.5rem;
-    }
-
-    #mod_quiz_navblock .qnbutton {
-      display: flex !important;
-      align-items: center;
-      justify-content: center;
-      font-family: var(--quiz-font-sans);
-      font-size: 1rem;
-      font-weight: 600;
-      width: 42px;
-      height: 42px;
-      padding: 0;
-      border-radius: 12px;
-      border: 1px solid var(--option-border);
-      background: var(--option-bg);
-      color: var(--text-main);
-      transition: all var(--trans-fast);
-      position: relative;
-      text-decoration: none;
-      box-shadow: 0 2px 4px rgba(15, 23, 42, 0.02);
-      float: none; /* override moodle default */
-      margin: 0; /* override moodle default */
-    }
-    
-    #mod_quiz_navblock .qnbutton .thispageholder,
-    #mod_quiz_navblock .qnbutton .trafficlight {
-      display: none !important;
-    }
-
-    /* States */
-    #mod_quiz_navblock .qnbutton.answersaved {
-      background: rgba(16, 185, 129, 0.1);
-      border-color: rgba(16, 185, 129, 0.3);
-      color: #065f46;
-    }
-
-    #mod_quiz_navblock .qnbutton.correct {
-      background: rgba(16, 185, 129, 0.12);
-      border-color: rgba(16, 185, 129, 0.4);
-      color: #065f46;
-    }
-
-    #mod_quiz_navblock .qnbutton.notyetanswered {
-      background: var(--option-bg);
-      color: var(--text-muted);
-    }
-
-    #mod_quiz_navblock .qnbutton.invalidanswer,
-    #mod_quiz_navblock .qnbutton.incorrect {
-      background: rgba(239, 68, 68, 0.12);
-      border-color: rgba(239, 68, 68, 0.4);
-      color: #991b1b;
-    }
-
-    #mod_quiz_navblock .qnbutton.partiallycorrect {
-      background: rgba(245, 158, 11, 0.12);
-      border-color: rgba(245, 158, 11, 0.4);
-      color: #b45309;
-    }
-
-    /* Current page indicator */
-    #mod_quiz_navblock .qnbutton.thispage {
-      box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.2);
-      border-color: #0d9488;
-      transform: translateY(-1px);
-    }
-
-    /* Hover */
-    #mod_quiz_navblock .qnbutton:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(15, 23, 42, 0.06);
-    }
-
-    /* Other Navigation / Finish Attempt */
-    #mod_quiz_navblock .othernav {
-      display: flex;
-      flex-direction: column;
-      gap: 0.8rem;
-      margin-top: 1.5rem;
-      padding-top: 1.5rem;
-      border-top: 1px solid var(--quiz-border);
-    }
-
-    #mod_quiz_navblock .endtestlink {
-      display: inline-flex !important;
-      align-items: center;
-      justify-content: center;
-      width: 100%;
-      min-height: 44px;
-      padding: 0 1.5rem;
-      border-radius: 12px;
-      background: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%);
-      color: #fff;
-      font-weight: 600;
-      text-decoration: none;
-      transition: all var(--trans-fast);
-      box-shadow: 0 4px 12px rgba(13, 148, 136, 0.3);
-      margin: 0;
-    }
-
-    #mod_quiz_navblock .endtestlink:hover {
-      transform: translateY(-1.5px);
-      box-shadow: 0 8px 16px rgba(13, 148, 136, 0.4);
-      color: #fff;
-      filter: brightness(1.05);
-    }
-
-    #mod_quiz_navblock .singlebutton form {
-      margin: 0;
-      width: 100%;
-    }
-
-    #mod_quiz_navblock .singlebutton .btn {
-      width: 100%;
-      min-height: 44px;
-      border-radius: 12px;
-      font-weight: 600;
-      border: 1px solid var(--option-border);
-      background: #fff;
-      color: var(--text-main);
-      transition: all var(--trans-fast);
-      box-shadow: 0 2px 4px rgba(15, 23, 42, 0.03);
-    }
-
-    #mod_quiz_navblock .singlebutton .btn:hover {
-      background: var(--option-hover);
-      border-color: var(--option-hover-border);
-      transform: translateY(-1px);
-      box-shadow: 0 4px 12px rgba(15, 23, 42, 0.06);
-    }
-
-    /* =========================================================
-       9) REVIEW MODE FEEDBACK BLOCKS
-       ========================================================= */
-       
-    :is(.que) .outcome,
-    :is(.que) .comment {
-      margin-top: 1rem;
-      padding: 1.25rem 1.5rem;
-      border-radius: var(--radius-md);
-      background: rgba(248, 250, 252, 0.8) !important;
-      border: 1px solid var(--option-border) !important;
-      color: var(--text-main);
-      font-size: 1.02rem;
-      line-height: 1.6;
-      box-shadow: none !important;
-    }
-
-    :is(.que) .outcome .specificfeedback {
-      margin-bottom: 0.75rem;
-    }
-    
-    :is(.que) .outcome .rightanswer {
-      font-weight: 560;
-      color: #0d9488;
-    }
-
-    /* Override Moodle's default ugly review backgrounds */
-    :is(.que.correct) .outcome,
-    :is(.que) .outcome.correct {
-      background: rgba(16, 185, 129, 0.06) !important;
-      border-color: rgba(16, 185, 129, 0.25) !important;
-      color: #065f46 !important;
-      border-radius: var(--radius-md) !important;
-    }
-    
-    :is(.que.incorrect) .outcome,
-    :is(.que.notanswered) .outcome,
-    :is(.que) .outcome.incorrect {
-      background: rgba(239, 68, 68, 0.06) !important;
-      border-color: rgba(239, 68, 68, 0.25) !important;
-      color: #b91c1c !important;
-      border-radius: var(--radius-md) !important;
-    }
-    
-    :is(.que.partiallycorrect) .outcome,
-    :is(.que) .outcome.partiallycorrect {
-      background: rgba(245, 158, 11, 0.06) !important;
-      border-color: rgba(245, 158, 11, 0.25) !important;
-      color: #b45309 !important;
-      border-radius: var(--radius-md) !important;
-    }
-
-    /* General feedback container */
-    :is(.que) .generalfeedback,
-    :is(.que) .rightanswer {
-      border: none !important;
-      background: none !important;
-      padding: 0 !important;
-    }
-  }
+/* ============================================================
+   AURORA — MOODLE QUIZ UI  ·  Optimized
+   Scope : #page-mod-quiz-attempt, #page-mod-quiz-review
+   Types : multichoice · truefalse · match · shortanswer ·
+           numerical · ddwtos · ddmarker · essay · ordering
+   ============================================================ */
+
+   #page-mod-quiz-attempt,
+   #page-mod-quiz-review {
+   
+     /* ── hide default info panel ─────────────────────────────── */
+     #page-content .info { display: none !important; }
+   
+     /* ============================================================
+        §1  DESIGN TOKENS
+        ============================================================ */
+     color-scheme: light;
+   
+     /* Palette */
+     --c-bg:           #f8fafc;
+     --c-white:        #ffffff;
+     --c-text:         #0f172a;
+     --c-muted:        #64748b;
+     --c-accent:       #0d9488;
+     --c-accent-light: rgba(20, 184, 166, 0.12);
+     --c-accent-ring:  rgba(20, 184, 166, 0.15);
+     --c-border:       rgba(226, 232, 240, 0.8);
+     --c-border-hover: rgba(203, 213, 225, 0.9);
+     --c-border-focus: rgba(20, 184, 94, 0.3);
+   
+     /* Semantic states */
+     --c-correct-bg:     rgba(16, 185, 129, 0.15);
+     --c-correct-border: rgba(16, 185, 129, 0.4);
+     --c-correct-text:   #065f46;
+     --c-wrong-bg:       rgba(239, 68, 68, 0.08);
+     --c-wrong-opt:      linear-gradient(115deg, rgba(247,63,63,.88), rgba(239,68,68,.76));
+     --c-wrong-border:   rgba(239, 68, 68, 0.5);
+     --c-wrong-text:     #b91c1c;
+     --c-partial-bg:     rgba(245, 158, 11, 0.08);
+     --c-partial-border: rgba(245, 158, 11, 0.3);
+     --c-partial-text:   #b45309;
+   
+     /* Option rows */
+     --opt-bg:          var(--c-white);
+     --opt-hover:       #fcfdfd;
+     --opt-active:      linear-gradient(90deg, #16e07e, #31c48d);
+     --opt-active-bdr:  rgba(235, 235, 235, 0.6);
+   
+     /* Card */
+     --card-bg:     var(--c-white);
+     --card-shadow: 0 6px 20px rgba(15, 23, 42, 0.035);
+     --card-shadow-hover: 0 16px 40px rgba(15, 23, 42, 0.07);
+   
+     /* Geometry */
+     --r-lg:   1.25rem;      /* card corners   */
+     --r-md:   18px;         /* option corners */
+     --r-sm:   12px;         /* input corners  */
+     --pad-y:  2.25rem;
+     --pad-x:  2.5rem;
+     --row-py: 1rem;
+     --row-px: 1.08rem;
+   
+     /* Transitions */
+     --t-fast: 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+     --t-main: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+   
+     /* Ring / focus */
+     --ring: 0 0 0 4px var(--c-accent-ring);
+   
+     /* Typography */
+     --font: "Outfit","Inter","Segoe UI Variable","SF Pro Text","Helvetica Neue",Arial,sans-serif;
+   
+   
+     /* ============================================================
+        §2  BASE TYPOGRAPHY & FIELD RESETS
+        ============================================================ */
+   
+     /* Shared font stack for all question types */
+     :is(.que.multichoice, .que.truefalse, .que.match, .que.shortanswer,
+         .que.numerical, .que.ddwtos, .que.ddmarker, .que.essay, .que.ordering)
+     :is(p, span, div, label, &) {
+       font-family: var(--font);
+       color: var(--c-text);
+       -webkit-font-smoothing: antialiased;
+       text-rendering: optimizeLegibility;
+     }
+   
+     /* Strip Moodle's formulation box */
+     .que .formulation { background: none !important; border: none !important; }
+   
+     /* Clear-choice link */
+     .qtype_multichoice_clearchoice { padding-top: 20px !important; }
+     .qtype_multichoice_clearchoice * { color: rgba(181,1,1,.75) !important; }
+   
+     /* Validation error */
+     .que .validationerror {
+       padding-top: 20px !important;
+       color: rgba(181,1,1,.75) !important;
+     }
+   
+     /* Hide icon decorations inside answers/feedback */
+     .que :is(.answer, .outcome, .specificfeedback) :is(i.icon, img.icon, span.ms-1) {
+       display: none !important;
+     }
+   
+     /* Shared question number badge */
+     :is(.que.multichoice, .que.truefalse, .que.match, .que.shortanswer,
+         .que.numerical, .que.ddwtos, .que.ddmarker, .que.essay, .que.ordering)
+     :is(.no, .qno) {
+       font-size: 1.02rem; font-weight: 750;
+       color: var(--c-accent); letter-spacing: .01em;
+     }
+   
+     /* State pill */
+     :is(.que.multichoice, .que.truefalse, .que.match, .que.shortanswer,
+         .que.numerical, .que.ddwtos, .que.ddmarker, .que.essay, .que.ordering)
+     :is(.state, .badge) {
+       margin-left: .65rem;
+       padding: .25rem .85rem;
+       font-size: .82rem; font-weight: 600;
+       border-radius: 999px;
+       background: var(--c-accent-light);
+       color: var(--c-accent);
+       border: 1px solid rgba(20,184,166,.24);
+     }
+   
+     /* Edit-question link */
+     :is(.que.multichoice, .que.truefalse, .que.match, .que.shortanswer,
+         .que.numerical, .que.ddwtos, .que.ddmarker, .que.essay, .que.ordering)
+     .editquestion {
+       position: absolute; top: 14px; right: 14px;
+       font-size: .88rem; opacity: .9;
+     }
+     :is(.que.multichoice, .que.truefalse, .que.match, .que.shortanswer,
+         .que.numerical, .que.ddwtos, .que.ddmarker, .que.essay, .que.ordering)
+     .editquestion a { color: var(--c-muted); text-decoration: underline dotted; }
+     :is(.que.multichoice, .que.truefalse, .que.match, .que.shortanswer,
+         .que.numerical, .que.ddwtos, .que.ddmarker, .que.essay, .que.ordering)
+     .editquestion a:hover { color: var(--c-accent); text-decoration: underline; }
+   
+     /* Question text */
+     :is(.que.multichoice, .que.truefalse, .que.match, .que.shortanswer,
+         .que.numerical, .que.ddwtos, .que.ddmarker, .que.essay, .que.ordering)
+     .qtext {
+       margin: 1.05rem 0 1.5rem;
+       font-size: 1.13rem; line-height: 1.66; font-weight: 600;
+       color: var(--c-text);
+     }
+   
+   
+     /* ============================================================
+        §3  SHELL UI — TIMER · NAV BAR · SUBMIT BUTTON
+        ============================================================ */
+   
+     /* Tertiary nav bar */
+     .tertiary-navigation { margin: .2rem 0 1rem; }
+     .tertiary-navigation .row { margin: 0; }
+     .tertiary-navigation .navitem { display: flex; align-items: center; gap: .55rem; }
+     .tertiary-navigation .btn,
+     .tertiary-navigation .btn-secondary {
+       background: var(--c-white) !important;
+       border: 1px solid rgba(203,213,225,.8) !important;
+       border-radius: 999px !important;
+       padding: .5rem 1.25rem !important;
+       min-height: 42px;
+       font-weight: 540 !important;
+       color: var(--c-text) !important;
+       box-shadow: 0 2px 8px rgba(15,23,42,.03) !important;
+       transition: all var(--t-fast) !important;
+     }
+     .tertiary-navigation .btn:hover,
+     .tertiary-navigation .btn-secondary:hover {
+       background: #f8fafc !important;
+       border-color: rgba(148,163,184,.6) !important;
+       transform: translateY(-2px) !important;
+       box-shadow: 0 6px 16px rgba(15,23,42,.06) !important;
+     }
+     .tertiary-navigation .btn:focus-visible {
+       outline: none; box-shadow: var(--ring) !important;
+     }
+   
+     /* Submit row */
+     .submitbtns { display: flex; justify-content: flex-end; margin-top: 1rem; }
+   
+     /* Next / submit button */
+     #mod_quiz-next-nav {
+       min-height: 48px; padding: 0 1.5rem;
+       border-radius: 14px;
+       border: 1px solid rgba(255,255,255,.1);
+       background: linear-gradient(135deg, #14b8a6, #0d9488);
+       color: #fff; font-weight: 600; letter-spacing: .02em;
+       box-shadow: 0 8px 20px -6px rgba(13,148,136,.4), inset 0 1px 0 rgba(255,255,255,.2);
+       transition: all var(--t-fast);
+     }
+     #mod_quiz-next-nav:hover {
+       filter: brightness(1.05);
+       box-shadow: 0 12px 24px -8px rgba(13,148,136,.5),
+                   inset 0 1px 0 rgba(255,255,255,.3),
+                   0 0 15px rgba(20,184,166,.4);
+       transform: translateY(-1.5px);
+     }
+     #mod_quiz-next-nav:focus-visible {
+       outline: none;
+       box-shadow: var(--ring), 0 10px 20px rgba(47,158,68,.22);
+     }
+   
+     /* Connection alerts */
+     #connection-error,
+     #connection-ok {
+       border-radius: var(--r-sm); padding: .9rem 1rem; margin: 1rem 0;
+       border: 1px solid transparent;
+       box-shadow: 0 4px 12px rgba(15,23,42,.04);
+     }
+     #connection-error {
+       background: rgba(254,242,242,.9);
+       border-color: rgba(239,68,68,.32); color: #991b1b;
+     }
+     #connection-ok {
+       background: rgba(236,253,245,.88);
+       border-color: rgba(16,185,129,.32); color: #065f46;
+     }
+   
+     /* Floating timer */
+     #quiz-timer-wrapper {
+       position: sticky !important; top: 1rem !important; z-index: 1000 !important;
+       display: flex; justify-content: flex-end; align-items: center;
+       margin-bottom: 2rem !important;
+       pointer-events: none;
+     }
+     #quiz-timer-wrapper > * { pointer-events: auto; }
+   
+     #quiz-timer {
+       background: rgba(255,255,255,.75) !important;
+       backdrop-filter: blur(12px) !important;
+       -webkit-backdrop-filter: blur(12px) !important;
+       border: 1px solid rgba(255,255,255,.5) !important;
+       border-radius: 999px !important;
+       padding: .6rem 1.25rem !important;
+       font-size: 1.05rem !important; font-weight: 600 !important;
+       color: var(--c-text) !important;
+       box-shadow: 0 8px 32px rgba(15,23,42,.08), inset 0 1px 0 rgba(255,255,255,.9) !important;
+       transition: all var(--t-main) !important;
+       animation: timerPulse 3.5s infinite ease-in-out !important;
+     }
+     @keyframes timerPulse {
+       0%,100% { box-shadow: 0 8px 32px rgba(15,23,42,.08), inset 0 1px 0 rgba(255,255,255,.9); transform: scale(1); }
+       50%      { box-shadow: 0 12px 36px rgba(15,23,42,.12), inset 0 1px 0 rgba(255,255,255,.9); transform: scale(1.02); }
+     }
+   
+     #toggle-timer {
+       border-radius: 999px !important;
+       background: var(--c-white) !important;
+       border: 1px solid rgba(203,213,225,.8) !important;
+       color: var(--c-text) !important;
+       box-shadow: 0 2px 8px rgba(15,23,42,.03) !important;
+       transition: all var(--t-fast) !important;
+       padding: .6rem 1rem !important;
+     }
+     #toggle-timer:hover {
+       background: #f8fafc !important;
+       transform: translateY(-2px) !important;
+       box-shadow: 0 6px 16px rgba(15,23,42,.06) !important;
+     }
+   
+   
+     /* ============================================================
+        §4  QUESTION CARDS  (shared premium shell)
+        ============================================================ */
+   
+     /* All question type cards */
+     :is(.que.multichoice, .que.truefalse, .que.match, .que.shortanswer,
+         .que.numerical, .que.ddwtos, .que.ddmarker, .que.essay,
+         .que.ordering):is(.deferredfeedback, .que.match, .que.shortanswer,
+         .que.numerical, .que.ddwtos, .que.ddmarker, .que.essay) {
+       position: relative;
+       overflow: clip;
+       background: var(--card-bg) !important;
+       border: 1px solid var(--c-border) !important;
+       border-radius: var(--r-lg) !important;
+       box-shadow: var(--card-shadow) !important;
+       padding: var(--pad-y) var(--pad-x) calc(var(--pad-y) - .2rem);
+       margin: 0 0 2.2rem;
+       transition: border-color var(--t-main), box-shadow var(--t-main),
+                   transform .25s cubic-bezier(.2,.8,.2,1) !important;
+     }
+   
+     /* Simpler targeting (also catches non-.deferredfeedback types) */
+     .que.multichoice.deferredfeedback,
+     .que.truefalse.deferredfeedback,
+     .que.ordering.deferredfeedback,
+     .que.match,
+     .que.shortanswer,
+     .que.numerical,
+     .que.ddwtos,
+     .que.ddmarker,
+     .que.essay {
+       position: relative;
+       overflow: clip;
+       background: var(--card-bg) !important;
+       border: 1px solid var(--c-border) !important;
+       border-radius: var(--r-lg) !important;
+       box-shadow: var(--card-shadow) !important;
+       padding: var(--pad-y) var(--pad-x) calc(var(--pad-y) - .2rem);
+       margin: 0 0 2.2rem;
+       transition: border-color var(--t-main), box-shadow var(--t-main),
+                   transform .25s cubic-bezier(.2,.8,.2,1) !important;
+     }
+   
+     .que.multichoice.deferredfeedback:hover,
+     .que.truefalse.deferredfeedback:hover,
+     .que.ordering.deferredfeedback:hover,
+     .que.match:hover,
+     .que.shortanswer:hover,
+     .que.numerical:hover,
+     .que.ddwtos:hover,
+     .que.ddmarker:hover {
+       border-color: var(--c-border-hover) !important;
+       box-shadow: var(--card-shadow-hover) !important;
+       transform: translateY(-3px) !important;
+     }
+   
+     /* Essay doesn't lift on hover (avoids jarring resize with TinyMCE) */
+     .que.essay { transition: border-color var(--t-main), box-shadow var(--t-main); }
+     .que.essay:hover,
+     .que.essay:focus-within {
+       border-color: var(--c-border-hover) !important;
+       box-shadow: var(--card-shadow-hover) !important;
+       transform: none !important;
+     }
+   
+     /* ablock resets shared across types */
+     .que.multichoice .ablock,
+     .que.truefalse .ablock,
+     .que.match .ablock,
+     .que.shortanswer .ablock,
+     .que.numerical .ablock,
+     .que.essay .ablock,
+     .que.ordering .ablock {
+       margin: 0; padding: 0; border: 0;
+       background: transparent; box-shadow: none;
+     }
+   
+     /* Content / formulation block */
+     .que.match .content,     .que.match .formulation,
+     .que.shortanswer .content, .que.shortanswer .formulation,
+     .que.numerical .content,   .que.numerical .formulation,
+     .que.ddwtos .content,      .que.ddwtos .formulation,
+     .que.ddmarker .content,    .que.ddmarker .formulation,
+     .que.essay .content,       .que.essay .formulation {
+       position: relative; display: block;
+     }
+   
+   
+     /* ============================================================
+        §5  OPTION ROW  (shared styles for multichoice & truefalse)
+        ============================================================ */
+   
+     .que.multichoice .answer,
+     .que.truefalse .answer {
+       display: flex !important; flex-direction: column !important; gap: .72rem !important;
+     }
+   
+     /* Individual option row */
+     .que.multichoice .answer > :is(.r0,.r1),
+     .que.truefalse  .answer > :is(.r0,.r1) {
+       position: relative !important;
+       border-radius: var(--r-md) !important;
+       background: var(--opt-bg) !important;
+       border: 1px solid rgba(15,23,42,.06) !important;
+       padding: var(--row-py) var(--row-px) !important;
+       transition: background var(--t-fast), border-color var(--t-fast),
+                   box-shadow var(--t-fast), transform .08s ease !important;
+     }
+   
+     .que.multichoice .answer > :is(.r0,.r1):hover,
+     .que.truefalse  .answer > :is(.r0,.r1):hover {
+       background: var(--opt-hover) !important;
+       border-color: var(--opt-active-bdr) !important;
+       box-shadow: 0 6px 16px rgba(15,23,42,.05) !important;
+       transform: translateY(-.5px) !important;
+     }
+   
+     /* ── Full-row invisible radio overlay ─────────────────────── */
+     .que.multichoice .answer > :is(.r0,.r1) input[type="radio"],
+     .que.truefalse  .answer > :is(.r0,.r1) input[type="radio"] {
+       position: absolute !important; inset: 0 !important;
+       width: 100% !important; height: 100% !important;
+       margin: 0 !important; opacity: 0 !important;
+       cursor: pointer !important; z-index: 3 !important;
+       appearance: none !important; -webkit-appearance: none !important;
+       background: transparent !important; border: 0 !important;
+       box-shadow: none !important; outline: 0 !important;
+     }
+   
+     /* ── Multichoice: label & text ───────────────────────────── */
+     .que.multichoice *:not(input):not(label):not(svg):not(path) {
+       all: unset; box-sizing: border-box; display: revert;
+     }
+     .que.multichoice,
+     .que.multichoice .content,
+     .que.multichoice .formulation { display: block; position: relative; }
+   
+     .que.multichoice input[type="radio"] {
+       all: revert; accent-color: var(--c-accent);
+     }
+     .que.multichoice label { cursor: pointer; }
+   
+     .que.multichoice .answer .d-flex {
+       display: flex; align-items: flex-start; gap: .9rem; width: 100%;
+     }
+   
+     .que.multichoice .answer > :is(.r0,.r1) label {
+       position: relative; width: 100%;
+       display: flex; align-items: center;
+       justify-content: space-between; gap: .5rem;
+     }
+     .que.multichoice .answer > :is(.r0,.r1) label > * {
+       position: relative; z-index: 2;
+     }
+   
+     .que.multichoice .answer p {
+       margin: 0; font-size: 1.04rem;
+       color: var(--c-text); line-height: 1.55; font-weight: 520;
+     }
+   
+     /* ── True/False: label styling ───────────────────────────── */
+     .que.truefalse .ablock {
+       border: 0 !important; margin: 0 !important;
+       padding: 0 !important; background: transparent !important;
+       box-shadow: none !important;
+     }
+     .que.truefalse .answer .ms-1 { margin-left: 0 !important; }
+   
+     .que.truefalse .answer > :is(.r0,.r1) label[for] {
+       position: relative !important; z-index: 1 !important;
+       display: flex !important; align-items: center !important;
+       justify-content: space-between !important; gap: .5rem !important;
+       width: 100% !important; padding-left: 0 !important;
+       font-size: 1.05rem !important; line-height: 1.55 !important;
+       font-weight: 520 !important; color: var(--c-text) !important;
+       user-select: none !important;
+     }
+     /* Remove pseudo-element radio indicator */
+     .que.truefalse .answer > :is(.r0,.r1) label[for]::before,
+     .que.truefalse .answer > :is(.r0,.r1) label[for]::after {
+       content: none !important; display: none !important;
+     }
+   
+     /* ── Selected / focus states — :has() browsers ──────────── */
+     @supports selector(:has(*)) {
+       .que.multichoice .answer > :is(.r0,.r1):has(input[type="radio"]:checked),
+       .que.truefalse   .answer > :is(.r0,.r1):has(input[type="radio"]:checked) {
+         background: var(--opt-active) !important;
+         border-color: var(--opt-active-bdr) !important;
+         box-shadow: none !important;
+       }
+       /* Neutralise inner d-flex highlight */
+       .que.multichoice .answer input[type="radio"]:checked + .d-flex {
+         background: transparent !important; border: 0 !important;
+         box-shadow: none !important; border-radius: 0 !important;
+         width: auto !important; height: auto !important;
+         margin: 0 !important; padding: 0 !important;
+       }
+   
+       /* Focus ring */
+       .que.multichoice .answer > :is(.r0,.r1):has(input[type="radio"]:focus-visible),
+       .que.truefalse   .answer > :is(.r0,.r1):has(input[type="radio"]:focus-visible) {
+         box-shadow: var(--ring) !important;
+         border-color: var(--opt-active-bdr) !important;
+       }
+   
+       /* Review: correct / incorrect option rows */
+       .que.multichoice .answer > :is(.r0,.r1).incorrect,
+       .que.truefalse   .answer > :is(.r0,.r1).incorrect {
+         background: var(--c-wrong-opt) !important;
+         border-color: var(--c-wrong-border) !important;
+       }
+       .que.multichoice .answer > :is(.r0,.r1).correct,
+       .que.truefalse   .answer > :is(.r0,.r1).correct {
+         background: var(--c-correct-bg) !important;
+         border-color: var(--c-correct-border) !important;
+       }
+     }
+   
+     /* ── Selected / focus states — fallback (no :has()) ─────── */
+     @supports not selector(:has(*)) {
+       .que.multichoice .answer input[type="radio"]:checked + .d-flex,
+       .que.multichoice .answer input[type="radio"]:checked + label .d-flex {
+         background: var(--opt-active) !important;
+         border: 1px solid var(--opt-active-bdr) !important;
+         border-radius: var(--r-md) !important;
+         box-shadow: none !important;
+         margin: calc(var(--row-py) * -1) calc(var(--row-px) * -1) !important;
+         padding: var(--row-py) var(--row-px) !important;
+         width: auto !important; height: auto !important;
+       }
+       .que.truefalse .answer > :is(.r0,.r1) input[type="radio"]:checked + label[for] {
+         box-shadow: 0 0 0 9999px var(--opt-active) inset !important;
+         border-radius: var(--r-md) !important;
+       }
+       .que.truefalse .answer > :is(.r0,.r1) input[type="radio"]:focus-visible + label[for] {
+         box-shadow: var(--ring), 0 0 0 9999px var(--opt-active) inset !important;
+         border-radius: var(--r-md) !important;
+       }
+     }
+   
+     .que.multichoice input[type="radio"]:focus-visible {
+       outline: none; box-shadow: var(--ring); border-radius: 50%;
+     }
+   
+   
+     /* ============================================================
+        §6  INPUT TYPES — shortanswer · numerical
+        ============================================================ */
+   
+     .que.shortanswer .ablock,
+     .que.numerical .ablock {
+       display: flex; flex-wrap: wrap;
+       align-items: center; gap: .7rem;
+     }
+     .que.shortanswer .ablock > label,
+     .que.numerical  .ablock > label {
+       font-size: 1rem; font-weight: 600; color: var(--c-muted);
+     }
+     .que.shortanswer .answer,
+     .que.numerical  .answer { display: inline-block; min-width: min(100%,320px); }
+   
+     .que.shortanswer input[type="text"],
+     .que.numerical   input[type="text"],
+     .que select.form-select,
+     .que textarea.form-control {
+       border-radius: var(--r-sm) !important;
+       border: 1px solid rgba(203,213,225,.8) !important;
+       box-shadow: inset 0 2px 4px rgba(15,23,42,.02) !important;
+       background: rgba(248,250,252,.9);
+       color: var(--c-text);
+       transition: all var(--t-fast) !important;
+     }
+     .que.shortanswer input[type="text"],
+     .que.numerical   input[type="text"] {
+       width: min(100%,560px); max-width: 100%;
+       min-height: 44px; padding: .58rem .85rem;
+     }
+     .que.shortanswer input[type="text"]:hover,
+     .que.numerical   input[type="text"]:hover  { background: var(--c-white); }
+   
+     .que select.form-select:focus,
+     .que input[type="text"]:focus,
+     .que textarea.form-control:focus,
+     .que.shortanswer input[type="text"]:focus-visible,
+     .que.numerical   input[type="text"]:focus-visible {
+       outline: none !important;
+       border-color: var(--c-accent) !important;
+       box-shadow: 0 0 0 4px rgba(13,148,136,.15),
+                   inset 0 2px 4px rgba(15,23,42,.02) !important;
+       background: var(--c-white) !important;
+     }
+   
+     /* Review correct / incorrect on text inputs */
+     .que :is(input[type="text"], textarea, select).incorrect {
+       background: var(--c-wrong-bg) !important;
+       border-color: var(--c-wrong-border) !important;
+       color: var(--c-wrong-text) !important; font-weight: 560 !important;
+     }
+     .que :is(input[type="text"], textarea, select).correct {
+       background: var(--c-correct-bg) !important;
+       border-color: var(--c-correct-border) !important;
+       color: var(--c-correct-text) !important; font-weight: 560 !important;
+     }
+   
+   
+     /* ============================================================
+        §7  MATCH QUESTION
+        ============================================================ */
+   
+     .que.match .answer.table-reboot {
+       width: 100%; border-collapse: separate;
+       border-spacing: 0 .72rem; margin: 0;
+     }
+     .que.match .answer.table-reboot :is(tbody, tr, td) {
+       padding: 0; border: 0 !important;
+       background: transparent; box-shadow: none !important; outline: none !important;
+     }
+     .que.match .answer.table-reboot tr {
+       display: grid;
+       grid-template-columns: minmax(0,1fr) minmax(220px,340px);
+       gap: .8rem; align-items: center;
+       background: var(--opt-bg);
+       border: 1px solid rgba(15,23,42,.06);
+       border-radius: var(--r-md);
+       box-shadow: 0 4px 14px rgba(15,23,42,.045);
+       padding: .72rem .86rem;
+       transition: background var(--t-fast), border-color var(--t-fast), box-shadow var(--t-fast);
+     }
+     .que.match .answer.table-reboot tr:hover {
+       background: var(--opt-hover);
+       border-color: var(--opt-active-bdr);
+       box-shadow: 0 8px 20px rgba(47,158,68,.09);
+     }
+     .que.match .answer.table-reboot td.text p {
+       margin: 0; font-size: 1.01rem;
+       line-height: 1.45; font-weight: 520; word-break: break-word;
+     }
+     .que.match .answer.table-reboot td.control { width: 100%; text-align: right; }
+     .que.match .answer.table-reboot select.form-select {
+       width: 100%; max-width: 340px; min-height: 42px;
+       border: 1px solid rgba(15,23,42,.06);
+       border-radius: 10px; background: var(--c-white);
+       color: var(--c-text);
+       box-shadow: inset 0 1px 0 rgba(255,255,255,.95);
+       transition: border-color var(--t-fast), box-shadow var(--t-fast);
+     }
+     .que.match .answer.table-reboot select.form-select:hover {
+       border-color: var(--opt-active-bdr);
+     }
+     .que.match .answer.table-reboot select.form-select:focus-visible {
+       outline: none;
+       border-color: var(--opt-active-bdr);
+       box-shadow: var(--ring);
+     }
+   
+   
+     /* ============================================================
+        §8  DRAG-DROP WORDS (ddwtos)
+        ============================================================ */
+   
+     .que.ddwtos .qtext p { margin: 0 0 .72rem; font-size: 1.03rem; line-height: 1.55; font-weight: 520; }
+     .que.ddwtos .qtext .drop {
+       display: none; align-items: center; justify-content: center;
+       padding: 0 .38rem; border-radius: 10px;
+       border: 1px dashed var(--opt-active-bdr);
+       background: var(--opt-hover);
+       box-shadow: inset 0 1px 0 rgba(255,255,255,.9);
+       font-weight: 650; color: var(--c-accent); vertical-align: middle;
+     }
+     .que.ddwtos .qtext .drop.active { display: inline-flex; margin: 0 2px 2px 0; }
+   
+     .que.ddwtos .answercontainer {
+       margin-top: .8rem; padding: .72rem;
+       border-radius: var(--r-md);
+       border: 1px solid rgba(15,23,42,.06);
+       background: linear-gradient(180deg, rgba(255,255,255,.96), rgba(248,250,252,.95));
+       box-shadow: inset 0 1px 0 rgba(255,255,255,.95);
+     }
+     .que.ddwtos [class*="draggrouphomes"] { display: flex; flex-wrap: wrap; gap: .45rem; }
+     .que.ddwtos .draghome {
+       display: inline-flex !important;
+       align-items: center; justify-content: center;
+       padding: 0 .45rem; border-radius: 10px;
+       border: 1px solid var(--opt-active-bdr);
+       background: var(--c-white); color: var(--c-accent);
+       font-weight: 700; box-shadow: 0 3px 10px rgba(15,23,42,.06);
+     }
+     .que.ddwtos .draghome.beingdragged { box-shadow: 0 8px 18px rgba(15,23,42,.14); cursor: grabbing; }
+     .que.ddwtos .draghome.placed { margin-bottom: 2px; vertical-align: middle; }
+     .que.ddwtos .qtext .draghome.placed { display: inline-flex !important; margin: 0 2px 2px 0; }
+     .que.ddwtos .draghome.dragplaceholder { display: none !important; }
+     .que.ddwtos .draghome.dragplaceholder.active {
+       display: inline-flex !important; visibility: hidden !important;
+       border-color: transparent !important; background: transparent !important;
+       box-shadow: none; pointer-events: none;
+     }
+   
+   
+     /* ============================================================
+        §9  DRAG-DROP MARKERS (ddmarker)
+        ============================================================ */
+   
+     .que.ddmarker .ddarea {
+       margin-top: .65rem; display: flex;
+       flex-direction: column; align-items: center; gap: .85rem;
+     }
+     .que.ddmarker .droparea {
+       width: min(100%,1140px); margin-inline: auto;
+       border-radius: 14px;
+       border: 1px solid rgba(15,23,42,.06);
+       background: var(--c-white);
+       box-shadow: 0 5px 16px rgba(15,23,42,.055);
+       overflow: hidden; position: relative;
+     }
+     .que.ddmarker .dropbackground { display: block; width: 100%; height: auto; margin: 0; border: none !important; box-shadow: none !important; }
+   
+     /* Marker text chip */
+     .que.ddmarker .droparea .marker .markertext,
+     .que.ddmarker .draghomes .marker .markertext,
+     .que.ddmarker div.markertexts .markertext {
+       margin: 0 5px; z-index: 3;
+       background: var(--c-white); border: none !important;
+       padding: 5px 10px; display: inline-block;
+       border-radius: 10px; color: #222;
+       opacity: .6; font-weight: 500; font-size: .95rem;
+       line-height: 1.35; cursor: pointer;
+       transition: opacity .16s;
+       outline: none; box-shadow: none !important; text-shadow: none !important; filter: none !important;
+     }
+     .que.ddmarker .droparea .marker .markertext:is(:hover,:focus-visible,:active),
+     .que.ddmarker .draghomes .marker .markertext:is(:hover,:focus-visible,:active),
+     .que.ddmarker div.markertexts .markertext:is(:hover,:focus-visible,:active) {
+       opacity: 1;
+       outline: 2px solid rgba(116,198,157,.45);
+       outline-offset: 1px;
+       box-shadow: none !important; text-shadow: none !important; filter: none !important;
+     }
+   
+     /* Drop zones */
+     .que.ddmarker .dropzones :is([class*="drop"],.dropzone) {
+       border: 2px dashed rgba(47,158,68,.35);
+       border-radius: var(--r-sm);
+       background: rgba(236,253,250,.42);
+       transition: border-color var(--t-fast), background var(--t-fast), box-shadow var(--t-fast);
+     }
+     .que.ddmarker .dropzones :is([class*="drop"],.dropzone):hover {
+       border-color: var(--opt-active-bdr);
+       background: rgba(204,251,241,.5);
+       box-shadow: inset 0 0 0 1px rgba(47,158,68,.18);
+     }
+   
+     /* Draghomes tray */
+     .que.ddmarker .draghomes {
+       display: flex; flex-wrap: wrap; justify-content: center; gap: .55rem;
+       width: min(100%,1140px); margin-inline: auto; padding: .15rem 0 .3rem;
+     }
+     .que.ddmarker .marker {
+       border-radius: 999px;
+       border: 1px solid rgba(47,158,68,.32);
+       background: var(--c-white);
+       color: var(--c-text);
+       box-shadow: none !important;
+       padding: .32rem .62rem;
+       transition: border-color var(--t-fast), background var(--t-fast);
+     }
+     .que.ddmarker .marker .markertext { background: none !important; font-weight: 560; font-size: .93rem; line-height: 1.35; }
+     .que.ddmarker .marker .markertext:hover { background: none !important; border: none !important; outline: none !important; }
+     .que.ddmarker .marker:hover { border-color: var(--opt-active-bdr); background: rgba(204,251,241,.52); }
+     .que.ddmarker .marker:focus-visible { outline: none; border-color: var(--opt-active-bdr); }
+     .que.ddmarker .marker:is(:active),
+     .que.ddmarker .droparea .marker,
+     .que.ddmarker .draghomes .marker { box-shadow: none !important; text-shadow: none !important; filter: none !important; }
+     .que.ddmarker .marker.unneeded { opacity: .88; }
+     .que.ddmarker .marker.dragplaceholder { background: transparent; border-color: transparent; }
+   
+   
+     /* ============================================================
+        §10  ESSAY QUESTION
+        ============================================================ */
+   
+     .que.essay .answer,
+     .que.essay .qtype_essay_response { border: none !important; width: 100%; }
+     .que.essay .qtype_essay_response {
+       padding: .45rem;
+       border: 1px solid rgba(15,23,42,.06);
+       border-radius: var(--r-md);
+       background: rgba(255,255,255,.94);
+       box-shadow: inset 0 1px 0 rgba(255,255,255,.95);
+       transition: border-color var(--t-fast), box-shadow var(--t-fast);
+     }
+     .que.essay .qtype_essay_response:focus-within {
+       border-color: var(--opt-active-bdr); box-shadow: var(--ring);
+     }
+     .que.essay textarea.form-control {
+       min-height: 220px; border: 1px solid rgba(15,23,42,.06);
+       border-radius: var(--r-sm); background: var(--c-white); color: var(--c-text);
+       transition: border-color var(--t-fast), box-shadow var(--t-fast);
+     }
+     .que.essay textarea.form-control:focus-visible {
+       outline: none; border-color: var(--opt-active-bdr); box-shadow: var(--ring);
+     }
+   
+     /* TinyMCE */
+     .que.essay .tox.tox-tinymce {
+       border: 1px solid rgba(15,23,42,.07) !important;
+       border-radius: var(--r-sm) !important;
+       box-shadow: none !important; overflow: hidden;
+     }
+     .que.essay .tox.tox-tinymce.tox-fullscreen,
+     .tox.tox-tinymce.tox-fullscreen {
+       position: fixed !important; inset: 0 !important;
+       width: 100vw !important; height: 100vh !important;
+       max-width: none !important; max-height: none !important;
+       margin: 0 !important; border: 0 !important; border-radius: 0 !important;
+       background: var(--c-white) !important; box-shadow: none !important;
+       overflow: hidden !important; z-index: 2000 !important;
+     }
+     :is(.que.essay,.tox) .tox-tinymce.tox-fullscreen
+     :is(.tox-editor-container,.tox-sidebar-wrap,.tox-edit-area,.tox-edit-area__iframe) {
+       height: 100% !important; max-height: none !important; min-height: 0 !important;
+     }
+     :is(.que.essay,.tox) .tox-tinymce.tox-fullscreen
+     :is(.tox-editor-header,.tox-statusbar) { flex: 0 0 auto; }
+     .tox.tox-tinymce-aux { z-index: 2100 !important; }
+   
+   
+     /* ============================================================
+        §11  ORDERING QUESTION
+        ============================================================ */
+   
+     .que.ordering .qtext { margin: 1.05rem 0 1.5rem; font-size: 1.13rem; line-height: 1.66; font-weight: 600; }
+     .que.ordering .answer.ordering { margin-top: .2rem; }
+   
+     .que.ordering .sortablelist {
+       list-style: none; float: none !important; border: none !important;
+       margin: 0 0 0 8px; padding: 0;
+       display: flex; flex-direction: column; gap: .68rem;
+     }
+   
+     .que.ordering .answer.ordering .sortableitem {
+       margin: 0; padding: 0 !important;
+       border-radius: var(--r-md);
+       background: var(--opt-bg);
+       border: 1px solid rgba(15,23,42,.06);
+       box-shadow: 0 4px 14px rgba(15,23,42,.045);
+       transition: background var(--t-fast), border-color var(--t-fast),
+                   box-shadow var(--t-fast), transform .08s ease;
+     }
+     .que.ordering .answer.ordering .sortableitem:hover {
+       background: var(--opt-hover);
+       border-color: var(--opt-active-bdr);
+       box-shadow: 0 8px 20px rgba(47,158,68,.09);
+       transform: translateY(-.5px);
+     }
+   
+     /* Review states */
+     .que.ordering .answer.ordering .sortableitem.correct  { background: var(--c-correct-bg) !important; border-color: var(--c-correct-border) !important; }
+     .que.ordering .answer.ordering .sortableitem.incorrect { background: var(--c-wrong-bg) !important; border-color: var(--c-wrong-border) !important; }
+   
+     .que.ordering .answer.ordering .sortableitem > .d-flex {
+       align-items: center; gap: .7rem; min-height: 56px;
+       padding: .42rem .52rem; border-radius: inherit;
+     }
+     .que.ordering .answer.ordering .grip {
+       color: var(--c-muted); border-radius: 10px;
+       min-width: 2.15rem; justify-content: center;
+       cursor: grab; user-select: none;
+     }
+     .que.ordering .answer.ordering .grip .fa-grip-vertical { opacity: .75; font-size: .95rem; }
+     .que.ordering .answer.ordering .sortableitem:active .grip { cursor: grabbing; }
+   
+     .que.ordering .answer.ordering [id$="-text"] {
+       color: var(--c-text); font-size: 1.03rem; line-height: 1.5; font-weight: 540;
+       min-height: 2rem; display: flex; align-items: center; word-break: break-word;
+     }
+     .que.ordering .answer.ordering [id$="-text"] p { margin: 0; }
+   
+     .que.ordering .answer.ordering .btn.btn-icon {
+       width: 2rem; height: 2rem; border-radius: 10px;
+       border: 1px solid rgba(15,23,42,.06);
+       background: var(--c-white); color: var(--c-accent);
+       display: inline-flex; align-items: center; justify-content: center;
+       transition: border-color var(--t-fast), background var(--t-fast),
+                   box-shadow var(--t-fast), transform .08s ease;
+     }
+     .que.ordering .answer.ordering .btn.btn-icon:hover {
+       border-color: var(--opt-active-bdr); background: var(--opt-hover);
+       box-shadow: 0 4px 10px rgba(47,158,68,.08); transform: translateY(-.5px);
+     }
+     .que.ordering .answer.ordering .btn.btn-icon:focus-visible {
+       outline: none; border-color: var(--opt-active-bdr); box-shadow: var(--ring);
+     }
+   
+     /* Drag helper (floating clone) */
+     .que.ordering .answer.ordering .sortableitem:is(.ui-sortable-helper,.sortable-drag,.dragging) {
+       opacity: .98 !important; background: var(--c-white) !important;
+       border-color: var(--opt-active-bdr) !important;
+       box-shadow: 0 20px 40px -10px rgba(15,23,42,.18) !important;
+       cursor: grabbing !important; transform: scale(1.01) !important; z-index: 9999 !important;
+     }
+   
+     /* Placeholder (gap while dragging) */
+     .que.ordering .answer.ordering .sortableitem:is(.sortable-placeholder,.ui-sortable-placeholder,.sortable-ghost) {
+       visibility: visible !important;
+       background: rgba(241,245,249,.5) !important;
+       border: 2px dashed var(--opt-active-bdr) !important;
+       box-shadow: none !important; min-height: 56px; opacity: .6;
+     }
+   
+     /* Drop target highlight */
+     .que.ordering .answer.ordering .sortableitem.current-drop,
+     .que.ordering .answer.ordering .p-2.sortableitem.current-drop {
+       background: var(--opt-active) !important;
+       border-color: var(--opt-active-bdr) !important;
+       box-shadow: none !important; color: var(--c-text) !important;
+       padding: 0 !important;
+     }
+   
+   
+     /* ============================================================
+        §12  NAVIGATION BLOCK  (#mod_quiz_navblock)
+        ============================================================ */
+   
+     #mod_quiz_navblock {
+       background: var(--card-bg) !important;
+       border: 1px solid var(--c-border) !important;
+       border-radius: 1.5rem !important;
+       padding: 1.5rem !important;
+       box-shadow: 0 12px 48px rgba(15,23,42,.05) !important;
+       margin-bottom: 2rem !important;
+       position: sticky !important;
+       top: 5rem !important;
+     }
+     #mod_quiz_navblock .card-body { padding: 0 !important; }
+     #mod_quiz_navblock .card-title {
+       font-family: var(--font); color: var(--c-text);
+       font-size: 1.25rem; font-weight: 700;
+       margin-bottom: 1.2rem; display: block;
+     }
+   
+     /* Button grid */
+     #mod_quiz_navblock .qn_buttons {
+       display: grid; grid-template-columns: repeat(auto-fill,minmax(42px,1fr));
+       gap: .6rem; margin-bottom: 1.5rem;
+     }
+     #mod_quiz_navblock .qnbutton {
+       display: flex !important; align-items: center; justify-content: center;
+       font-family: var(--font); font-size: 1rem; font-weight: 600;
+       width: 42px; height: 42px; padding: 0;
+       border-radius: var(--r-sm); border: 1px solid rgba(15,23,42,.06);
+       background: var(--opt-bg); color: var(--c-text);
+       transition: all var(--t-fast); position: relative;
+       text-decoration: none; box-shadow: 0 2px 4px rgba(15,23,42,.02);
+       float: none !important; margin: 0 !important;
+     }
+     #mod_quiz_navblock .qnbutton :is(.thispageholder,.trafficlight) { display: none !important; }
+   
+     /* Button states */
+     #mod_quiz_navblock .qnbutton.answersaved,
+     #mod_quiz_navblock .qnbutton.correct       { background: rgba(16,185,129,.1); border-color: rgba(16,185,129,.3); color: var(--c-correct-text); }
+     #mod_quiz_navblock .qnbutton:is(.invalidanswer,.incorrect) { background: var(--c-wrong-bg); border-color: rgba(239,68,68,.4); color: #991b1b; }
+     #mod_quiz_navblock .qnbutton.partiallycorrect { background: rgba(245,158,11,.12); border-color: rgba(245,158,11,.4); color: var(--c-partial-text); }
+     #mod_quiz_navblock .qnbutton.thispage {
+       box-shadow: 0 0 0 3px rgba(20,184,166,.2);
+       border-color: var(--c-accent); transform: translateY(-1px);
+     }
+     #mod_quiz_navblock .qnbutton:hover {
+       transform: translateY(-2px); box-shadow: 0 4px 12px rgba(15,23,42,.06);
+     }
+   
+     /* Footer: finish attempt link */
+     #mod_quiz_navblock .othernav {
+       display: flex; flex-direction: column; gap: .8rem;
+       margin-top: 1.5rem; padding-top: 1.5rem;
+       border-top: 1px solid var(--c-border);
+     }
+     #mod_quiz_navblock .endtestlink {
+       display: inline-flex !important; align-items: center; justify-content: center;
+       width: 100%; min-height: 44px; padding: 0 1.5rem;
+       border-radius: var(--r-sm);
+       background: linear-gradient(135deg, #14b8a6, #0d9488);
+       color: #fff !important; font-weight: 600; text-decoration: none;
+       transition: all var(--t-fast);
+       box-shadow: 0 4px 12px rgba(13,148,136,.3); margin: 0;
+     }
+     #mod_quiz_navblock .endtestlink:hover {
+       transform: translateY(-1.5px); color: #fff !important;
+       box-shadow: 0 8px 16px rgba(13,148,136,.4); filter: brightness(1.05);
+     }
+     #mod_quiz_navblock .singlebutton form { margin: 0; width: 100%; }
+     #mod_quiz_navblock .singlebutton .btn {
+       width: 100%; min-height: 44px; border-radius: var(--r-sm);
+       font-weight: 600; border: 1px solid rgba(15,23,42,.06);
+       background: var(--c-white); color: var(--c-text);
+       transition: all var(--t-fast); box-shadow: 0 2px 4px rgba(15,23,42,.03);
+     }
+     #mod_quiz_navblock .singlebutton .btn:hover {
+       background: var(--opt-hover); border-color: var(--opt-active-bdr);
+       transform: translateY(-1px); box-shadow: 0 4px 12px rgba(15,23,42,.06);
+     }
+   
+   
+     /* ============================================================
+        §13  REVIEW MODE — FEEDBACK CARDS
+        ============================================================ */
+   
+     @keyframes slideFeedback {
+       from { opacity: 0; transform: translateY(10px); }
+       to   { opacity: 1; transform: translateY(0); }
+     }
+   
+     .que :is(.outcome, .comment) {
+       margin-top: 1.25rem !important;
+       padding: 1.15rem 1.4rem !important;
+       border-radius: var(--r-md) !important;
+       background: rgba(248,250,252,.8) !important;
+       border: 1px solid var(--c-border) !important;
+       color: var(--c-text); font-size: 1.02rem; line-height: 1.6;
+       box-shadow: none !important; display: block;
+       animation: slideFeedback .4s var(--t-main);
+     }
+     .que :is(.outcome, .comment) .feedback p { margin-bottom: .5rem !important; line-height: 1.6 !important; }
+     .que .outcome .specificfeedback  { margin-bottom: .6rem; font-weight: 500; }
+     .que .outcome .rightanswer       { font-weight: 600; color: var(--c-accent); margin-top: .5rem; }
+   
+     /* State-specific feedback */
+     :is(.que.correct) .outcome,
+     .que .outcome.correct {
+       background: var(--c-correct-bg) !important;
+       border-color: var(--c-correct-border) !important;
+       color: var(--c-correct-text) !important;
+     }
+     :is(.que.incorrect,.que.notanswered) .outcome,
+     .que .outcome.incorrect {
+       background: var(--c-wrong-bg) !important;
+       border-color: var(--c-wrong-border) !important;
+       color: var(--c-wrong-text) !important; font-weight: 540 !important;
+     }
+     :is(.que.partiallycorrect) .outcome,
+     .que .outcome.partiallycorrect {
+       background: var(--c-partial-bg) !important;
+       border-color: var(--c-partial-border) !important;
+       color: var(--c-partial-text) !important;
+     }
+   
+     .que .generalfeedback,
+     .que .rightanswer { border: none !important; background: none !important; padding: 0 !important; margin-top: .5rem; }
+   
+   
+     /* ============================================================
+        §14  RESPONSIVE
+        ============================================================ */
+   
+     @media (max-width: 900px) {
+       .que.multichoice.deferredfeedback, .que.truefalse.deferredfeedback,
+       .que.ordering.deferredfeedback, .que.match, .que.shortanswer,
+       .que.numerical, .que.ddwtos, .que.ddmarker, .que.essay {
+         --pad-y: 1.35rem; --pad-x: 1.15rem;
+         padding: var(--pad-y) var(--pad-x) calc(var(--pad-y) - .25rem);
+       }
+       :is(.que.multichoice, .que.truefalse, .que.match, .que.shortanswer,
+           .que.numerical, .que.ddwtos, .que.ddmarker, .que.essay, .que.ordering)
+       .qtext { font-size: 1.05rem; }
+   
+       .que.match .answer.table-reboot tr { grid-template-columns: minmax(0,1fr); }
+       .que.match .answer.table-reboot td.control { text-align: left; }
+       .que.match .answer.table-reboot select.form-select { max-width: 100%; }
+     }
+   
+     @media (max-width: 560px) {
+       --row-py: .85rem; --row-px: .85rem;
+   
+       .que.multichoice.deferredfeedback, .que.truefalse.deferredfeedback,
+       .que.ordering.deferredfeedback, .que.match, .que.shortanswer,
+       .que.numerical, .que.ddwtos, .que.ddmarker, .que.essay {
+         --pad-y: 1rem; --pad-x: .9rem;
+         padding: var(--pad-y) var(--pad-x) calc(var(--pad-y) - .2rem);
+         border-radius: 16px !important;
+       }
+   
+       :is(.que.multichoice, .que.truefalse) .answer > :is(.r0,.r1) {
+         padding: var(--row-py) var(--row-px); border-radius: 14px;
+       }
+       .que.multichoice .answer p,
+       .que.truefalse .answer > :is(.r0,.r1) label[for] {
+         font-size: 1rem; font-weight: 500;
+       }
+   
+       .que.shortanswer .ablock,
+       .que.numerical   .ablock { align-items: stretch; }
+       .que.shortanswer .answer,
+       .que.numerical   .answer { width: 100%; min-width: 0; }
+       .que.shortanswer input[type="text"],
+       .que.numerical   input[type="text"] { width: 100%; }
+   
+       .que.ddwtos :is(.draghome,.qtext .drop) { min-width: 1.9rem; min-height: 1.9rem; }
+   
+       .submitbtns { justify-content: stretch; }
+       #mod_quiz-next-nav { width: 100%; }
+   
+       .que.ddmarker :is(.droparea,.draghomes) { width: 100%; }
+       .que.ddmarker .marker .markertext { font-size: .86rem; }
+   
+       .que.ordering .answer.ordering .sortableitem > .d-flex { gap: .45rem; min-height: 50px; padding: .35rem .38rem; }
+       .que.ordering .answer.ordering [id$="-text"] { font-size: .98rem; }
+       .que.ordering .answer.ordering .btn.btn-icon { width: 1.9rem; height: 1.9rem; }
+     }
+   
+   
+     /* ============================================================
+        §15  REDUCED MOTION
+        ============================================================ */
+   
+     @media (prefers-reduced-motion: reduce) {
+       .que.multichoice.deferredfeedback, .que.truefalse.deferredfeedback,
+       .que.ordering.deferredfeedback, .que.match, .que.shortanswer,
+       .que.numerical, .que.ddwtos, .que.ddmarker, .que.essay,
+       .que.multichoice .answer > :is(.r0,.r1),
+       .que.truefalse   .answer > :is(.r0,.r1),
+       .que.ordering .answer.ordering .sortableitem,
+       .que.ordering .answer.ordering .btn.btn-icon,
+       .que.match .answer.table-reboot tr,
+       .que.ddmarker .marker,
+       #mod_quiz-next-nav {
+         transition: none !important; animation: none !important;
+       }
+       .que.multichoice.deferredfeedback:hover, .que.truefalse.deferredfeedback:hover,
+       .que.ordering.deferredfeedback:hover, .que.match:hover, .que.shortanswer:hover,
+       .que.numerical:hover, .que.ddwtos:hover, .que.ddmarker:hover,
+       .que.multichoice .answer > :is(.r0,.r1):hover,
+       .que.truefalse   .answer > :is(.r0,.r1):hover,
+       .que.ordering .answer.ordering .sortableitem:hover,
+       .que.ordering .answer.ordering .btn.btn-icon:hover,
+       .que.match .answer.table-reboot tr:hover,
+       #mod_quiz-next-nav:hover {
+         transform: none !important;
+       }
+     }
+   
+   } /* end #page-mod-quiz-attempt, #page-mod-quiz-review */
