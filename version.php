@@ -24,6 +24,10 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+if (!isset($plugin)) {
+    $plugin = new stdClass();
+}
+
 $plugin->version = 2025100601;
 $plugin->requires = 2022041900;
 $plugin->component = 'theme_aurora';

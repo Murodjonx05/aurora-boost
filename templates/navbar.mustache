@@ -57,8 +57,18 @@
 }}
 <nav id="PRIMARY-NAVBAR" class="navbar fixed-top bg-body navbar-expand" aria-label="{{#str}}sitemenubar, admin{{/str}}">
     <div class="container-fluid">
-        <button class="navbar-toggler aabtn d-block d-md-none px-1 my-1 border-0" data-toggler="drawers" data-action="toggle" data-target="theme_aurora-drawers-primary">
-            <span class="navbar-toggler-icon"></span>
+        <button class="navbar-toggler aurora-mobile-logo-toggle aabtn d-block d-md-none px-1 my-1 border-0" data-toggler="drawers" data-action="toggle" data-target="theme_aurora-drawers-primary">
+            {{#auroranavbar.customlogo}}
+                <img src="{{{ auroranavbar.customlogo }}}" class="logo" alt="{{sitename}}">
+            {{/auroranavbar.customlogo}}
+            {{^auroranavbar.customlogo}}
+            {{# output.should_display_navbar_logo }}
+                <img src="{{output.get_compact_logo_url}}" class="logo" alt="{{sitename}}">
+            {{/ output.should_display_navbar_logo }}
+            {{^ output.should_display_navbar_logo }}
+                <span class="navbar-toggler-icon"></span>
+            {{/ output.should_display_navbar_logo }}
+            {{/auroranavbar.customlogo}}
             <span class="visually-hidden">{{#str}}sidepanel, core{{/str}}</span>
         </button>
 

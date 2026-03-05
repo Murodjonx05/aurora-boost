@@ -30,7 +30,7 @@ defined('MOODLE_INTERNAL') || die();
 class theme_aurora_admin_settingspage_tabs extends admin_settingpage
 {
 
-    /** @var The tabs */
+    /** @var admin_settingpage[] The tabs. */
     protected $tabs = array();
 
     /**

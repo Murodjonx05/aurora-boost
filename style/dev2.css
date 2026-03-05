@@ -17,46 +17,78 @@
      color-scheme: light;
    
      /* ── Core palette ─────────────────────────────────────────── */
-     --c-bg:           #f8fafc;
-     --c-white:        #ffffff;
-     --c-text:         #1e293b;
-     --c-muted:        #8492a6;
-     --c-error:        rgba(181,1,1,.75);     /* validation / clear-choice */
+     --color-background: #f8fafc;
+     --color-surface: #ffffff;
+     --color-text: #1e293b;
+     --color-text-muted: #8492a6;
+     --color-danger: rgba(181, 1, 1, .75); /* validation / clear-choice */
 
      /* ── Accent (teal) ───────────────────────────────────────── */
-     --c-accent:        #0d9488;
-     --c-accent-2:      #14b8a6;               /* lighter teal for gradients */
-     --c-accent-light:  rgba(20,184,166,.12);
-     --c-accent-border: rgba(20,184,166,.24);
-     --c-accent-ring:   rgba(20,184,166,.15);
+     --color-accent: #0d9488;
+     --color-accent-strong: #14b8a6; /* lighter teal for gradients */
+     --color-accent-soft: rgba(20, 184, 166, .12);
+     --color-accent-border: rgba(20, 184, 166, .24);
+     --color-accent-ring: rgba(20, 184, 166, .15);
 
      /* ── Borders ─────────────────────────────────────────────── */
-     --c-border:        rgba(226,232,240,.8);  /* card default */
-     --c-border-hover:  rgba(203,213,225,.9);  /* card hover   */
-     --c-border-focus:  rgba(20,184,94,.3);    /* card focus   */
-     --c-opt-border:    rgba(15,23,42,.035);    /* option rows  */
+     --color-border: rgba(226, 232, 240, .8); /* card default */
+     --color-border-strong: rgba(203, 213, 225, .9); /* card hover */
+     --color-border-focus: rgba(20, 184, 94, .3); /* card focus */
+     --color-option-border: rgba(15, 23, 42, .035); /* option rows */
 
-     /* ── Shadow ink (shared alpha channel key) ───────────────── */
-     --c-ink:           15,23,42;              /* used as rgb(var(--c-ink),.X) */
-     --c-ink-accent:    13,148,136;            /* teal shadow key */
+     /* ── Shadow helpers ──────────────────────────────────────── */
+     --shadow-ink-rgb: 15, 23, 42;
+     --shadow-accent-rgb: 13, 148, 136;
 
      /* ── Semantic states ─────────────────────────────────────── */
-     --c-correct-bg:     rgba(16,185,129,.08);
-     --c-correct-border: rgba(16,185,129,.4);
-     --c-correct-text:   #065f46;
-     --c-wrong-bg:       rgba(239,68,68,.05);
-     --c-wrong-opt:      #fef2f2;
-     --c-wrong-border:   rgba(239,68,68,.3);
-     --c-wrong-text:     #b91c1c;
-     --c-partial-bg:     rgba(245,158,11,.05);
-     --c-partial-border: rgba(245,158,11,.3);
-     --c-partial-text:   #b45309;
+     --color-success-background: rgba(16, 185, 129, .08);
+     --color-success-border: rgba(16, 185, 129, .4);
+     --color-success-text: #065f46;
+     --color-error-background: rgba(239, 68, 68, .05);
+     --color-error-surface: #fef2f2;
+     --color-error-border: rgba(239, 68, 68, .3);
+     --color-error-text: #b91c1c;
+     --color-warning-background: rgba(245, 158, 11, .05);
+     --color-warning-border: rgba(245, 158, 11, .3);
+     --color-warning-text: #b45309;
 
      /* ── Option rows ─────────────────────────────────────────── */
-     --opt-bg:         var(--c-white);
-     --opt-hover:      #fcfdfd;
-     --opt-active:     #f0fdf4;
-     --opt-active-bdr: rgba(74,222,128,.35);
+     --option-background: var(--color-surface);
+     --option-hover-background: #fcfdfd;
+     --option-active-background: #f0fdf4;
+     --option-active-border: rgba(74, 222, 128, .35);
+
+     /* ── Compatibility aliases (legacy token names used below) ─ */
+     --c-bg: var(--color-background);
+     --c-white: var(--color-surface);
+     --c-text: var(--color-text);
+     --c-muted: var(--color-text-muted);
+     --c-error: var(--color-danger);
+     --c-accent: var(--color-accent);
+     --c-accent-2: var(--color-accent-strong);
+     --c-accent-light: var(--color-accent-soft);
+     --c-accent-border: var(--color-accent-border);
+     --c-accent-ring: var(--color-accent-ring);
+     --c-border: var(--color-border);
+     --c-border-hover: var(--color-border-strong);
+     --c-border-focus: var(--color-border-focus);
+     --c-opt-border: var(--color-option-border);
+     --c-ink: var(--shadow-ink-rgb);
+     --c-ink-accent: var(--shadow-accent-rgb);
+     --c-correct-bg: var(--color-success-background);
+     --c-correct-border: var(--color-success-border);
+     --c-correct-text: var(--color-success-text);
+     --c-wrong-bg: var(--color-error-background);
+     --c-wrong-opt: var(--color-error-surface);
+     --c-wrong-border: var(--color-error-border);
+     --c-wrong-text: var(--color-error-text);
+     --c-partial-bg: var(--color-warning-background);
+     --c-partial-border: var(--color-warning-border);
+     --c-partial-text: var(--color-warning-text);
+     --opt-bg: var(--option-background);
+     --opt-hover: var(--option-hover-background);
+     --opt-active: var(--option-active-background);
+     --opt-active-bdr: var(--option-active-border);
 
 
      /* ── Geometry ────────────────────────────────────────────── */
@@ -1041,9 +1073,9 @@
         ============================================================ */
    
      @media (max-width: 900px) {
-       .que.multichoice.deferredfeedback, .que.truefalse.deferredfeedback,
-       .que.ordering.deferredfeedback, .que.match, .que.shortanswer,
-       .que.numerical, .que.ddwtos, .que.ddmarker, .que.essay {
+       :is(.que.multichoice.deferredfeedback, .que.truefalse.deferredfeedback,
+           .que.ordering.deferredfeedback, .que.match, .que.shortanswer,
+           .que.numerical, .que.ddwtos, .que.ddmarker, .que.essay) {
          --pad-y: 1.35rem; --pad-x: 1.15rem;
          padding: var(--pad-y) var(--pad-x) calc(var(--pad-y) - .25rem);
        }
@@ -1058,10 +1090,10 @@
    
      @media (max-width: 560px) {
        --row-py: .85rem; --row-px: .85rem;
-   
-       .que.multichoice.deferredfeedback, .que.truefalse.deferredfeedback,
-       .que.ordering.deferredfeedback, .que.match, .que.shortanswer,
-       .que.numerical, .que.ddwtos, .que.ddmarker, .que.essay {
+
+       :is(.que.multichoice.deferredfeedback, .que.truefalse.deferredfeedback,
+           .que.ordering.deferredfeedback, .que.match, .que.shortanswer,
+           .que.numerical, .que.ddwtos, .que.ddmarker, .que.essay) {
          --pad-y: 1rem; --pad-x: .9rem;
          padding: var(--pad-y) var(--pad-x) calc(var(--pad-y) - .2rem);
          border-radius: 16px !important;
@@ -1101,27 +1133,27 @@
         ============================================================ */
    
      @media (prefers-reduced-motion: reduce) {
-       .que.multichoice.deferredfeedback, .que.truefalse.deferredfeedback,
-       .que.ordering.deferredfeedback, .que.match, .que.shortanswer,
-       .que.numerical, .que.ddwtos, .que.ddmarker, .que.essay,
-       .que.multichoice .answer > :is(.r0,.r1),
-       .que.truefalse   .answer > :is(.r0,.r1),
-       .que.ordering .answer.ordering .sortableitem,
-       .que.ordering .answer.ordering .btn.btn-icon,
-       .que.match .answer.table-reboot tr,
-       .que.ddmarker .marker,
-       #mod_quiz-next-nav {
+       :is(.que.multichoice.deferredfeedback, .que.truefalse.deferredfeedback,
+           .que.ordering.deferredfeedback, .que.match, .que.shortanswer,
+           .que.numerical, .que.ddwtos, .que.ddmarker, .que.essay,
+           .que.multichoice .answer > :is(.r0,.r1),
+           .que.truefalse .answer > :is(.r0,.r1),
+           .que.ordering .answer.ordering .sortableitem,
+           .que.ordering .answer.ordering .btn.btn-icon,
+           .que.match .answer.table-reboot tr,
+           .que.ddmarker .marker,
+           #mod_quiz-next-nav) {
          transition: none !important; animation: none !important;
        }
-       .que.multichoice.deferredfeedback:hover, .que.truefalse.deferredfeedback:hover,
-       .que.ordering.deferredfeedback:hover, .que.match:hover, .que.shortanswer:hover,
-       .que.numerical:hover, .que.ddwtos:hover, .que.ddmarker:hover,
-       .que.multichoice .answer > :is(.r0,.r1):hover,
-       .que.truefalse   .answer > :is(.r0,.r1):hover,
-       .que.ordering .answer.ordering .sortableitem:hover,
-       .que.ordering .answer.ordering .btn.btn-icon:hover,
-       .que.match .answer.table-reboot tr:hover,
-       #mod_quiz-next-nav:hover {
+       :is(.que.multichoice.deferredfeedback:hover, .que.truefalse.deferredfeedback:hover,
+           .que.ordering.deferredfeedback:hover, .que.match:hover, .que.shortanswer:hover,
+           .que.numerical:hover, .que.ddwtos:hover, .que.ddmarker:hover,
+           .que.multichoice .answer > :is(.r0,.r1):hover,
+           .que.truefalse .answer > :is(.r0,.r1):hover,
+           .que.ordering .answer.ordering .sortableitem:hover,
+           .que.ordering .answer.ordering .btn.btn-icon:hover,
+           .que.match .answer.table-reboot tr:hover,
+           #mod_quiz-next-nav:hover) {
          transform: none !important;
        }
      }
